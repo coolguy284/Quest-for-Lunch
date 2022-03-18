@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MOVEMENT_FORCE: 0.07
-  MOVEMENT_SPEED: 15
+  MOVEMENT_SPEED: 5
   JUMP_FORCE: 7.5
   AIRJUMP_FORCE: 5.5
   WALLJUMP_FORCE: 5
