@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712ffef125cf1844ca1025f19da8397c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MOVEMENT_FORCE: 0.07
+  MOVEMENT_FORCE: 0.2
   MOVEMENT_SPEED: 5
   JUMP_FORCE: 7.5
   AIRJUMP_FORCE: 5.5
@@ -157,7 +157,7 @@ MonoBehaviour:
   JUMPS_FROM_GND: 1
   JUMPS_FROM_WALL: 1
   FASTDROP_FORCE: 0.25
-  WALL_DROP_SPEED: 1
+  WALL_DROP_SPEED: 0
   Player_BoxCollider: {fileID: 2580276687157029556}
   Player_RigidBody: {fileID: 3026333166035380684}
   debugText: {fileID: 0}
