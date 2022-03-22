@@ -12,18 +12,19 @@ public class GameMovement : MonoBehaviour {
     public float AIRJUMP_FORCE = 5.5f;
     public float WALLJUMP_FORCE = 5.0f;
     public float LONGJUMP_GRAV_MULT = 1f;
-    
-    public float WALL_JUMP_LAG = 0.25f;
 
     public int JUMPS_FROM_GND = 1;
     public int JUMPS_FROM_WALL = 1;
 
     public float FASTDROP_FORCE = 0.25f;
 
-    public float WALL_DROP_SPEED = 0.0f;
+    public float WALL_DROP_SPEED = 1.0f;
 
-    public float WALL_SLIDE_TIMER = 2.0f;
+    public float WALL_SLIDE_TIMER = 3.0f;
     public float WALL_DROP_TIMER = 4.0f;
+    
+    public float WALL_DROPOFF_LAG = 0.5f;
+    public float WALL_JUMP_LAG = 0.25f;
 
     public BoxCollider2D Player_BoxCollider;
     public Rigidbody2D Player_RigidBody;
@@ -77,6 +78,30 @@ public class GameMovement : MonoBehaviour {
         isHoldingWall = false;
     }
 
+    void StartWallCling(bool climb) {
+        isWallCling = true;
+
+        if (climb) {
+            Player_RigidBody.velocity = new Vector2(Player_RigidBody.velocity.x, 10.0f);
+        } else {
+            Player_RigidBody.velocity = new Vector2(Player_RigidBody.velocity.x, 0.0f);
+        }
+    }
+
+    void StopWallCling(float lagTime) {
+        isWallCling = false;
+        wallClingTimer = 0.0f;
+        wallClingLagTime = lagTime;
+    }
+
+    void StartFastDrop() {
+        isFastDropping = true;
+    }
+    
+    void StopFastDrop() {
+        isFastDropping = false;
+    }
+
     void Start() {
         jumps = JUMPS_FROM_GND;
     }
@@ -105,7 +130,13 @@ public class GameMovement : MonoBehaviour {
             // establish wall cling
             if (!inWallClingLag) {
                 if (isHoldingWall && !isGrounded) {
-                    isWallCling = true;
+                    if (Player_RigidBody.velocity.y < -1.0f) {
+                        // simple cling
+                        StartWallCling(false);
+                    } else {
+                        // climb up
+                        StartWallCling(true);
+                    }
                 }
             }
 
@@ -160,12 +191,47 @@ public class GameMovement : MonoBehaviour {
             }
         } else if (isWallCling) {
             // wall cling
-            Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, -WALL_DROP_SPEED));
+
+            if (wallClingTimer < WALL_SLIDE_TIMER) {
+                Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, 0.3f));
+            } else if (wallClingTimer < WALL_DROP_TIMER) {
+                Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, -WALL_DROP_SPEED));
+            } else {
+                StopWallCling(WALL_DROPOFF_LAG);
+            }
+            
+            // jump off wall actions
+            if (Input.GetButtonDown("Jump")) {
+                if (movementVertical < 0.0f) {
+                    // fast drop
+                    StopWallCling(0.0f);
+                    StartFastDrop();
+                } else if (movementHorizontal < 0.0f && isWalledRight || movementHorizontal > 0.0f && isWalledLeft) {
+                    // jump away
+                    StopWallCling(WALL_JUMP_LAG);
+                } else if (movementHorizontal > 0.0f && isWalledRight || movementHorizontal < 0.0f && isWalledLeft) {
+                    // jump towards
+                    StopWallCling(WALL_JUMP_LAG);
+                } else {
+                    // jump neutral
+                    StopWallCling(WALL_JUMP_LAG);
+                }
+            }
+
+            // disable wall cling if grounded
+            if (isGrounded && isWallCling) {
+                StopWallCling(0.0f);
+            }
 
             wallClingTimer += Time.deltaTime;
         } else if (isFastDropping) {
             // fast dropping
             Player_RigidBody.AddForce(new Vector2(0, -FASTDROP_FORCE), ForceMode2D.Impulse);
+
+            // disable fast drop if grounded
+            if (isGrounded) {
+                StopFastDrop();
+            }
         }
 
         // reduce lag by lag time
@@ -175,7 +241,7 @@ public class GameMovement : MonoBehaviour {
         }
 
         // debug jumping text
-        debugText.text = string.Format("Debug:\nIsGrounded: {0}\nIsHoldingWall: {1}\nJumps: {2}\nInWallClingLag: {3}\nisWallCling: {4}", isGrounded, isHoldingWall, jumps, inWallClingLag, isWallCling);
+        debugText.text = string.Format("Debug:\nIsGrounded: {0}\nIsHoldingWall: {1}\nJumps: {2}\nWallClingLag: {3}\nisWallCling: {4}", isGrounded, isHoldingWall, jumps, wallClingLagTime, isWallCling);
 
         // press esc to return to title
         if (Input.GetButtonDown("Cancel")) {
