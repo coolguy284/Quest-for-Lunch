@@ -18,10 +18,11 @@ public class GameMovement : MonoBehaviour {
 
     public float FASTDROP_FORCE = 0.25f;
 
-    public float WALL_DROP_SPEED = 1.0f;
+    public float WALL_CLIMB_THRESHOLD = -0.3f;
 
     public float WALL_SLIDE_TIMER = 3.0f;
     public float WALL_DROP_TIMER = 4.0f;
+    public float WALL_DROP_SPEED = 1.0f;
     
     public float WALL_DROPOFF_LAG = 0.5f;
     public float WALL_JUMP_LAG = 0.25f;
@@ -71,9 +72,9 @@ public class GameMovement : MonoBehaviour {
         Player_RigidBody.AddForce(new Vector2(0, AIRJUMP_FORCE), ForceMode2D.Impulse);
     }
 
-    void WallJump(bool left) {
+    void WallJump(bool left, float strength) {
         Player_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-        Player_RigidBody.AddForce(new Vector2((left ? -1.0f : 1.0f) * WALLJUMP_FORCE * 0.2f, WALLJUMP_FORCE), ForceMode2D.Impulse);
+        Player_RigidBody.AddForce(new Vector2((left ? -1.0f : 1.0f) * WALLJUMP_FORCE, WALLJUMP_FORCE) * strength, ForceMode2D.Impulse);
         wallClingLagTime = WALL_JUMP_LAG;
         isHoldingWall = false;
     }
@@ -96,6 +97,7 @@ public class GameMovement : MonoBehaviour {
 
     void StartFastDrop() {
         isFastDropping = true;
+        Player_RigidBody.velocity = new Vector2(0.0f, Player_RigidBody.velocity.y);
     }
     
     void StopFastDrop() {
@@ -130,7 +132,7 @@ public class GameMovement : MonoBehaviour {
             // establish wall cling
             if (!inWallClingLag) {
                 if (isHoldingWall && !isGrounded) {
-                    if (Player_RigidBody.velocity.y < -1.0f) {
+                    if (Player_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
                         // simple cling
                         StartWallCling(false);
                     } else {
@@ -166,8 +168,8 @@ public class GameMovement : MonoBehaviour {
                     Jump();
                     jumpButton = true;
                 } else {
-                    if (isHoldingWall) {
-                        WallJump(isWalledRight);
+                    if (movementVertical < 0.0f) {
+                        StartFastDrop();
                     } else if (jumps > 0) {
                         AirJump();
                         jumps--;
@@ -209,17 +211,20 @@ public class GameMovement : MonoBehaviour {
                 } else if (movementHorizontal < 0.0f && isWalledRight || movementHorizontal > 0.0f && isWalledLeft) {
                     // jump away
                     StopWallCling(WALL_JUMP_LAG);
+                    WallJump(movementHorizontal < 0.0f, 2.0f);
                 } else if (movementHorizontal > 0.0f && isWalledRight || movementHorizontal < 0.0f && isWalledLeft) {
                     // jump towards
                     StopWallCling(WALL_JUMP_LAG);
+                    WallJump(movementHorizontal > 0.0f, 1.0f);
                 } else {
                     // jump neutral
                     StopWallCling(WALL_JUMP_LAG);
+                    WallJump(isWalledRight, 1.0f);
                 }
             }
 
             // disable wall cling if grounded
-            if (isGrounded && isWallCling) {
+            if ((isGrounded || !isWalled) && isWallCling) {
                 StopWallCling(0.0f);
             }
 
