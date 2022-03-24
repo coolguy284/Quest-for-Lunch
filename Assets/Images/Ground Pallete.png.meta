@@ -107,12 +107,12 @@ TextureImporter:
       name: Ground Pallete_1
       rect:
         serializedVersion: 2
-        x: 48
-        y: 72
-        width: 24
-        height: 24
+        x: 14
+        y: 53
+        width: 12
+        height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -125,36 +125,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_4
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 48
-        width: 24
-        height: 24
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f797fd9b2c12e514fb4e186f38738e38
-      internalID: 1134896857
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Ground Pallete_0
       rect:
         serializedVersion: 2
-        x: 72
-        y: 48
-        width: 24
-        height: 24
+        x: 1
+        y: 53
+        width: 12
+        height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -162,6 +141,342 @@ TextureImporter:
       bones: []
       spriteID: 765a3c705c76e9344a0625fe343638ba
       internalID: 1598150345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_3
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 40
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1870a02fd9f0f347a643b0217dee96a
+      internalID: -1368632038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_4
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 40
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c3359d49e655574f8f02fea0bb6aa42
+      internalID: 152862967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_5
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 40
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39a1eacaaf69a7e4e9a419591b985116
+      internalID: 1602777466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_6
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 40
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad36c36ff308aed48b7ffb9f0665bb50
+      internalID: -552493475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_7
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 40
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caff8f02b2e810a4eb078cfad30956db
+      internalID: 1486418988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_8
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 27
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c0dd060df96bfa49b2017c58a65bb11
+      internalID: 693015111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_9
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 27
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9957f9af14651a44a9248ce2897d8e6
+      internalID: 1044926230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_10
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 27
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75c760c77f93b8a409a82500a485e052
+      internalID: 797118086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_11
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 27
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d297ab7d83d223479e12ca3b4123edb
+      internalID: 1441986533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_12
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 27
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dec29689b6d85974a8b28e0918ebd60d
+      internalID: 2032243121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_13
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 14
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad3889432a587644fac62b1007fa5618
+      internalID: -1283970013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_14
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 14
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 825acacfa4f0bc648ae9a6c4a8a1a9f6
+      internalID: -1428036160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_15
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 14
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f92588e3c6450240b6cdfd9126d970b
+      internalID: 133011360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_16
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 270b06c892cd2744cbb209344b30a4d6
+      internalID: 1084260171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_17
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 14
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 107eafd3637487d419e424ae85dc83ff
+      internalID: 989810126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ground Pallete_18
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 14
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d8f5cbe147514547a58e5ab066491bd
+      internalID: 412854842
       vertices: []
       indices: 
       edges: []
@@ -177,15 +492,27 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Ground Pallete_8: 879096183
+      Ground Pallete_10: 797118086
+      Ground Pallete_11: 1441986533
+      Ground Pallete_8: 693015111
+      Ground Pallete_12: 2032243121
+      Ground Pallete_13: -1283970013
       Ground Pallete_0: 1598150345
-      Ground Pallete_4: 1134896857
+      Ground Pallete_4: 152862967
+      Ground Pallete_16: 1084260171
+      Ground Pallete_20: 988762656
       Ground Pallete_3: -1368632038
-      Ground Pallete_7: 1337842952
-      Ground Pallete_6: -1872381267
+      Ground Pallete_7: 1486418988
+      Ground Pallete_14: -1428036160
+      Ground Pallete_15: 133011360
+      Ground Pallete_17: 989810126
+      Ground Pallete_6: -552493475
       Ground Pallete_2: 1643874557
+      Ground Pallete_18: 412854842
       Ground Pallete_1: -1478565928
-      Ground Pallete_5: -1599936168
+      Ground Pallete_9: 1044926230
+      Ground Pallete_5: 1602777466
+      Ground Pallete_19: 2123084011
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
