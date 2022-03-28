@@ -162,6 +162,7 @@ MonoBehaviour:
   WALL_DROP_SPEED: 1
   WALL_DROPOFF_LAG: 0.5
   WALL_JUMP_LAG: 0.25
+  Player: {fileID: 3026333166035380656}
   Player_BoxCollider: {fileID: 2580276687157029556}
   Player_RigidBody: {fileID: 3026333166035380684}
   debugText: {fileID: 0}
