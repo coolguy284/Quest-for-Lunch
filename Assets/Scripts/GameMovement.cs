@@ -27,8 +27,9 @@ public class GameMovement : MonoBehaviour {
     public float WALL_DROPOFF_LAG = 0.5f;
     public float WALL_JUMP_LAG = 0.25f;
 
-    public BoxCollider2D Player_BoxCollider;
-    public Rigidbody2D Player_RigidBody;
+    public GameObject Player;
+    BoxCollider2D Player_BoxCollider;
+    Rigidbody2D Player_RigidBody;
     public TextMeshProUGUI debugText;
 
     int jumps = 0; // number of jumps available
@@ -40,15 +41,26 @@ public class GameMovement : MonoBehaviour {
     bool inWallClingLag = false;
     float wallClingTimer = 0.0f;
 
-    bool jumpButton = false; // whether jump button is being held down
+    int layerCollisionMask;
     bool isGrounded = false;
     bool isWalledLeft = false;
     bool isWalledRight = false;
     bool isWalled = false;
     bool isHoldingWall = false;
+    bool jumpButton = false; // whether jump button is being held down
+
+    int getLayerCollisionMask() {
+        int collisionMask = 0;
+        for (int i = 0; i < 32; i++) {
+            if (!Physics.GetIgnoreLayerCollision(Player.layer, i)) {
+                collisionMask |= 1 << i;
+            }
+        }
+        return collisionMask;
+    }
 
     bool isOnGround() {
-        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y - Player_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Player_BoxCollider.bounds.size.x);
+        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y - Player_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Player_BoxCollider.bounds.size.x, layerCollisionMask);
         var isGrounded = groundRaycast.collider != null;
         return isGrounded;
     }
@@ -98,13 +110,22 @@ public class GameMovement : MonoBehaviour {
     void StartFastDrop() {
         isFastDropping = true;
         Player_RigidBody.velocity = new Vector2(0.0f, Player_RigidBody.velocity.y);
+        Player.layer = LayerMask.NameToLayer("Ignore Platform");
+        layerCollisionMask = getLayerCollisionMask();
+        Debug.Log(Player.layer + " " + layerCollisionMask);
     }
     
     void StopFastDrop() {
         isFastDropping = false;
+        Player.layer = LayerMask.NameToLayer("Default");
+        layerCollisionMask = getLayerCollisionMask();
+        Debug.Log(Player.layer + " " + layerCollisionMask);
     }
 
     void Start() {
+        Player_BoxCollider = Player.GetComponent<BoxCollider2D>();
+        Player_RigidBody = Player.GetComponent<Rigidbody2D>();
+        layerCollisionMask = getLayerCollisionMask();
         jumps = JUMPS_FROM_GND;
     }
 
@@ -165,12 +186,19 @@ public class GameMovement : MonoBehaviour {
             // jumping
             if (Input.GetButtonDown("Jump")) {
                 if (isGrounded) {
-                    Jump();
-                    jumpButton = true;
+                    if (movementVertical < 0.0f) {
+                        // drop through platform
+                        Player_RigidBody.position = new Vector2(Player_RigidBody.position.x, Player_RigidBody.position.y - 0.2f);
+                    } else {
+                        Jump();
+                        jumpButton = true;
+                    }
                 } else {
                     if (movementVertical < 0.0f) {
+                        // fastdrop
                         StartFastDrop();
                     } else if (jumps > 0) {
+                        // air jump
                         AirJump();
                         jumps--;
                     }
