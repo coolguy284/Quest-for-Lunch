@@ -40,9 +40,12 @@ public class GameMovement : MonoBehaviour {
     float wallClingLagTime = 0.0f; // amount of time that inputs will be ignored due to lag
     bool inWallClingLag = false;
     float wallClingTimer = 0.0f;
+    bool ignorePlatform = false;
 
     int layerCollisionMask;
     bool isGrounded = false;
+    bool isPlatform = false;
+    bool isInPlatform = false;
     bool isWalledLeft = false;
     bool isWalledRight = false;
     bool isWalled = false;
@@ -61,8 +64,17 @@ public class GameMovement : MonoBehaviour {
 
     bool isOnGround() {
         var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y - Player_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Player_BoxCollider.bounds.size.x, layerCollisionMask);
-        var isGrounded = groundRaycast.collider != null;
-        return isGrounded;
+        return groundRaycast.collider != null;
+    }
+
+    bool isOnPlatform() {
+        var platformRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y - Player_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Player_BoxCollider.bounds.size.x, LayerMask.GetMask("Platform"));
+        return platformRaycast.collider != null;
+    }
+
+    bool isInsidePlatform() {
+        var platformRaycast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + Player_BoxCollider.bounds.extents.y + 0.02f), Vector2.down, Player_BoxCollider.bounds.size.y + 0.04f, LayerMask.GetMask("Platform"));
+        return platformRaycast.collider != null;
     }
 
     bool isOnWallLeft() {
@@ -107,19 +119,29 @@ public class GameMovement : MonoBehaviour {
         wallClingLagTime = lagTime;
     }
 
+    void StartIgnorePlatform() {
+        if (!ignorePlatform) {
+            ignorePlatform = true;
+            Player.layer = LayerMask.NameToLayer("Ignore Platform");
+            layerCollisionMask = getLayerCollisionMask();
+        }
+    }
+
+    void StopIgnorePlatform() {
+        if (ignorePlatform) {
+            ignorePlatform = false;
+            Player.layer = LayerMask.NameToLayer("Default");
+            layerCollisionMask = getLayerCollisionMask();
+        }
+    }
+
     void StartFastDrop() {
         isFastDropping = true;
         Player_RigidBody.velocity = new Vector2(0.0f, Player_RigidBody.velocity.y);
-        Player.layer = LayerMask.NameToLayer("Ignore Platform");
-        layerCollisionMask = getLayerCollisionMask();
-        Debug.Log(Player.layer + " " + layerCollisionMask);
     }
     
     void StopFastDrop() {
         isFastDropping = false;
-        Player.layer = LayerMask.NameToLayer("Default");
-        layerCollisionMask = getLayerCollisionMask();
-        Debug.Log(Player.layer + " " + layerCollisionMask);
     }
 
     void Start() {
@@ -132,6 +154,8 @@ public class GameMovement : MonoBehaviour {
     void Update() {
         // get onground, onwall, inwallclinglag status
         isGrounded = isOnGround();
+        isPlatform = isOnPlatform();
+        isInPlatform = isInsidePlatform();
         isWalledLeft = isOnWallLeft();
         isWalledRight = isOnWallRight();
         isWalled = isWalledLeft || isWalledRight;
@@ -150,17 +174,9 @@ public class GameMovement : MonoBehaviour {
         if (!isWallCling && !isFastDropping) {
             // normal state
 
-            // establish wall cling
-            if (!inWallClingLag) {
-                if (isHoldingWall && !isGrounded) {
-                    if (Player_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
-                        // simple cling
-                        StartWallCling(false);
-                    } else {
-                        // climb up
-                        StartWallCling(true);
-                    }
-                }
+            // stop ignoring platforms after falling through one enough
+            if (ignorePlatform && !isInPlatform) {
+                StopIgnorePlatform();
             }
 
             // horizontal movement
@@ -183,12 +199,27 @@ public class GameMovement : MonoBehaviour {
                 }
             }
 
+            // establish wall cling
+            if (!inWallClingLag) {
+                if (isHoldingWall && !isGrounded) {
+                    if (Player_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
+                        // simple cling
+                        StartWallCling(false);
+                    } else {
+                        // climb up
+                        StartWallCling(true);
+                    }
+                }
+            }
+
             // jumping
             if (Input.GetButtonDown("Jump")) {
                 if (isGrounded) {
                     if (movementVertical < 0.0f) {
                         // drop through platform
-                        Player_RigidBody.position = new Vector2(Player_RigidBody.position.x, Player_RigidBody.position.y - 0.2f);
+                        if (isPlatform) {
+                            StartIgnorePlatform();
+                        }
                     } else {
                         Jump();
                         jumpButton = true;
@@ -262,7 +293,7 @@ public class GameMovement : MonoBehaviour {
             Player_RigidBody.AddForce(new Vector2(0, -FASTDROP_FORCE), ForceMode2D.Impulse);
 
             // disable fast drop if grounded
-            if (isGrounded) {
+            if (isGrounded || isPlatform) {
                 StopFastDrop();
             }
         }
