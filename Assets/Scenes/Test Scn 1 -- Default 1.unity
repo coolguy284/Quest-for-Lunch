@@ -158,8 +158,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 293.5, y: 186.5}
-  m_SizeDelta: {x: 190.0413, y: 47.2466}
+  m_AnchoredPosition: {x: 331.8, y: 180.5}
+  m_SizeDelta: {x: 129.7682, y: 84.3748}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &497220503
 MonoBehaviour:
@@ -181,7 +181,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: 'IsGrounded: False
+
+    IsHoldingWall: False
+
+    IsWallCling: False
+
+    Jumps:
+    0
+
+    WallClingLag: 0
+
+    ignorePlatform: False'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -208,8 +219,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -416,7 +427,7 @@ PlatformEffector2D:
   m_RotationalOffset: 0
   m_UseOneWay: 1
   m_UseOneWayGrouping: 0
-  m_SurfaceArc: 180
+  m_SurfaceArc: 90
   m_UseSideFriction: 0
   m_UseSideBounce: 0
   m_SideArc: 1
@@ -933,7 +944,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 57edb4d92d3fa474dbacc4e2b6a6467c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4762,6 +4773,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2094814157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4969306531121174993, guid: 3ec0d5d6605cff3478d347e6c951edae, type: 3}
+  m_PrefabInstance: {fileID: 4969306531423112744}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2094814162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094814157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d55b846a3a5734d8c507d673890a12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2786692707314069451
 PrefabInstance:
   m_ObjectHideFlags: 0

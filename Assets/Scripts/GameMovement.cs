@@ -23,9 +23,11 @@ public class GameMovement : MonoBehaviour {
     public float WALL_SLIDE_TIMER = 3.0f;
     public float WALL_DROP_TIMER = 4.0f;
     public float WALL_DROP_SPEED = 1.0f;
+    public float PLATFORM_PULLUP_SPEED = 2.0f;
     
     public float WALL_DROPOFF_LAG = 0.5f;
     public float WALL_JUMP_LAG = 0.25f;
+    public float PLATFORM_FALL_LAG = 0.5f;
 
     public GameObject Player;
     BoxCollider2D Player_BoxCollider;
@@ -41,10 +43,13 @@ public class GameMovement : MonoBehaviour {
     bool inWallClingLag = false;
     float wallClingTimer = 0.0f;
     bool ignorePlatform = false;
+    bool queuedPlatPullVelReset = false;
 
     int layerCollisionMask;
     bool isGrounded = false;
+    bool isTrueGrounded = false;
     bool isPlatform = false;
+    bool isLooseInPlatform = false;
     bool isInPlatform = false;
     bool isWalledLeft = false;
     bool isWalledRight = false;
@@ -67,23 +72,35 @@ public class GameMovement : MonoBehaviour {
         return groundRaycast.collider != null;
     }
 
+    bool isOnTrueGround() {
+        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y - Player_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Player_BoxCollider.bounds.size.x, LayerMask.GetMask("Default"));
+        return groundRaycast.collider != null;
+    }
+
     bool isOnPlatform() {
         var platformRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y - Player_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Player_BoxCollider.bounds.size.x, LayerMask.GetMask("Platform"));
         return platformRaycast.collider != null;
     }
 
+    bool isLooseInsidePlatform() {
+        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y + Player_BoxCollider.bounds.extents.y + 0.02f), Vector2.down, Player_BoxCollider.bounds.size.y + 0.04f, LayerMask.GetMask("Platform"));
+        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + Player_BoxCollider.bounds.extents.x, transform.position.y + Player_BoxCollider.bounds.extents.y + 0.02f), Vector2.down, Player_BoxCollider.bounds.size.y + 0.04f, LayerMask.GetMask("Platform"));
+        return platformRaycastL.collider != null || platformRaycastR.collider != null;
+    }
+
     bool isInsidePlatform() {
-        var platformRaycast = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + Player_BoxCollider.bounds.extents.y + 0.02f), Vector2.down, Player_BoxCollider.bounds.size.y + 0.04f, LayerMask.GetMask("Platform"));
-        return platformRaycast.collider != null;
+        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x, transform.position.y + Player_BoxCollider.bounds.extents.y), Vector2.down, Player_BoxCollider.bounds.size.y, LayerMask.GetMask("Platform"));
+        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + Player_BoxCollider.bounds.extents.x, transform.position.y + Player_BoxCollider.bounds.extents.y), Vector2.down, Player_BoxCollider.bounds.size.y, LayerMask.GetMask("Platform"));
+        return platformRaycastL.collider != null || platformRaycastR.collider != null;
     }
 
     bool isOnWallLeft() {
-        var leftWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x - 0.02f, transform.position.y - Player_BoxCollider.bounds.extents.y), Vector2.up, Player_BoxCollider.bounds.size.y);
+        var leftWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Player_BoxCollider.bounds.extents.x - 0.02f, transform.position.y - Player_BoxCollider.bounds.extents.y), Vector2.up, Player_BoxCollider.bounds.size.y, LayerMask.GetMask("Default"));
         return leftWallRaycast.collider != null;
     }
 
     bool isOnWallRight() {
-        var rightWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x + Player_BoxCollider.bounds.extents.x + 0.02f, transform.position.y - Player_BoxCollider.bounds.extents.y), Vector2.up, Player_BoxCollider.bounds.size.y);
+        var rightWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x + Player_BoxCollider.bounds.extents.x + 0.02f, transform.position.y - Player_BoxCollider.bounds.extents.y), Vector2.up, Player_BoxCollider.bounds.size.y, LayerMask.GetMask("Default"));
         return rightWallRaycast.collider != null;
     }
 
@@ -154,7 +171,9 @@ public class GameMovement : MonoBehaviour {
     void Update() {
         // get onground, onwall, inwallclinglag status
         isGrounded = isOnGround();
+        isTrueGrounded = isOnTrueGround();
         isPlatform = isOnPlatform();
+        isLooseInPlatform = isLooseInsidePlatform();
         isInPlatform = isInsidePlatform();
         isWalledLeft = isOnWallLeft();
         isWalledRight = isOnWallRight();
@@ -174,16 +193,27 @@ public class GameMovement : MonoBehaviour {
         if (!isWallCling && !isFastDropping) {
             // normal state
 
+            // pull up through platform
+            if (isInPlatform && !inWallClingLag && !ignorePlatform) {
+                Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
+                queuedPlatPullVelReset = true;
+            } else if (queuedPlatPullVelReset) {
+                Player_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+                queuedPlatPullVelReset = false;
+            }
+
             // stop ignoring platforms after falling through one enough
-            if (ignorePlatform && !isInPlatform) {
+            if (ignorePlatform && !isLooseInPlatform) {
                 StopIgnorePlatform();
             }
 
             // horizontal movement
-            if (Player_RigidBody.velocity.x * movementHorizontal > 0) {
-                Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Player_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Impulse);
-            } else {
-                Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Impulse);
+            if (!isInPlatform) {
+                if (Player_RigidBody.velocity.x * movementHorizontal > 0) {
+                    Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Player_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Impulse);
+                } else {
+                    Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Impulse);
+                }
             }
 
             // refreshes jump counter if jump counter not locked, and locks jump counter
@@ -201,7 +231,7 @@ public class GameMovement : MonoBehaviour {
 
             // establish wall cling
             if (!inWallClingLag) {
-                if (isHoldingWall && !isGrounded) {
+                if (isHoldingWall && !isGrounded && !isInPlatform) {
                     if (Player_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
                         // simple cling
                         StartWallCling(false);
@@ -217,8 +247,9 @@ public class GameMovement : MonoBehaviour {
                 if (isGrounded) {
                     if (movementVertical < 0.0f) {
                         // drop through platform
-                        if (isPlatform) {
+                        if (isPlatform && !isTrueGrounded) {
                             StartIgnorePlatform();
+                            wallClingLagTime = PLATFORM_FALL_LAG;
                         }
                     } else {
                         Jump();
@@ -305,7 +336,7 @@ public class GameMovement : MonoBehaviour {
         }
 
         // debug jumping text
-        debugText.text = string.Format("Debug:\nIsGrounded: {0}\nIsHoldingWall: {1}\nJumps: {2}\nWallClingLag: {3}\nisWallCling: {4}", isGrounded, isHoldingWall, jumps, wallClingLagTime, isWallCling);
+        debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4}\nignorePlatform: {5}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform);
 
         // press esc to return to title
         if (Input.GetButtonDown("Cancel")) {
