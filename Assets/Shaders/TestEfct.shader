@@ -7,7 +7,8 @@ Shader "Custom/TestEfct"
     SubShader
     {
         // No culling or depth
-        Cull Off ZWrite Off ZTest Always
+        Cull Off ZWrite Off
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
@@ -42,9 +43,9 @@ Shader "Custom/TestEfct"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                float multfact = pow(sin(((i.uv[0] % 0.2) - (i.uv[1] % 0.2)) * 6.28 * 5.5), 4);
-                float multfact2 = pow(sin(((i.uv[0] % 0.2) + (i.uv[1] % 0.2)) * 6.28 * 5.5), 4);
-                col.rgb = col.rgb * (1 + ((multfact + multfact2) * 0.3));
+                //float multfact = pow(sin(((i.vertex.x - i.vertex.y)) * 6.28 * 5.5), 4);
+                //float multfact2 = pow(sin(((i.vertex.x + i.vertex.y)) * 6.28 * 5.5), 4);
+                //col.rgb = col.rgb * (1 + ((multfact + multfact2) * 0.3));
                 return col;
             }
             ENDCG

@@ -104,7 +104,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ground Pallete_1
+      name: Rock
       rect:
         serializedVersion: 2
         x: 14
@@ -125,7 +125,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_0
+      name: Grass
       rect:
         serializedVersion: 2
         x: 1
@@ -146,7 +146,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_3
+      name: Dirt TL
       rect:
         serializedVersion: 2
         x: 1
@@ -167,7 +167,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_4
+      name: Dirt T
       rect:
         serializedVersion: 2
         x: 14
@@ -188,7 +188,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_5
+      name: Dirt TR
       rect:
         serializedVersion: 2
         x: 27
@@ -209,7 +209,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_6
+      name: Dirt TLR
       rect:
         serializedVersion: 2
         x: 40
@@ -230,7 +230,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_7
+      name: Dirt TBL
       rect:
         serializedVersion: 2
         x: 53
@@ -251,7 +251,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_8
+      name: Dirt L
       rect:
         serializedVersion: 2
         x: 1
@@ -272,7 +272,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_9
+      name: Dirt N
       rect:
         serializedVersion: 2
         x: 14
@@ -293,7 +293,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_10
+      name: Dirt R
       rect:
         serializedVersion: 2
         x: 27
@@ -314,7 +314,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_11
+      name: Dirt TBR
       rect:
         serializedVersion: 2
         x: 40
@@ -335,7 +335,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_12
+      name: Dirt BLR
       rect:
         serializedVersion: 2
         x: 53
@@ -356,7 +356,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_13
+      name: Dirt BL
       rect:
         serializedVersion: 2
         x: 1
@@ -377,7 +377,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_14
+      name: Dirt B
       rect:
         serializedVersion: 2
         x: 14
@@ -398,7 +398,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_15
+      name: Dirt BR
       rect:
         serializedVersion: 2
         x: 27
@@ -419,7 +419,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_16
+      name: Dirt TBLR
       rect:
         serializedVersion: 2
         x: 1
@@ -440,7 +440,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_17
+      name: Dirt LR
       rect:
         serializedVersion: 2
         x: 40
@@ -461,7 +461,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ground Pallete_18
+      name: Dirt TB
       rect:
         serializedVersion: 2
         x: 53
@@ -481,6 +481,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Spikes
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 53
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -6, y: -6}
+        - {x: -6, y: -3}
+        - {x: 6, y: -3}
+        - {x: 6, y: -6}
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8ec193f1c1ad5d4d8ce5619121503cc
+      internalID: 1643874557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -492,26 +517,26 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Ground Pallete_10: 797118086
-      Ground Pallete_11: 1441986533
-      Ground Pallete_8: 693015111
-      Ground Pallete_12: 2032243121
-      Ground Pallete_13: -1283970013
-      Ground Pallete_0: 1598150345
-      Ground Pallete_4: 152862967
-      Ground Pallete_16: 1084260171
+      Spikes: 1643874557
+      Dirt TR: 1602777466
+      Dirt R: 797118086
+      Dirt TBR: 1441986533
+      Dirt TBLR: 1084260171
+      Dirt BR: 133011360
       Ground Pallete_20: 988762656
-      Ground Pallete_3: -1368632038
-      Ground Pallete_7: 1486418988
-      Ground Pallete_14: -1428036160
-      Ground Pallete_15: 133011360
-      Ground Pallete_17: 989810126
-      Ground Pallete_6: -552493475
-      Ground Pallete_2: 1643874557
-      Ground Pallete_18: 412854842
-      Ground Pallete_1: -1478565928
-      Ground Pallete_9: 1044926230
-      Ground Pallete_5: 1602777466
+      Grass: 1598150345
+      Dirt T: 152862967
+      Dirt BLR: 2032243121
+      Dirt TLR: -552493475
+      Dirt TB: 412854842
+      Rock: -1478565928
+      Dirt BL: -1283970013
+      Dirt L: 693015111
+      Dirt TBL: 1486418988
+      Dirt TL: -1368632038
+      Dirt N: 1044926230
+      Dirt LR: 989810126
+      Dirt B: -1428036160
       Ground Pallete_19: 2123084011
   spritePackingTag: 
   pSDRemoveMatte: 0
