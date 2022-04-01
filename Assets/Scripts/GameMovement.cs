@@ -179,10 +179,11 @@ public class GameMovement : MonoBehaviour {
         isWalledRight = isOnWallRight();
         isWalled = isWalledLeft || isWalledRight;
         inWallClingLag = wallClingLagTime > 0.0f;
+        bool isAlive = GetComponent<HealthAndAttack>().alive;
 
         // get movement
-        var movementHorizontal = Input.GetAxisRaw("Horizontal");
-        var movementVertical = Input.GetAxisRaw("Vertical");
+        var movementHorizontal = isAlive ? Input.GetAxisRaw("Horizontal") : 0.0f;
+        var movementVertical = isAlive ? Input.GetAxisRaw("Vertical") : 0.0f;
 
         isHoldingWall = movementHorizontal > 0 && isWalledRight || movementHorizontal < 0 && isWalledLeft;
 
@@ -190,142 +191,144 @@ public class GameMovement : MonoBehaviour {
         if (!isGrounded && lockGround) lockGround = false;
         if (!isWalled && lockWall) lockWall = false;
 
-        if (!isWallCling && !isFastDropping) {
-            // normal state
+        if (isAlive) {
+            if (!isWallCling && !isFastDropping) {
+                // normal state
 
-            // pull up through platform
-            if (isInPlatform && !inWallClingLag && !ignorePlatform) {
-                Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
-                queuedPlatPullVelReset = true;
-            } else if (queuedPlatPullVelReset) {
-                Player_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-                queuedPlatPullVelReset = false;
-            }
-
-            // stop ignoring platforms after falling through one enough
-            if (ignorePlatform && !isLooseInPlatform) {
-                StopIgnorePlatform();
-            }
-
-            // horizontal movement
-            if (!isInPlatform || inWallClingLag) {
-                if (Player_RigidBody.velocity.x * movementHorizontal > 0) {
-                    Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Player_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Impulse);
-                } else {
-                    Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Impulse);
+                // pull up through platform
+                if (isInPlatform && !inWallClingLag && !ignorePlatform) {
+                    Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
+                    queuedPlatPullVelReset = true;
+                } else if (queuedPlatPullVelReset) {
+                    Player_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+                    queuedPlatPullVelReset = false;
                 }
-            }
 
-            // refreshes jump counter if jump counter not locked, and locks jump counter
-            if (isGrounded) {
-                if (jumps < JUMPS_FROM_GND && !lockGround) {
-                    jumps = JUMPS_FROM_GND;
-                    lockGround = true;
+                // stop ignoring platforms after falling through one enough
+                if (ignorePlatform && !isLooseInPlatform) {
+                    StopIgnorePlatform();
                 }
-            } else if (isHoldingWall && !lockWall) {
-                if (jumps < JUMPS_FROM_WALL) {
-                    jumps = JUMPS_FROM_WALL;
-                    lockWall = true;
-                }
-            }
 
-            // establish wall cling
-            if (!inWallClingLag) {
-                if (isHoldingWall && !isGrounded && !isInPlatform) {
-                    if (Player_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
-                        // simple cling
-                        StartWallCling(false);
+                // horizontal movement
+                if (!isInPlatform || inWallClingLag) {
+                    if (Player_RigidBody.velocity.x * movementHorizontal > 0) {
+                        Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Player_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Impulse);
                     } else {
-                        // climb up
-                        StartWallCling(true);
+                        Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Impulse);
                     }
                 }
-            }
 
-            // jumping
-            if (Input.GetButtonDown("Jump")) {
+                // refreshes jump counter if jump counter not locked, and locks jump counter
                 if (isGrounded) {
-                    if (movementVertical < 0.0f) {
-                        // drop through platform
-                        if (isPlatform && !isTrueGrounded) {
-                            StartIgnorePlatform();
-                            wallClingLagTime = PLATFORM_FALL_LAG;
+                    if (jumps < JUMPS_FROM_GND && !lockGround) {
+                        jumps = JUMPS_FROM_GND;
+                        lockGround = true;
+                    }
+                } else if (isHoldingWall && !lockWall) {
+                    if (jumps < JUMPS_FROM_WALL) {
+                        jumps = JUMPS_FROM_WALL;
+                        lockWall = true;
+                    }
+                }
+
+                // establish wall cling
+                if (!inWallClingLag) {
+                    if (isHoldingWall && !isGrounded && !isInPlatform) {
+                        if (Player_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
+                            // simple cling
+                            StartWallCling(false);
+                        } else {
+                            // climb up
+                            StartWallCling(true);
+                        }
+                    }
+                }
+
+                // jumping
+                if (Input.GetButtonDown("Jump")) {
+                    if (isGrounded) {
+                        if (movementVertical < 0.0f) {
+                            // drop through platform
+                            if (isPlatform && !isTrueGrounded) {
+                                StartIgnorePlatform();
+                                wallClingLagTime = PLATFORM_FALL_LAG;
+                            }
+                        } else {
+                            Jump();
+                            jumpButton = true;
                         }
                     } else {
-                        Jump();
-                        jumpButton = true;
+                        if (movementVertical < 0.0f) {
+                            // fastdrop
+                            StartFastDrop();
+                        } else if (jumps > 0) {
+                            // air jump
+                            AirJump();
+                            jumps--;
+                        }
                     }
-                } else {
-                    if (movementVertical < 0.0f) {
-                        // fastdrop
-                        StartFastDrop();
-                    } else if (jumps > 0) {
-                        // air jump
-                        AirJump();
-                        jumps--;
+                    if (isGrounded) lockGround = true;
+                    if (isHoldingWall) lockWall = true;
+                }
+
+                // while jump button is pressed, jumping is true, when jumping is true gravity is reduced
+                if (jumpButton) {
+                    Player_RigidBody.AddForce(new Vector2(0.0f, Player_RigidBody.mass * (1.0f - LONGJUMP_GRAV_MULT) * 1.5f * 0.04f), ForceMode2D.Impulse);
+                    if (Player_RigidBody.velocity.y < 0) {
+                        jumpButton = false;
                     }
                 }
-                if (isGrounded) lockGround = true;
-                if (isHoldingWall) lockWall = true;
-            }
 
-            // while jump button is pressed, jumping is true, when jumping is true gravity is reduced
-            if (jumpButton) {
-                Player_RigidBody.AddForce(new Vector2(0.0f, Player_RigidBody.mass * (1.0f - LONGJUMP_GRAV_MULT) * 1.5f * 0.04f), ForceMode2D.Impulse);
-                if (Player_RigidBody.velocity.y < 0) {
+                // make jumping false once jump button is released
+                if (Input.GetButtonUp("Jump") && jumpButton) {
                     jumpButton = false;
                 }
-            }
+            } else if (isWallCling) {
+                // wall cling
 
-            // make jumping false once jump button is released
-            if (Input.GetButtonUp("Jump") && jumpButton) {
-                jumpButton = false;
-            }
-        } else if (isWallCling) {
-            // wall cling
-
-            if (wallClingTimer < WALL_SLIDE_TIMER) {
-                Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, 0.3f));
-            } else if (wallClingTimer < WALL_DROP_TIMER) {
-                Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, -WALL_DROP_SPEED));
-            } else {
-                StopWallCling(WALL_DROPOFF_LAG);
-            }
-            
-            // jump off wall actions
-            if (Input.GetButtonDown("Jump")) {
-                if (movementVertical < 0.0f) {
-                    // fast drop
-                    StopWallCling(0.0f);
-                    StartFastDrop();
-                } else if (movementHorizontal < 0.0f && isWalledRight || movementHorizontal > 0.0f && isWalledLeft) {
-                    // jump away
-                    StopWallCling(WALL_JUMP_LAG);
-                    WallJump(movementHorizontal < 0.0f, 2.0f);
-                } else if (movementHorizontal > 0.0f && isWalledRight || movementHorizontal < 0.0f && isWalledLeft) {
-                    // jump towards
-                    StopWallCling(WALL_JUMP_LAG);
-                    WallJump(movementHorizontal > 0.0f, 1.0f);
+                if (wallClingTimer < WALL_SLIDE_TIMER) {
+                    Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, 0.3f));
+                } else if (wallClingTimer < WALL_DROP_TIMER) {
+                    Player_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Player_RigidBody.velocity.y, -WALL_DROP_SPEED));
                 } else {
-                    // jump neutral
-                    StopWallCling(WALL_JUMP_LAG);
-                    WallJump(isWalledRight, 1.0f);
+                    StopWallCling(WALL_DROPOFF_LAG);
                 }
-            }
+                
+                // jump off wall actions
+                if (Input.GetButtonDown("Jump")) {
+                    if (movementVertical < 0.0f) {
+                        // fast drop
+                        StopWallCling(0.0f);
+                        StartFastDrop();
+                    } else if (movementHorizontal < 0.0f && isWalledRight || movementHorizontal > 0.0f && isWalledLeft) {
+                        // jump away
+                        StopWallCling(WALL_JUMP_LAG);
+                        WallJump(movementHorizontal < 0.0f, 2.0f);
+                    } else if (movementHorizontal > 0.0f && isWalledRight || movementHorizontal < 0.0f && isWalledLeft) {
+                        // jump towards
+                        StopWallCling(WALL_JUMP_LAG);
+                        WallJump(movementHorizontal > 0.0f, 1.0f);
+                    } else {
+                        // jump neutral
+                        StopWallCling(WALL_JUMP_LAG);
+                        WallJump(isWalledRight, 1.0f);
+                    }
+                }
 
-            // disable wall cling if grounded
-            if ((isGrounded || !isWalled) && isWallCling) {
-                StopWallCling(0.0f);
-            }
+                // disable wall cling if grounded
+                if ((isGrounded || !isWalled) && isWallCling) {
+                    StopWallCling(0.0f);
+                }
 
-            wallClingTimer += Time.deltaTime;
-        } else if (isFastDropping) {
-            // fast dropping
-            Player_RigidBody.AddForce(new Vector2(0, -FASTDROP_FORCE), ForceMode2D.Impulse);
+                wallClingTimer += Time.deltaTime;
+            } else if (isFastDropping) {
+                // fast dropping
+                Player_RigidBody.AddForce(new Vector2(0, -FASTDROP_FORCE), ForceMode2D.Impulse);
 
-            // disable fast drop if grounded
-            if (isGrounded || isPlatform) {
-                StopFastDrop();
+                // disable fast drop if grounded
+                if (isGrounded || isPlatform) {
+                    StopFastDrop();
+                }
             }
         }
 
