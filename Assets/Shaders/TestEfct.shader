@@ -43,7 +43,8 @@ Shader "Custom/TestEfct"
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 float multfact = pow(sin(((i.uv[0] % 0.2) - (i.uv[1] % 0.2)) * 6.28 * 5.5), 4);
-                col.rgb = col.rgb * (1 + (multfact * 0.3));
+                float multfact2 = pow(sin(((i.uv[0] % 0.2) + (i.uv[1] % 0.2)) * 6.28 * 5.5), 4);
+                col.rgb = col.rgb * (1 + ((multfact + multfact2) * 0.3));
                 return col;
             }
             ENDCG

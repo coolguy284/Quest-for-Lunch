@@ -208,7 +208,7 @@ public class GameMovement : MonoBehaviour {
             }
 
             // horizontal movement
-            if (!isInPlatform) {
+            if (!isInPlatform || inWallClingLag) {
                 if (Player_RigidBody.velocity.x * movementHorizontal > 0) {
                     Player_RigidBody.AddForce(new Vector2(movementHorizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Player_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Impulse);
                 } else {
@@ -336,7 +336,7 @@ public class GameMovement : MonoBehaviour {
         }
 
         // debug jumping text
-        debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4}\nignorePlatform: {5}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform);
+        debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nignorePlatform: {5}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform);
 
         // press esc to return to title
         if (Input.GetButtonDown("Cancel")) {
