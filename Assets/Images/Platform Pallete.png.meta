@@ -104,7 +104,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Platform Pallete_0
+      name: Platform L
       rect:
         serializedVersion: 2
         x: 1
@@ -129,7 +129,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Platform Pallete_1
+      name: Platform M
       rect:
         serializedVersion: 2
         x: 14
@@ -154,7 +154,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Platform Pallete_2
+      name: Platform R
       rect:
         serializedVersion: 2
         x: 27
@@ -179,7 +179,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Platform Pallete_3
+      name: Platform LF
       rect:
         serializedVersion: 2
         x: 1
@@ -204,7 +204,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Platform Pallete_4
+      name: Platform RF
       rect:
         serializedVersion: 2
         x: 14
@@ -229,7 +229,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Platform Pallete_5
+      name: Platform N
       rect:
         serializedVersion: 2
         x: 27
@@ -264,12 +264,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Platform Pallete_4: -2089063362
-      Platform Pallete_2: -439362475
-      Platform Pallete_5: -82895024
-      Platform Pallete_0: -1869398434
-      Platform Pallete_3: 243352235
-      Platform Pallete_1: -393327261
+      Platform M: -393327261
+      Platform LF: 243352235
+      Platform R: -439362475
+      Platform RF: -2089063362
+      Platform N: -82895024
+      Platform L: -1869398434
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
