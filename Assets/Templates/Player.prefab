@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 1
-  Player: {fileID: 3026333166035380656}
+  Player: {fileID: 0}
 --- !u!114 &3026333166035380683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712ffef125cf1844ca1025f19da8397c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugText: {fileID: 0}
 --- !u!114 &4021388766387843322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,11 +178,6 @@ MonoBehaviour:
   health: 100
   maxHealth: 100
   alive: 1
-  GroundGridLayout: {fileID: 0}
-  GroundTileMap: {fileID: 0}
-  HealthBarImage: {fileID: 0}
-  DeadText: {fileID: 0}
-  DebugText2: {fileID: 0}
 --- !u!114 &6267435495100797197
 MonoBehaviour:
   m_ObjectHideFlags: 0

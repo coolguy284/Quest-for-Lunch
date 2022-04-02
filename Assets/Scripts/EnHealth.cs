@@ -8,11 +8,11 @@ using TMPro;
 public class EnHealth : MonoBehaviour {
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
-    public GridLayout GroundGridLayout;
-    public Tilemap GroundTileMap;
-    public Image HealthBarImage;
-    public TextMeshProUGUI DeadText;
-    public TextMeshProUGUI DebugText2;
+    GridLayout GroundGridLayout;
+    Tilemap GroundTileMap;
+    Image HealthBarImage;
+    TextMeshProUGUI DeadText;
+    TextMeshProUGUI DebugText2;
 
     public float health = 100.0f;
     public float maxHealth = 100.0f;
@@ -44,7 +44,11 @@ public class EnHealth : MonoBehaviour {
     void Start() {
         Self = this.gameObject;
         Self_BoxCollider = GetComponent<BoxCollider2D>();
-        isPlayer = GetComponent<EnMain>().isPlayer;
+        GroundGridLayout = GameObject.Find("Grid").GetComponent<GridLayout>();
+        GroundTileMap = GameObject.Find("Ground Tilemap").GetComponent<Tilemap>();
+        HealthBarImage = GameObject.Find("Health Bar").GetComponent<Image>();
+        DeadText = GameObject.Find("Dead Text").GetComponent<TextMeshProUGUI>();
+        DebugText2 = GameObject.Find("Debug Text 2").GetComponent<TextMeshProUGUI>();
     }
 
     void Update() {

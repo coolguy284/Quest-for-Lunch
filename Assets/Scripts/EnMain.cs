@@ -6,7 +6,12 @@ using UnityEngine.SceneManagement;
 public class EnMain : MonoBehaviour {
     public bool isPlayer = true;
 
+    [HideInInspector]
     public GameObject Player;
+
+    void Start() {
+        Player = GameObject.Find("Player");
+    }
 
     void Update() {
         // press esc to return to title

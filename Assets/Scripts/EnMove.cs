@@ -8,9 +8,9 @@ public class EnMove : MonoBehaviour {
     BoxCollider2D Self_BoxCollider;
     Rigidbody2D Self_RigidBody;
     GameObject Player;
-    public TextMeshProUGUI debugText;
+    TextMeshProUGUI debugText;
 
-    float MOVEMENT_FORCE = 0.3f;
+    float MOVEMENT_FORCE = 36.0f;
     float MOVEMENT_SPEED = 5.0f;
 
     float JUMP_FORCE = 7.5f;
@@ -21,7 +21,7 @@ public class EnMove : MonoBehaviour {
     int JUMPS_FROM_GND = 1;
     int JUMPS_FROM_WALL = 1;
 
-    float FASTDROP_FORCE = 0.5f;
+    float FASTDROP_FORCE = 30.0f;
 
     float WALL_CLIMB_THRESHOLD = -0.3f;
 
@@ -44,6 +44,7 @@ public class EnMove : MonoBehaviour {
     float wallClingTimer = 0.0f;
     bool ignorePlatform = false;
     bool queuedPlatPullVelReset = false;
+    float trueGravityScale = 0.0f;
 
     int layerCollisionMask;
     bool isPlayer = false;
@@ -204,6 +205,8 @@ public class EnMove : MonoBehaviour {
                 // take inputs from user
                 inputs.horizontal = Input.GetAxisRaw("Horizontal");
                 inputs.vertical = Input.GetAxisRaw("Vertical");
+                inputs.horizontal = Mathf.Abs(inputs.horizontal) < 0.35 ? 0 : Mathf.Sign(inputs.horizontal);
+                inputs.vertical = Mathf.Abs(inputs.vertical) < 0.35 ? 0 : Mathf.Sign(inputs.vertical);
                 inputs.jumpHeld = Input.GetButton("Jump");
             } else {
                 // calculate inputs of entity
@@ -234,12 +237,14 @@ public class EnMove : MonoBehaviour {
         Self = this.gameObject;
         Self_BoxCollider = GetComponent<BoxCollider2D>();
         Self_RigidBody = GetComponent<Rigidbody2D>();
-        Player = GetComponent<EnMain>().Player;
+        Player = GameObject.Find("Player");
+        debugText = GameObject.Find("Debug Text").GetComponent<TextMeshProUGUI>();
+        trueGravityScale = Self_RigidBody.gravityScale;
         layerCollisionMask = getLayerCollisionMask();
         jumps = JUMPS_FROM_GND;
     }
 
-    void Update() {
+    void LateUpdate() {
         // update state variables
         isPlayer = GetComponent<EnMain>().isPlayer;
         alive = GetComponent<EnHealth>().alive;
@@ -266,6 +271,11 @@ public class EnMove : MonoBehaviour {
             if (!isWallCling && !isFastDropping) {
                 // normal state
 
+                // hover very slightly above ground in order to not get stuck on 0m ledges between ground and platform
+                if (Mathf.Abs(Self_RigidBody.velocity.x) > 1e-6f) {
+                    Self_RigidBody.velocity += new Vector2(0.0f, 0.0001f);
+                }
+
                 // pull up through platform
                 if (isInPlatform && !inWallClingLag && !ignorePlatform) {
                     Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
@@ -283,9 +293,9 @@ public class EnMove : MonoBehaviour {
                 // horizontal movement
                 if (!isInPlatform || inWallClingLag) {
                     if (Self_RigidBody.velocity.x * inputs.horizontal > 0) {
-                        Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Impulse);
+                        Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
                     } else {
-                        Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Impulse);
+                        Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Force);
                     }
                 }
 
@@ -344,10 +354,12 @@ public class EnMove : MonoBehaviour {
 
                 // while jump button is pressed, jumping is true, when jumping is true gravity is reduced
                 if (jumpButton) {
-                    Self_RigidBody.AddForce(new Vector2(0.0f, Self_RigidBody.mass * (1.0f - LONGJUMP_GRAV_MULT) * 1.5f * 0.04f), ForceMode2D.Impulse);
+                    Self_RigidBody.gravityScale = trueGravityScale * LONGJUMP_GRAV_MULT;
                     if (Self_RigidBody.velocity.y < 0) {
                         jumpButton = false;
                     }
+                } else if (Self_RigidBody.gravityScale != trueGravityScale) {
+                    Self_RigidBody.gravityScale = trueGravityScale;
                 }
 
                 // make jumping false once jump button is released
@@ -394,7 +406,7 @@ public class EnMove : MonoBehaviour {
                 wallClingTimer += Time.deltaTime;
             } else if (isFastDropping) {
                 // fast dropping
-                Self_RigidBody.AddForce(new Vector2(0, -FASTDROP_FORCE), ForceMode2D.Impulse);
+                Self_RigidBody.AddForce(new Vector2(0, -FASTDROP_FORCE), ForceMode2D.Force);
 
                 // disable fast drop if grounded
                 if (isGrounded || isPlatform) {
@@ -410,6 +422,6 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug jumping text
-        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nIgnorePlatform: {5}\nJump: {6}\nJumpRelease: {7}\nJumpHeld: {8}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform, inputs.jump, inputs.jumpRelease, inputs.jumpHeld);
+        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nIgnorePlatform: {5}\nHorz: {6}\nVert: {7}\nJump: {8}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
     }
 }
