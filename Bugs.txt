@@ -1,5 +1,4 @@
 fastdropping while falling through a platform makes fastdrop go through more platforms 
-slight gap between tiles
 no post processing shader in build
 can get stuck on walking from ground to platform
 error spam from cinemachine

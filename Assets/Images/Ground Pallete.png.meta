@@ -107,8 +107,8 @@ TextureImporter:
       name: Rock
       rect:
         serializedVersion: 2
-        x: 14
-        y: 53
+        x: 17
+        y: 62
         width: 12
         height: 12
       alignment: 0
@@ -128,8 +128,8 @@ TextureImporter:
       name: Grass
       rect:
         serializedVersion: 2
-        x: 1
-        y: 53
+        x: 2
+        y: 62
         width: 12
         height: 12
       alignment: 0
@@ -149,8 +149,8 @@ TextureImporter:
       name: Dirt TL
       rect:
         serializedVersion: 2
-        x: 1
-        y: 40
+        x: 2
+        y: 47
         width: 12
         height: 12
       alignment: 0
@@ -170,8 +170,8 @@ TextureImporter:
       name: Dirt T
       rect:
         serializedVersion: 2
-        x: 14
-        y: 40
+        x: 17
+        y: 47
         width: 12
         height: 12
       alignment: 0
@@ -191,8 +191,8 @@ TextureImporter:
       name: Dirt TR
       rect:
         serializedVersion: 2
-        x: 27
-        y: 40
+        x: 32
+        y: 47
         width: 12
         height: 12
       alignment: 0
@@ -212,8 +212,8 @@ TextureImporter:
       name: Dirt TLR
       rect:
         serializedVersion: 2
-        x: 40
-        y: 40
+        x: 47
+        y: 47
         width: 12
         height: 12
       alignment: 0
@@ -233,8 +233,8 @@ TextureImporter:
       name: Dirt TBL
       rect:
         serializedVersion: 2
-        x: 53
-        y: 40
+        x: 62
+        y: 47
         width: 12
         height: 12
       alignment: 0
@@ -254,8 +254,8 @@ TextureImporter:
       name: Dirt L
       rect:
         serializedVersion: 2
-        x: 1
-        y: 27
+        x: 2
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -275,8 +275,8 @@ TextureImporter:
       name: Dirt N
       rect:
         serializedVersion: 2
-        x: 14
-        y: 27
+        x: 17
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -296,8 +296,8 @@ TextureImporter:
       name: Dirt R
       rect:
         serializedVersion: 2
-        x: 27
-        y: 27
+        x: 32
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -317,8 +317,8 @@ TextureImporter:
       name: Dirt TBR
       rect:
         serializedVersion: 2
-        x: 40
-        y: 27
+        x: 47
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -338,8 +338,8 @@ TextureImporter:
       name: Dirt BLR
       rect:
         serializedVersion: 2
-        x: 53
-        y: 27
+        x: 62
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -359,8 +359,8 @@ TextureImporter:
       name: Dirt BL
       rect:
         serializedVersion: 2
-        x: 1
-        y: 14
+        x: 2
+        y: 17
         width: 12
         height: 12
       alignment: 0
@@ -380,8 +380,8 @@ TextureImporter:
       name: Dirt B
       rect:
         serializedVersion: 2
-        x: 14
-        y: 14
+        x: 17
+        y: 17
         width: 12
         height: 12
       alignment: 0
@@ -401,8 +401,8 @@ TextureImporter:
       name: Dirt BR
       rect:
         serializedVersion: 2
-        x: 27
-        y: 14
+        x: 32
+        y: 17
         width: 12
         height: 12
       alignment: 0
@@ -422,8 +422,8 @@ TextureImporter:
       name: Dirt TBLR
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
+        x: 2
+        y: 2
         width: 12
         height: 12
       alignment: 0
@@ -443,8 +443,8 @@ TextureImporter:
       name: Dirt LR
       rect:
         serializedVersion: 2
-        x: 40
-        y: 14
+        x: 47
+        y: 17
         width: 12
         height: 12
       alignment: 0
@@ -464,8 +464,8 @@ TextureImporter:
       name: Dirt TB
       rect:
         serializedVersion: 2
-        x: 53
-        y: 14
+        x: 62
+        y: 17
         width: 12
         height: 12
       alignment: 0
@@ -485,8 +485,8 @@ TextureImporter:
       name: Spikes
       rect:
         serializedVersion: 2
-        x: 27
-        y: 53
+        x: 32
+        y: 62
         width: 12
         height: 12
       alignment: 0

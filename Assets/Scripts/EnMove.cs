@@ -185,7 +185,7 @@ public class EnMove : MonoBehaviour {
     void StopIgnorePlatform() {
         if (ignorePlatform) {
             ignorePlatform = false;
-            Self.layer = LayerMask.NameToLayer("Default");
+            Self.layer = LayerMask.NameToLayer("Entity");
             layerCollisionMask = getLayerCollisionMask();
         }
     }
