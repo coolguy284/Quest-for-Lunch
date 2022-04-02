@@ -107,8 +107,8 @@ TextureImporter:
       name: Platform L
       rect:
         serializedVersion: 2
-        x: 1
-        y: 27
+        x: 2
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -132,8 +132,8 @@ TextureImporter:
       name: Platform M
       rect:
         serializedVersion: 2
-        x: 14
-        y: 27
+        x: 17
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -157,8 +157,8 @@ TextureImporter:
       name: Platform R
       rect:
         serializedVersion: 2
-        x: 27
-        y: 27
+        x: 32
+        y: 32
         width: 12
         height: 12
       alignment: 0
@@ -182,8 +182,8 @@ TextureImporter:
       name: Platform LF
       rect:
         serializedVersion: 2
-        x: 1
-        y: 14
+        x: 2
+        y: 17
         width: 12
         height: 12
       alignment: 0
@@ -207,8 +207,8 @@ TextureImporter:
       name: Platform RF
       rect:
         serializedVersion: 2
-        x: 14
-        y: 14
+        x: 17
+        y: 17
         width: 12
         height: 12
       alignment: 0
@@ -232,8 +232,8 @@ TextureImporter:
       name: Platform N
       rect:
         serializedVersion: 2
-        x: 27
-        y: 14
+        x: 32
+        y: 17
         width: 12
         height: 12
       alignment: 0

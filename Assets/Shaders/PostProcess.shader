@@ -1,20 +1,17 @@
-Shader "Custom/PostProcess"
-{
-    Properties
-    {
+Shader "Custom/PostProcess" {
+    Properties {
         _MainTex ("Texture", 2D) = "white" {}
         _vignette ("Vignette", Range(0, 1)) = 0
         _psychedelic ("Psychedelic", Range(0, 1)) = 0
         _bowl ("Bowl", Range(0, 1)) = 0
-        _mandel ("Mandel", Range(0, 1)) = 0
     }
-    SubShader
-    {
+
+    SubShader {
         // No culling or depth
         Cull Off ZWrite Off ZTest Always
 
-        Pass
-        {CGPROGRAM
+        Pass {
+            CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
@@ -82,34 +79,6 @@ Shader "Custom/PostProcess"
                     col.r = lerp(col.r, 0, multfact2);
                     col.g = lerp(col.g, 0, multfact2);
                     col.b = lerp(col.b, 0, multfact2);
-                }
-
-                if (_mandel > 0.0) {
-                    float x = i.uv[0] * 4 - 2;
-                    float y = i.uv[1] * 4 - 2 + sin(i.uv[0] * 50 + _Time[1] * 50);
-
-                    if (x * x + y * y > sq((1 - _mandel)) * 8) {
-                        float zx = 0;
-                        float zy = 0;
-                        float zx2 = 0;
-                        float zy2 = 0;
-                        int iters = 0;
-                        while (iters < 100 && zx * zx + zy * zy < 4) {
-                            zx2 = zx * zx - zy * zy;
-                            zy2 = 2 * zx * zy;
-                            zx = zx2 + x;
-                            zy = zy2 + y;
-                            iters++;
-                        }
-
-                        if (zx * zx + zy * zy > 4) {
-                            col.r = 0;
-                            col.g = float(iters) / 20;
-                            col.b = 0;
-                        } else {
-                            col = 0;
-                        }
-                    }
                 }
 
                 return col;

@@ -44,7 +44,6 @@ public class EnHealth : MonoBehaviour {
         Self = this.gameObject;
         Self_BoxCollider = GetComponent<BoxCollider2D>();
         isPlayer = GetComponent<EnMain>().isPlayer;
-        if (isPlayer) DeadText.enabled = false;
     }
 
     void Update() {
