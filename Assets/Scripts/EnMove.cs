@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class EnMove : MonoBehaviour {
@@ -48,7 +47,7 @@ public class EnMove : MonoBehaviour {
 
     int layerCollisionMask;
     bool isPlayer = false;
-    bool isAlive = false;
+    bool alive = false;
     bool isGrounded = false;
     bool isTrueGrounded = false;
     bool isPlatform = false;
@@ -200,25 +199,31 @@ public class EnMove : MonoBehaviour {
     }
 
     void updateInput() {
-        if (isPlayer) {
-            // take inputs from user
-            inputs.horizontal = Input.GetAxisRaw("Horizontal");
-            inputs.vertical = Input.GetAxisRaw("Vertical");
-            inputs.jumpHeld = Input.GetButton("Jump");
-        } else {
-            // calculate inputs of entity
-            var relPlayerPos = Player.transform.position - Self.transform.position;
-            if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f) {
-                if (relPlayerPos.x > 1.0f) {
-                    inputs.horizontal = 1.0f;
-                } else if (relPlayerPos.x < -1.0f) {
-                    inputs.horizontal = -1.0f;
+        if (alive) {
+            if (isPlayer) {
+                // take inputs from user
+                inputs.horizontal = Input.GetAxisRaw("Horizontal");
+                inputs.vertical = Input.GetAxisRaw("Vertical");
+                inputs.jumpHeld = Input.GetButton("Jump");
+            } else {
+                // calculate inputs of entity
+                var relPlayerPos = Player.transform.position - Self.transform.position;
+                if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f) {
+                    if (relPlayerPos.x > 1.0f) {
+                        inputs.horizontal = 1.0f;
+                    } else if (relPlayerPos.x < -1.0f) {
+                        inputs.horizontal = -1.0f;
+                    } else {
+                        inputs.horizontal = 0.0f;
+                    }
                 } else {
                     inputs.horizontal = 0.0f;
                 }
-            } else {
-                inputs.horizontal = 0.0f;
+                inputs.vertical = 0.0f;
+                inputs.jumpHeld = false;
             }
+        } else {
+            inputs.horizontal = 0.0f;
             inputs.vertical = 0.0f;
             inputs.jumpHeld = false;
         }
@@ -237,7 +242,7 @@ public class EnMove : MonoBehaviour {
     void Update() {
         // update state variables
         isPlayer = GetComponent<EnMain>().isPlayer;
-        isAlive = GetComponent<EnHealth>().alive;
+        alive = GetComponent<EnHealth>().alive;
         isGrounded = isOnGround();
         isTrueGrounded = isOnTrueGround();
         isPlatform = isOnPlatform();
@@ -251,13 +256,13 @@ public class EnMove : MonoBehaviour {
         // get movement
         updateInput();
 
-        isHoldingWall = inputs.horizontal > 0 && isWalledRight || inputs.horizontal < 0 && isWalledLeft;
+        isHoldingWall = alive && inputs.horizontal > 0 && isWalledRight || inputs.horizontal < 0 && isWalledLeft;
 
         // unlock ground/wall jump counter reset
         if (!isGrounded && lockGround) lockGround = false;
         if (!isWalled && lockWall) lockWall = false;
 
-        if (isAlive) {
+        if (alive) {
             if (!isWallCling && !isFastDropping) {
                 // normal state
 
@@ -406,10 +411,5 @@ public class EnMove : MonoBehaviour {
 
         // debug jumping text
         if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nIgnorePlatform: {5}\nJump: {6}\nJumpRelease: {7}\nJumpHeld: {8}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform, inputs.jump, inputs.jumpRelease, inputs.jumpHeld);
-
-        // press esc to return to title
-        if (isPlayer && Input.GetButtonDown("Cancel")) {
-            SceneManager.LoadScene("Title");
-        }
     }
 }

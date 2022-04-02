@@ -17,7 +17,8 @@ public class EnHealth : MonoBehaviour {
     public float health = 100.0f;
     public float maxHealth = 100.0f;
     public bool alive = true;
-    public float invulnTime = 0.0f;
+    float invulnTime = 0.0f;
+    bool isInvuln = false;
 
     bool isPlayer = false;
 
@@ -49,19 +50,32 @@ public class EnHealth : MonoBehaviour {
     void Update() {
         // update state variables
         isPlayer = GetComponent<EnMain>().isPlayer;
+        isInvuln = invulnTime > 0.0f;
 
         // get tile at feet
         var celCoords = GroundGridLayout.WorldToCell(new Vector2(Self.transform.position.x, Self.transform.position.y - Self_BoxCollider.bounds.extents.y));
         var tile = GroundTileMap.GetTile(celCoords);
+        var tileAt = tile ? tile.name : "None";
         
-        // if tile is spikes do damage
-        if ((tile ? tile.name : "") == "Spikes") {
-            changeHealth(-110.0f * Time.deltaTime);
+        if (alive) {
+            // only do damage if vulnerable
+            if (!isInvuln) {
+                // if tile is spikes do damage
+                if (tileAt == "Spikes") {
+                    changeHealth(-48.0f);
+                    invulnTime = 1.0f;
+                }
+            }
+
+            // slow heal over time
+            changeHealth(10.0f * Time.deltaTime);
         }
 
-        // slow heal over time
-        changeHealth(10.0f * Time.deltaTime);
+        if (isInvuln) {
+            invulnTime -= Time.deltaTime;
+            if (invulnTime < 0.0f) invulnTime = 0.0f;
+        }
 
-        if (isPlayer) DebugText2.text = string.Format("TileCoord: {0}\nTileAt: {1}", celCoords, (tile ? tile.name : ""));
+        if (isPlayer) DebugText2.text = string.Format("TileCoord: {0}\nTileAt: {1}\nInvulnTime: {2:0.000}", celCoords, tileAt, invulnTime);
     }
 }
