@@ -22,7 +22,7 @@ public class EnHealth : MonoBehaviour {
 
     bool isPlayer = false;
 
-    void changeHealth(float amount) {
+    public void changeHealth(float amount) {
         if (!alive) return;
         health = Mathf.Min(Mathf.Max(health + amount, 0.0f), maxHealth);
         if (isPlayer) HealthBarImage.fillAmount = health / maxHealth;

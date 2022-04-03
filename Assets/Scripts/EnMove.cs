@@ -67,7 +67,9 @@ public class EnMove : MonoBehaviour {
         bool _jumpDone = false;
         bool _jumpReleaseDone = false;
         public bool jumpHeld = false;
-
+        public bool attack1 = false;
+        public bool attack2 = false;
+        
         public void Update() {
             if (jumpHeld) {
                 _jumpReleaseDone = false;
@@ -91,7 +93,7 @@ public class EnMove : MonoBehaviour {
         }
     }
     
-    Inputs inputs = new Inputs();
+    public Inputs inputs = new Inputs();
 
     bool jumpButton = false; // whether jump button is being held down
 
@@ -208,6 +210,8 @@ public class EnMove : MonoBehaviour {
                 inputs.horizontal = Mathf.Abs(inputs.horizontal) < 0.35 ? 0 : Mathf.Sign(inputs.horizontal);
                 inputs.vertical = Mathf.Abs(inputs.vertical) < 0.35 ? 0 : Mathf.Sign(inputs.vertical);
                 inputs.jumpHeld = Input.GetButton("Jump");
+                inputs.attack1 = Input.GetButtonDown("Fire1");
+                inputs.attack2 = Input.GetButtonDown("Fire2");
             } else {
                 // calculate inputs of entity
                 var relPlayerPos = Player.transform.position - Self.transform.position;
@@ -219,16 +223,21 @@ public class EnMove : MonoBehaviour {
                     } else {
                         inputs.horizontal = 0.0f;
                     }
+                    inputs.attack1 = true;
                 } else {
                     inputs.horizontal = 0.0f;
+                    inputs.attack1 = false;
                 }
                 inputs.vertical = 0.0f;
                 inputs.jumpHeld = false;
+                inputs.attack2 = false;
             }
         } else {
             inputs.horizontal = 0.0f;
             inputs.vertical = 0.0f;
             inputs.jumpHeld = false;
+            inputs.attack1 = false;
+            inputs.attack2 = false;
         }
         inputs.Update();
     }
