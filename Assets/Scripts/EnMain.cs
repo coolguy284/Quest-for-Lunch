@@ -12,11 +12,4 @@ public class EnMain : MonoBehaviour {
     void Start() {
         Player = GameObject.Find("Player");
     }
-
-    void Update() {
-        // press esc to return to title
-        if (isPlayer && Input.GetButtonDown("Cancel")) {
-            SceneManager.LoadScene("Title");
-        }
-    }
 }

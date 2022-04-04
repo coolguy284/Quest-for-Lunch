@@ -1,5 +1,4 @@
 list of how many ingredients collected (from dead mobs) as part of inventory
-level selection screen
 procedural placing of predefined structures
 finish weapons and picking weapons from inventory
 animations for stuff
