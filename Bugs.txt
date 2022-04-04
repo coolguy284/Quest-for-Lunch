@@ -4,3 +4,4 @@ can get stuck on walking from ground to platform (maybe fixed)
 fullscreen checkmark text invisible in build
 resolutions duplicated or more in build
 ui clipped when aspect ratio not 16:9
+attack goes through walls
