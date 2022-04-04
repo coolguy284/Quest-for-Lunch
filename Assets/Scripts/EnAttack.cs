@@ -24,6 +24,13 @@ public class EnAttack : MonoBehaviour {
             attackCooldown = ATTACK_COOLDOWN;
         }
 
+        if (GetComponent<EnMove>().isFastDropping) {
+            var attackRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y + Self_BoxCollider.bounds.extents.y - 0.1f), Vector2.left, 5.0f, LayerMask.GetMask("Entity"));
+            var attackRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y + Self_BoxCollider.bounds.extents.y - 0.1f), Vector2.right, 5.0f, LayerMask.GetMask("Entity"));
+            if (attackRaycastL.collider != null) attackRaycastL.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
+            if (attackRaycastR.collider != null) attackRaycastR.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
+        }
+
         if (attackCooldown > 0.0f) {
             attackCooldown -= Time.deltaTime;
             if (attackCooldown < 0.0f) attackCooldown = 0.0f;

@@ -1,4 +1,5 @@
-list of how many ingredients collected (from dead mobs) as part of inventory
 procedural placing of predefined structures
+currency (ingredients?), weapons, things on the weapons (stats), abilities
+list of how many ingredients collected (from dead mobs) as part of inventory
 finish weapons and picking weapons from inventory
 animations for stuff

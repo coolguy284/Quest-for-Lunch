@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 
 public class EnMove : MonoBehaviour {
+    #region Variables
+
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
     Rigidbody2D Self_RigidBody;
@@ -37,8 +39,10 @@ public class EnMove : MonoBehaviour {
     int jumps = 0; // number of jumps available
     bool lockGround = false; // if true ground cannot refresh jump counter
     bool lockWall = false; // if true wall cannot refresh jump counter
-    bool isWallCling = false;
-    bool isFastDropping = false;
+    [HideInInspector]
+    public bool isWallCling = false;
+    [HideInInspector]
+    public bool isFastDropping = false;
     float wallClingLagTime = 0.0f; // amount of time that inputs will be ignored due to lag
     bool inWallClingLag = false;
     float wallClingTimer = 0.0f;
@@ -58,6 +62,8 @@ public class EnMove : MonoBehaviour {
     bool isWalledRight = false;
     bool isWalled = false;
     bool isHoldingWall = false;
+    
+    bool jumpButtonDaemon = false; // whether jump button is being held down, but becomes false once falling
 
     public class Inputs {
         public float horizontal = 0.0f;
@@ -95,7 +101,9 @@ public class EnMove : MonoBehaviour {
     
     public Inputs inputs = new Inputs();
 
-    bool jumpButton = false; // whether jump button is being held down
+    #endregion
+
+    #region Getter Functions
 
     int getLayerCollisionMask() {
         int collisionMask = 0;
@@ -143,6 +151,10 @@ public class EnMove : MonoBehaviour {
         var rightWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y), Vector2.up, Self_BoxCollider.bounds.size.y, LayerMask.GetMask("Default"));
         return rightWallRaycast.collider != null;
     }
+
+    #endregion
+
+    #region Movement and State Change Functions
 
     void Jump() {
         Self_RigidBody.AddForce(new Vector2(0, JUMP_FORCE), ForceMode2D.Impulse);
@@ -201,6 +213,10 @@ public class EnMove : MonoBehaviour {
         isFastDropping = false;
     }
 
+    #endregion
+
+    #region State Update Functions
+
     void updateInput() {
         if (alive) {
             if (isPlayer) {
@@ -242,19 +258,7 @@ public class EnMove : MonoBehaviour {
         inputs.Update();
     }
 
-    void Start() {
-        Self = this.gameObject;
-        Self_BoxCollider = GetComponent<BoxCollider2D>();
-        Self_RigidBody = GetComponent<Rigidbody2D>();
-        Player = GameObject.Find("Player");
-        debugText = GameObject.Find("Debug Text").GetComponent<TextMeshProUGUI>();
-        trueGravityScale = Self_RigidBody.gravityScale;
-        layerCollisionMask = getLayerCollisionMask();
-        jumps = JUMPS_FROM_GND;
-    }
-
-    void LateUpdate() {
-        // update state variables
+    void updateState() {
         isPlayer = GetComponent<EnMain>().isPlayer;
         alive = GetComponent<EnHealth>().alive;
         isGrounded = isOnGround();
@@ -266,11 +270,26 @@ public class EnMove : MonoBehaviour {
         isWalledRight = isOnWallRight();
         isWalled = isWalledLeft || isWalledRight;
         inWallClingLag = wallClingLagTime > 0.0f;
+        isHoldingWall = alive && (inputs.horizontal > 0 && isWalledRight || inputs.horizontal < 0 && isWalledLeft);
+    }
 
-        // get movement
+    #endregion
+
+    void Start() {
+        Self = this.gameObject;
+        Self_BoxCollider = GetComponent<BoxCollider2D>();
+        Self_RigidBody = GetComponent<Rigidbody2D>();
+        Player = GameObject.Find("Player");
+        debugText = GameObject.Find("Debug Text").GetComponent<TextMeshProUGUI>();
+        trueGravityScale = Self_RigidBody.gravityScale;
+        layerCollisionMask = getLayerCollisionMask();
+        jumps = JUMPS_FROM_GND;
+    }
+
+    void Update() {
+        // update state and movement
         updateInput();
-
-        isHoldingWall = alive && inputs.horizontal > 0 && isWalledRight || inputs.horizontal < 0 && isWalledLeft;
+        updateState();
 
         // unlock ground/wall jump counter reset
         if (!isGrounded && lockGround) lockGround = false;
@@ -282,7 +301,7 @@ public class EnMove : MonoBehaviour {
 
                 // hover very slightly above ground in order to not get stuck on 0m ledges between ground and platform
                 if (Mathf.Abs(Self_RigidBody.velocity.x) > 1e-6f) {
-                    Self_RigidBody.velocity += new Vector2(0.0f, 0.0001f);
+                    Self_RigidBody.velocity += new Vector2(0.0f, 0.01f);
                 }
 
                 // pull up through platform
@@ -345,7 +364,7 @@ public class EnMove : MonoBehaviour {
                             }
                         } else {
                             Jump();
-                            jumpButton = true;
+                            jumpButtonDaemon = true;
                         }
                     } else {
                         if (inputs.vertical < 0.0f) {
@@ -362,18 +381,18 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // while jump button is pressed, jumping is true, when jumping is true gravity is reduced
-                if (jumpButton) {
+                if (jumpButtonDaemon) {
                     Self_RigidBody.gravityScale = trueGravityScale * LONGJUMP_GRAV_MULT;
                     if (Self_RigidBody.velocity.y < 0) {
-                        jumpButton = false;
+                        jumpButtonDaemon = false;
                     }
                 } else if (Self_RigidBody.gravityScale != trueGravityScale) {
                     Self_RigidBody.gravityScale = trueGravityScale;
                 }
 
                 // make jumping false once jump button is released
-                if (inputs.jumpRelease && jumpButton) {
-                    jumpButton = false;
+                if (inputs.jumpRelease && jumpButtonDaemon) {
+                    jumpButtonDaemon = false;
                 }
             } else if (isWallCling) {
                 // wall cling
