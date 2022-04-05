@@ -1,3 +1,4 @@
+use raycastall for hitlines
 procedural placing of predefined structures
 currency (ingredients?), weapons, things on the weapons (stats), abilities
 list of how many ingredients collected (from dead mobs) as part of inventory
