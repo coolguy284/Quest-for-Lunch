@@ -48,7 +48,7 @@ Shader "Custom/HardCut3" {
                 float3 normalTex = normalize(tex2D(_NormalTex, i.uv) * 2 - 1);
                 normalTex.z *= facing;
                 float3 N = normalize(i.tangent) * normalTex.r + normalize(i.bitangent) * normalTex.g + normalize(i.normal) * normalTex.b;
-                half3 toonLight = saturate(dot(N, _WorldSpaceLightPos0)) > 0.3 ? _LightColor0 : unity_AmbientSky;
+                half3 toonLight = saturate(dot(N, _WorldSpaceLightPos0)) > 0.3 ? _LightColor0 : 0.35/*unity_AmbientSky*/;
                 half3 diffuse = diffuseTex * toonLight;
                 return fixed4(diffuse, 0);
             }

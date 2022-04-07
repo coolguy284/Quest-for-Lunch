@@ -6,6 +6,9 @@ using UnityEngine.Tilemaps;
 using TMPro;
 
 public class EnHealth : MonoBehaviour {
+    float SPIKES_DAMAGE = 48.0f;
+    float SPIKES_INVULN = 0.1f;
+
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
     GridLayout GroundGridLayout;
@@ -66,13 +69,10 @@ public class EnHealth : MonoBehaviour {
             if (!isInvuln) {
                 // if tile is spikes do damage
                 if (tileAt == "Spikes") {
-                    changeHealth(-48.0f);
-                    invulnTime = 1.0f;
+                    changeHealth(-SPIKES_DAMAGE);
+                    invulnTime = SPIKES_INVULN;
                 }
             }
-
-            // slow heal over time
-            changeHealth(10.0f * Time.deltaTime);
         }
 
         if (isInvuln) {

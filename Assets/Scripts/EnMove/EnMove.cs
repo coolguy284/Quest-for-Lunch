@@ -64,6 +64,8 @@ public class EnMove : MonoBehaviour {
     bool isHoldingWall = false;
     
     bool jumpButtonDaemon = false; // whether jump button is being held down, but becomes false once falling
+    [HideInInspector]
+    public bool fastDropStoppedFrame  = false; // true only on the frame that fastdropping is stopped, used for fastdrop attack
 
     public class Inputs {
         public float horizontal = 0.0f;
@@ -211,6 +213,7 @@ public class EnMove : MonoBehaviour {
     
     void StopFastDrop() {
         isFastDropping = false;
+        fastDropStoppedFrame = true;
     }
 
     #endregion
@@ -275,6 +278,8 @@ public class EnMove : MonoBehaviour {
 
     #endregion
 
+    #region Main Functions
+
     void Start() {
         Self = this.gameObject;
         Self_BoxCollider = GetComponent<BoxCollider2D>();
@@ -291,6 +296,10 @@ public class EnMove : MonoBehaviour {
         updateInput();
         updateState();
 
+        if (fastDropStoppedFrame) {
+            fastDropStoppedFrame = false;
+        }
+
         // unlock ground/wall jump counter reset
         if (!isGrounded && lockGround) lockGround = false;
         if (!isWalled && lockWall) lockWall = false;
@@ -300,8 +309,8 @@ public class EnMove : MonoBehaviour {
                 // normal state
 
                 // hover very slightly above ground in order to not get stuck on 0m ledges between ground and platform
-                if (Mathf.Abs(Self_RigidBody.velocity.x) > 1e-6f) {
-                    Self_RigidBody.velocity += new Vector2(0.0f, 0.01f);
+                if (isGrounded && inputs.horizontal != 0.0f) {
+                    Self_RigidBody.velocity += new Vector2(0.0f, 0.1f);
                 }
 
                 // pull up through platform
@@ -341,7 +350,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // establish wall cling
-                if (!inWallClingLag) {
+                if (!inWallClingLag && !ignorePlatform) {
                     if (isHoldingWall && !isGrounded && !isInPlatform) {
                         if (Self_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
                             // simple cling
@@ -356,12 +365,10 @@ public class EnMove : MonoBehaviour {
                 // jumping
                 if (inputs.jump) {
                     if (isGrounded) {
-                        if (inputs.vertical < 0.0f) {
+                        if (inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
                             // drop through platform
-                            if (isPlatform && !isTrueGrounded) {
-                                StartIgnorePlatform();
-                                wallClingLagTime = PLATFORM_FALL_LAG;
-                            }
+                            StartIgnorePlatform();
+                            wallClingLagTime = PLATFORM_FALL_LAG;
                         } else {
                             Jump();
                             jumpButtonDaemon = true;
@@ -452,4 +459,6 @@ public class EnMove : MonoBehaviour {
         // debug jumping text
         if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nIgnorePlatform: {5}\nHorz: {6}\nVert: {7}\nJump: {8}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
     }
+
+    #endregion
 }
