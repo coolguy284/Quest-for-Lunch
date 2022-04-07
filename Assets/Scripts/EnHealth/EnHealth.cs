@@ -7,7 +7,7 @@ using TMPro;
 
 public class EnHealth : MonoBehaviour {
     float SPIKES_DAMAGE = 48.0f;
-    float SPIKES_INVULN = 0.1f;
+    float SPIKES_INVULN = 1.8f;
 
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
