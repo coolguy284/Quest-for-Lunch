@@ -27,6 +27,7 @@ public class EnAttack : MonoBehaviour {
     }
 
     void Update() {
+        if (Time.timeScale == 0.0f) return;
         isPlayer = GetComponent<EnMain>().isPlayer;
         if ((GetComponent<EnMove>().inputs.attack1) && attackCooldown == 0.0f) {
             var attackRaycastL = attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y), Vector2.left, BASIC_HITBOT_SIZE);

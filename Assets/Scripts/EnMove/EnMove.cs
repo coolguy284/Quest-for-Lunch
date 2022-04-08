@@ -67,6 +67,10 @@ public class EnMove : MonoBehaviour {
     [HideInInspector]
     public bool fastDropStoppedFrame  = false; // true only on the frame that fastdropping is stopped, used for fastdrop attack
 
+    #endregion
+
+    #region Input
+
     public class Inputs {
         public float horizontal = 0.0f;
         public float vertical = 0.0f;
@@ -292,6 +296,7 @@ public class EnMove : MonoBehaviour {
     }
 
     void Update() {
+        if (Time.timeScale == 0.0f) return;
         // update state and movement
         updateInput();
         updateState();
