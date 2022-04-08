@@ -8,6 +8,8 @@ using TMPro;
 public class EnHealth : MonoBehaviour {
     float SPIKES_DAMAGE = 48.0f;
     float SPIKES_INVULN = 1.8f;
+    [HideInInspector]
+    public float DODGE_INVULN = 0.5f;
 
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
@@ -20,13 +22,13 @@ public class EnHealth : MonoBehaviour {
     public float health = 100.0f;
     public float maxHealth = 100.0f;
     public bool alive = true;
-    float invulnTime = 0.0f;
-    bool isInvuln = false;
+    [HideInInspector]
+    public float invulnTime = 0.0f;
 
     bool isPlayer = false;
 
     public void changeHealth(float amount) {
-        if (!alive) return;
+        if (!alive || invulnTime > 0.0f && amount < 0.0f) return;
         health = Mathf.Min(Mathf.Max(health + amount, 0.0f), maxHealth);
         if (isPlayer) HealthBarImage.fillAmount = health / maxHealth;
         if (health == 0.0f) {
@@ -58,7 +60,6 @@ public class EnHealth : MonoBehaviour {
         if (Time.timeScale == 0.0f) return;
         // update state variables
         isPlayer = GetComponent<EnMain>().isPlayer;
-        isInvuln = invulnTime > 0.0f;
 
         // get tile at feet
         var celCoords = GroundGridLayout.WorldToCell(new Vector2(Self.transform.position.x, Self.transform.position.y - Self_BoxCollider.bounds.extents.y));
@@ -67,7 +68,7 @@ public class EnHealth : MonoBehaviour {
         
         if (alive) {
             // only do damage if vulnerable
-            if (!isInvuln) {
+            if (invulnTime == 0.0f) {
                 // if tile is spikes do damage
                 if (tileAt == "Spikes") {
                     changeHealth(-SPIKES_DAMAGE);
@@ -76,11 +77,13 @@ public class EnHealth : MonoBehaviour {
             }
         }
 
-        if (isInvuln) {
+        // reduce invuln time by time passed
+        if (invulnTime > 0.0f) {
             invulnTime -= Time.deltaTime;
             if (invulnTime < 0.0f) invulnTime = 0.0f;
         }
 
+        // debug text
         if (isPlayer) DebugText2.text = string.Format("TileCoord: {0}\nTileAt: {1}\nInvulnTime: {2:0.000}", celCoords, tileAt, invulnTime);
     }
 }
