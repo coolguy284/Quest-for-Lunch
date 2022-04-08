@@ -7,6 +7,7 @@ public class PauseButtons : MonoBehaviour {
     public GameObject PauseMenu;
     public GameObject PauseMainMenu;
     public GameObject OptionsMenu;
+    public GameObject TutorialMenu;
     [HideInInspector]
     public bool gamePaused = false;
 
@@ -36,6 +37,9 @@ public class PauseButtons : MonoBehaviour {
                 if (OptionsMenu.activeSelf) {
                     PauseMainMenu.SetActive(true);
                     OptionsMenu.SetActive(false);
+                } else if (TutorialMenu.activeSelf) {
+                    PauseMainMenu.SetActive(true);
+                    TutorialMenu.SetActive(false);
                 } else {
                     Resume();
                 }

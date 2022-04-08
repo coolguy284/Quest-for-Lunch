@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class TitleButtons : MonoBehaviour {
     public GameObject MainMenu;
     public GameObject OptionsMenu;
+    public GameObject TutorialMenu;
 
     public void StartGame() {
         SceneManager.LoadScene("Levels");
@@ -20,6 +21,9 @@ public class TitleButtons : MonoBehaviour {
             if (OptionsMenu.activeSelf) {
                 MainMenu.SetActive(true);
                 OptionsMenu.SetActive(false);
+            } else if (TutorialMenu.activeSelf) {
+                MainMenu.SetActive(true);
+                TutorialMenu.SetActive(false);
             }
         }
     }
