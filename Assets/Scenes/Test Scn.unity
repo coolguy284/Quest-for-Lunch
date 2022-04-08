@@ -697,7 +697,16 @@ MonoBehaviour:
 
     WallClingLag: 0.000
 
-    IgnorePlatform: False'
+    InputLag: 0.000
+
+    IgnorePlatform: False
+
+    Horz:
+    0
+
+    Vert: 0
+
+    Jump: False'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -807,7 +816,8 @@ MonoBehaviour:
   PlatformTilemap: {fileID: 761828870}
   EnemiesList: {fileID: 999674149}
   EnemyPrefab: {fileID: 493426261116116526, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
-  Room_1: {fileID: 4731671658363728333, guid: 3f41bffa5f3cdf34cae6bc96cb1fc1bd, type: 3}
+  Rooms:
+  - {fileID: 4731671658363728333, guid: 3f41bffa5f3cdf34cae6bc96cb1fc1bd, type: 3}
 --- !u!4 &548532679
 Transform:
   m_ObjectHideFlags: 0
@@ -8447,6 +8457,18 @@ CompositeCollider2D:
         Y: -175000041
       - X: 35000100
         Y: -175000000
+      - X: 104999900
+        Y: -175000000
+      - X: 104999900
+        Y: -175000041
+      - X: 104999959
+        Y: -175000100
+      - X: 110000041
+        Y: -175000100
+      - X: 110000100
+        Y: -175000041
+      - X: 110000100
+        Y: -175000000
       - X: 495000000
         Y: -175000000
       - X: 495000000
@@ -8682,6 +8704,18 @@ CompositeCollider2D:
       - X: 465000000
         Y: -130000000
       - X: 465000000
+        Y: -170000000
+      - X: 110000100
+        Y: -170000000
+      - X: 110000100
+        Y: -169999959
+      - X: 110000041
+        Y: -169999900
+      - X: 104999959
+        Y: -169999900
+      - X: 104999900
+        Y: -169999959
+      - X: 104999900
         Y: -170000000
       - X: 35000100
         Y: -170000000
@@ -10224,7 +10258,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 0.93358636, y: 1}
+    m_SensorSize: {x: 1.8330171, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

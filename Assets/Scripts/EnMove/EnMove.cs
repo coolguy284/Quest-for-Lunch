@@ -23,6 +23,7 @@ public class EnMove : MonoBehaviour {
     int JUMPS_FROM_GND = 1;
     int JUMPS_FROM_WALL = 1;
 
+    float DODGE_FORCE = 7.0f;
     float FASTDROP_FORCE = 30.0f;
 
     float WALL_CLIMB_THRESHOLD = -0.3f;
@@ -40,12 +41,15 @@ public class EnMove : MonoBehaviour {
     bool lockGround = false; // if true ground cannot refresh jump counter
     bool lockWall = false; // if true wall cannot refresh jump counter
     [HideInInspector]
+    public bool isNormalState = true;
+    [HideInInspector]
     public bool isWallCling = false;
     [HideInInspector]
     public bool isFastDropping = false;
-    float wallClingLagTime = 0.0f; // amount of time that inputs will be ignored due to lag
-    bool inWallClingLag = false;
+    float wallClingLagTime = 0.0f; // amount of time that the wall cannot be clinged to
     float wallClingTimer = 0.0f;
+    [HideInInspector]
+    public float inputLagTime = 0.0f; // amount of time that inputs will be ignored
     bool ignorePlatform = false;
     bool queuedPlatPullVelReset = false;
     float trueGravityScale = 0.0f;
@@ -81,6 +85,7 @@ public class EnMove : MonoBehaviour {
         public bool jumpHeld = false;
         public bool attack1 = false;
         public bool attack2 = false;
+        public bool dodge = false;
         
         public void Update() {
             if (jumpHeld) {
@@ -225,7 +230,7 @@ public class EnMove : MonoBehaviour {
     #region State Update Functions
 
     void updateInput() {
-        if (alive) {
+        if (alive && inputLagTime == 0.0f) {
             if (isPlayer) {
                 // take inputs from user
                 inputs.horizontal = Input.GetAxisRaw("Horizontal");
@@ -235,18 +240,21 @@ public class EnMove : MonoBehaviour {
                 inputs.jumpHeld = Input.GetButton("Jump");
                 inputs.attack1 = Input.GetButtonDown("Fire1");
                 inputs.attack2 = Input.GetButtonDown("Fire2");
+                inputs.dodge = Input.GetButtonDown("Fire3");
             } else {
                 // calculate inputs of entity
                 var relPlayerPos = Player.transform.position - Self.transform.position;
                 if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f) {
                     if (relPlayerPos.x > 1.0f) {
                         inputs.horizontal = 1.0f;
+                        inputs.attack1 = false;
                     } else if (relPlayerPos.x < -1.0f) {
                         inputs.horizontal = -1.0f;
+                        inputs.attack1 = false;
                     } else {
                         inputs.horizontal = 0.0f;
+                        inputs.attack1 = true;
                     }
-                    inputs.attack1 = true;
                 } else {
                     inputs.horizontal = 0.0f;
                     inputs.attack1 = false;
@@ -254,6 +262,7 @@ public class EnMove : MonoBehaviour {
                 inputs.vertical = 0.0f;
                 inputs.jumpHeld = false;
                 inputs.attack2 = false;
+                inputs.dodge = false;
             }
         } else {
             inputs.horizontal = 0.0f;
@@ -261,6 +270,7 @@ public class EnMove : MonoBehaviour {
             inputs.jumpHeld = false;
             inputs.attack1 = false;
             inputs.attack2 = false;
+            inputs.dodge = false;
         }
         inputs.Update();
     }
@@ -276,7 +286,6 @@ public class EnMove : MonoBehaviour {
         isWalledLeft = isOnWallLeft();
         isWalledRight = isOnWallRight();
         isWalled = isWalledLeft || isWalledRight;
-        inWallClingLag = wallClingLagTime > 0.0f;
         isHoldingWall = alive && (inputs.horizontal > 0 && isWalledRight || inputs.horizontal < 0 && isWalledLeft);
     }
 
@@ -309,8 +318,10 @@ public class EnMove : MonoBehaviour {
         if (!isGrounded && lockGround) lockGround = false;
         if (!isWalled && lockWall) lockWall = false;
 
+        isNormalState = !isWallCling && !isFastDropping;
+
         if (alive) {
-            if (!isWallCling && !isFastDropping) {
+            if (isNormalState) {
                 // normal state
 
                 // hover very slightly above ground in order to not get stuck on 0m ledges between ground and platform
@@ -319,7 +330,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // pull up through platform
-                if (isInPlatform && !inWallClingLag && !ignorePlatform) {
+                if (isInPlatform && wallClingLagTime == 0.0f && !ignorePlatform) {
                     Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
                     queuedPlatPullVelReset = true;
                 } else if (queuedPlatPullVelReset) {
@@ -333,7 +344,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // horizontal movement
-                if (!isInPlatform || inWallClingLag) {
+                if (!isInPlatform || wallClingLagTime > 0.0f) {
                     if (Self_RigidBody.velocity.x * inputs.horizontal > 0) {
                         Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
                     } else {
@@ -355,7 +366,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // establish wall cling
-                if (!inWallClingLag && !ignorePlatform) {
+                if (wallClingLagTime == 0.0f && !ignorePlatform) {
                     if (isHoldingWall && !isGrounded && !isInPlatform) {
                         if (Self_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
                             // simple cling
@@ -406,6 +417,13 @@ public class EnMove : MonoBehaviour {
                 if (inputs.jumpRelease && jumpButtonDaemon) {
                     jumpButtonDaemon = false;
                 }
+
+                // dodging
+                if (inputs.dodge && inputs.horizontal != 0.0f) {
+                    Self_RigidBody.AddForce(new Vector2(Mathf.Sign(inputs.horizontal) * DODGE_FORCE, 0.0f), ForceMode2D.Impulse);
+                    GetComponent<EnHealth>().invulnTime = GetComponent<EnHealth>().DODGE_INVULN;
+                    inputLagTime = GetComponent<EnHealth>().DODGE_INVULN;
+                }
             } else if (isWallCling) {
                 // wall cling
 
@@ -455,14 +473,19 @@ public class EnMove : MonoBehaviour {
             }
         }
 
-        // reduce lag by lag time
-        if (inWallClingLag) {
+        // reduce lag time by time passed
+        if (wallClingLagTime > 0.0f) {
             wallClingLagTime -= Time.deltaTime;
             if (wallClingLagTime < 0.0f) wallClingLagTime = 0.0f;
         }
 
-        // debug jumping text
-        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nIgnorePlatform: {5}\nHorz: {6}\nVert: {7}\nJump: {8}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
+        if (inputLagTime > 0.0f) {
+            inputLagTime -= Time.deltaTime;
+            if (inputLagTime < 0.0f) inputLagTime = 0.0f;
+        }
+
+        // debug text
+        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nInputLag: {5:0.000}\nIgnorePlatform: {6}\nHorz: {7}\nVert: {8}\nJump: {9}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, inputLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
     }
 
     #endregion

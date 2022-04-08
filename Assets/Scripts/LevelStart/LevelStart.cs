@@ -8,13 +8,13 @@ public class LevelStart : MonoBehaviour {
     public Tilemap PlatformTilemap;
     public GameObject EnemiesList;
     public GameObject EnemyPrefab;
-    public GameObject Room_1;
+    public GameObject[] Rooms;
 
     IEnumerator PlaceRoom(int roomId, int locX, int locY) {
         float locXPos = locX / 2f;
         float locYPos = locY / 2f;
-        var RoomGroundTilemap = Room_1.transform.Find("Grid/Ground Tilemap").gameObject.GetComponent<Tilemap>();
-        var RoomPlatformTilemap = Room_1.transform.Find("Grid/Platform Tilemap").gameObject.GetComponent<Tilemap>();
+        var RoomGroundTilemap = Rooms[roomId].transform.Find("Grid/Ground Tilemap").gameObject.GetComponent<Tilemap>();
+        var RoomPlatformTilemap = Rooms[roomId].transform.Find("Grid/Platform Tilemap").gameObject.GetComponent<Tilemap>();
         RoomGroundTilemap.CompressBounds();
         RoomPlatformTilemap.CompressBounds();
         var minX = System.Math.Min(RoomGroundTilemap.cellBounds.xMin, RoomPlatformTilemap.cellBounds.xMin);
@@ -31,7 +31,7 @@ public class LevelStart : MonoBehaviour {
         }
         // the tilemap collider does not update immediately so need to wait a frame before placing enemies
         yield return null;
-        var RoomEnemies = Room_1.transform.Find("Enemies").gameObject.transform;
+        var RoomEnemies = Rooms[roomId].transform.Find("Enemies").gameObject.transform;
         for (int i = 0; i < RoomEnemies.childCount; i++) {
             var enemy = RoomEnemies.GetChild(i).gameObject;
             var instantiatedEnemy = Instantiate(EnemyPrefab, new Vector3(locXPos, locYPos, 0.0f) + enemy.transform.position, Quaternion.identity);
@@ -41,6 +41,6 @@ public class LevelStart : MonoBehaviour {
     }
 
     void Start() {
-        StartCoroutine(PlaceRoom(1, -7, -35));
+        StartCoroutine(PlaceRoom(0, -7, -35));
     }
 }
