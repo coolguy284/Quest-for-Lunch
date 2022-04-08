@@ -55,6 +55,7 @@ public class EnHealth : MonoBehaviour {
     }
 
     void Update() {
+        if (Time.timeScale == 0.0f) return;
         // update state variables
         isPlayer = GetComponent<EnMain>().isPlayer;
         isInvuln = invulnTime > 0.0f;

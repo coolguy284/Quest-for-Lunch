@@ -10,13 +10,23 @@ public class OptionsMenu : MonoBehaviour {
     public TMP_Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
 
+    Resolution[] resolutionsList;
+    bool ignoreSetting = true;
+
     public void SetResolution(int resolutionIndex) {
-        Resolution resolution = Screen.resolutions[resolutionIndex];
+        if (ignoreSetting) return;
+        Resolution resolution = resolutionsList[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 
     public void SetFullscreen(bool fullScreen) {
+        if (ignoreSetting) return;
         Screen.fullScreen = fullScreen;
+        if (Screen.fullScreen) {
+            ignoreSetting = true;
+            updateResolutions();
+            ignoreSetting = false;
+        }
     }
 
     public void SetQuality(int qualityIndex) {
@@ -35,20 +45,45 @@ public class OptionsMenu : MonoBehaviour {
         audioMixer.SetFloat("SFX", volume);
     }
 
-    void Start() {
+    void updateResolutions() {
         resolutionDropdown.ClearOptions();
+        List<Resolution> newResolutionsList = new List<Resolution>();
         List<string> resolutionOptions = new List<string>();
         int currentResolutionIndex = 0;
+        Resolution workingResolution;
+        int screenWidth, screenHeight, screenResolution;
+        int oldScreenWidth = 0, oldScreenHeight = 0, maxScreenResolution = 0;
         for (int i = 0; i < Screen.resolutions.Length; i++) {
-            resolutionOptions.Add(Screen.resolutions[i].width + " x " + Screen.resolutions[i].height);
-            if (Screen.resolutions[i].width == Screen.currentResolution.width &&
-                Screen.resolutions[i].height == Screen.currentResolution.height) {
+            workingResolution = Screen.resolutions[i];
+            screenWidth = workingResolution.width;
+            screenHeight = workingResolution.height;
+            screenResolution = workingResolution.refreshRate;
+            if (screenWidth == oldScreenWidth && screenHeight == oldScreenHeight) {
+                if (screenResolution > maxScreenResolution) {
+                    newResolutionsList[newResolutionsList.Count - 1] = workingResolution;
+                }
+            } else {
+                newResolutionsList.Add(workingResolution);
+                resolutionOptions.Add(screenWidth + " x " + screenHeight);
+                maxScreenResolution = 0;
+            }
+            oldScreenWidth = screenWidth;
+            oldScreenHeight = screenHeight;
+            if (screenWidth == Screen.currentResolution.width &&
+                screenHeight == Screen.currentResolution.height) {
                 currentResolutionIndex = i;
             }
         }
+        resolutionsList = newResolutionsList.ToArray();
         resolutionDropdown.AddOptions(resolutionOptions);
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
+    }
+
+    void Start() {
+        ignoreSetting = true;
+        updateResolutions();
         fullscreenToggle.isOn = Screen.fullScreen;
+        ignoreSetting = false;
     }
 }
