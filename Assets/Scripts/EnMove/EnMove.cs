@@ -23,7 +23,7 @@ public class EnMove : MonoBehaviour {
     int JUMPS_FROM_GND = 1;
     int JUMPS_FROM_WALL = 1;
 
-    float DODGE_FORCE = 7.0f;
+    float DODGE_SPEED = 10.0f;
     float FASTDROP_FORCE = 30.0f;
 
     float WALL_CLIMB_THRESHOLD = -0.3f;
@@ -36,6 +36,7 @@ public class EnMove : MonoBehaviour {
     float WALL_DROPOFF_LAG = 0.5f;
     float WALL_JUMP_LAG = 0.25f;
     float PLATFORM_FALL_LAG = 0.5f;
+    float DODGE_LAG = 0.5f;
 
     int jumps = 0; // number of jumps available
     bool lockGround = false; // if true ground cannot refresh jump counter
@@ -46,6 +47,8 @@ public class EnMove : MonoBehaviour {
     public bool isWallCling = false;
     [HideInInspector]
     public bool isFastDropping = false;
+    float dodgeLagTime = 0.0f;
+
     float wallClingLagTime = 0.0f; // amount of time that the wall cannot be clinged to
     float wallClingTimer = 0.0f;
     [HideInInspector]
@@ -53,7 +56,8 @@ public class EnMove : MonoBehaviour {
     bool ignorePlatform = false;
     bool queuedPlatPullVelReset = false;
     float trueGravityScale = 0.0f;
-    bool facingRight = true;
+    [HideInInspector]
+    public bool facingRight = true;
 
     int layerCollisionMask;
     bool isPlayer = false;
@@ -331,6 +335,16 @@ public class EnMove : MonoBehaviour {
         isNormalState = !isWallCling && !isFastDropping;
 
         if (alive) {
+            // cancel dodge invulnerability for any input
+            if ((inputs.jump || inputs.attackMelee || inputs.attackRanged || inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
+                GetComponent<EnHealth>().dodgeInvulnTime = 0.0f;
+            }
+
+            // add dodge lag when invulnerability disappears
+            if (GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && GetComponent<EnHealth>().pastDodgeInvulnTime > 0.0f) {
+                dodgeLagTime = DODGE_LAG;
+            }
+
             if (isNormalState) {
                 // normal state
 
@@ -354,7 +368,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // horizontal movement
-                if (!isInPlatform || wallClingLagTime > 0.0f) {
+                if ((!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f) {
                     if (Self_RigidBody.velocity.x * inputs.horizontal > 0) {
                         Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
                     } else {
@@ -429,10 +443,10 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // dodging
-                if (inputs.dodge) {
-                    Self_RigidBody.AddForce(new Vector2(facingRight ? DODGE_FORCE : -DODGE_FORCE, 0.0f), ForceMode2D.Impulse);
-                    GetComponent<EnHealth>().invulnTime = GetComponent<EnHealth>().DODGE_INVULN;
-                    inputLagTime = GetComponent<EnHealth>().DODGE_INVULN;
+                if (inputs.dodge && dodgeLagTime == 0.0f) {
+                    Self_RigidBody.velocity = new Vector2(facingRight ? DODGE_SPEED : -DODGE_SPEED, Self_RigidBody.velocity.y);
+                    GetComponent<EnHealth>().dodgeInvulnTime = GetComponent<EnHealth>().DODGE_INVULN;
+                    dodgeLagTime = DODGE_LAG;
                 }
             } else if (isWallCling) {
                 // wall cling
@@ -484,18 +498,23 @@ public class EnMove : MonoBehaviour {
         }
 
         // reduce lag time by time passed
-        if (wallClingLagTime > 0.0f) {
-            wallClingLagTime -= Time.deltaTime;
-            if (wallClingLagTime < 0.0f) wallClingLagTime = 0.0f;
-        }
-
         if (inputLagTime > 0.0f) {
             inputLagTime -= Time.deltaTime;
             if (inputLagTime < 0.0f) inputLagTime = 0.0f;
         }
 
+        if (wallClingLagTime > 0.0f) {
+            wallClingLagTime -= Time.deltaTime;
+            if (wallClingLagTime < 0.0f) wallClingLagTime = 0.0f;
+        }
+
+        if (dodgeLagTime > 0.0f) {
+            dodgeLagTime -= Time.deltaTime;
+            if (dodgeLagTime < 0.0f) dodgeLagTime = 0.0f;
+        }
+
         // debug text
-        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nWallClingLag: {4:0.000}\nInputLag: {5:0.000}\nIgnorePlatform: {6}\nHorz: {7}\nVert: {8}\nJump: {9}", isGrounded, isHoldingWall, isWallCling, jumps, wallClingLagTime, inputLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
+        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nInputLag: {4:0.000}\nWallClingLag: {5:0.000}\nDodgeLag: {6:0.000}\nIgnorePlatform: {7}\nHorz: {8}\nVert: {9}\nJump: {10}", isGrounded, isHoldingWall, isWallCling, jumps, inputLagTime, wallClingLagTime, dodgeLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
     }
 
     #endregion
