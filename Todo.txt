@@ -1,5 +1,4 @@
-keep track of facing direction
-dodge stationary follows facing direction
+prevent enemies from wallcling
 when wall cling strength runs out, make it so you can't re-grab wall at all until you either touch grass or jump
 if isholdingwall movement towards wall disabled
 any input cancels dodge
