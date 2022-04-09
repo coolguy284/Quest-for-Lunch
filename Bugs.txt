@@ -1,3 +1,6 @@
+if quality low, movement speed crazy and jumps all over the place, jumps, everything basically 5.0x speed
+jumping in air while holding direction triggers dodge
+double jump gone when regular jump if game lags enough
 fastdropping while falling through a platform makes fastdrop go through more platforms 
 can get stuck on walking from ground to platform (fix attempted but not working)
 fullscreen checkmark text invisible in build

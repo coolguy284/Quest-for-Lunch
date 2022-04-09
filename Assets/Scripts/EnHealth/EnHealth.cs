@@ -16,7 +16,7 @@ public class EnHealth : MonoBehaviour {
     GridLayout GroundGridLayout;
     Tilemap GroundTileMap;
     Image HealthBarImage;
-    TextMeshProUGUI DeadText;
+    GameObject DeadText;
     TextMeshProUGUI DebugText2;
 
     public float health = 100.0f;
@@ -34,14 +34,14 @@ public class EnHealth : MonoBehaviour {
         if (health == 0.0f) {
             alive = false;
             if (isPlayer) {
-                DeadText.enabled = true;
+                DeadText.SetActive(true);
             } else {
                 Destroy(Self);
             }
         } else if (!alive) {
             alive = true;
             if (isPlayer) {
-                DeadText.enabled = false;
+                DeadText.SetActive(false);
             }
         }
     }
@@ -52,7 +52,7 @@ public class EnHealth : MonoBehaviour {
         GroundGridLayout = GameObject.Find("Grid").GetComponent<GridLayout>();
         GroundTileMap = GameObject.Find("Ground Tilemap").GetComponent<Tilemap>();
         HealthBarImage = GameObject.Find("Health Bar").GetComponent<Image>();
-        DeadText = GameObject.Find("Dead Text").GetComponent<TextMeshProUGUI>();
+        DeadText = GameObject.Find("HUD").transform.Find("Dead Text").gameObject;
         DebugText2 = GameObject.Find("Debug Text 2").GetComponent<TextMeshProUGUI>();
     }
 

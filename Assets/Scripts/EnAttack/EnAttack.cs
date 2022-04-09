@@ -10,12 +10,22 @@ public class EnAttack : MonoBehaviour {
     float BASIC_HITBOT_SIZE = 1.0f;
     float FASTDROP_HITBOT_SIZE = 0.6f;
     float FASTDROP_LAG = 0.5f;
+    //float TELEPORT_ATTACK_MAX = 10.0f;
 
     float attackCooldown = 0.0f;
+    //float teleportAttack = 0.0f;
+    //int attackCombo = 0;
 
-    RaycastHit2D[] attackRaycast(Vector2 origin, Vector2 direction, float distance) {
+    void attackRaycast(Vector2 origin, Vector2 direction, float distance) {
         Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f), isPlayer ? Color.red : Color.yellow, 0.1f, false);
-        return Physics2D.RaycastAll(origin, direction, distance, LayerMask.GetMask("Entity"));
+        var attackRaycast = Physics2D.RaycastAll(origin, direction, distance, LayerMask.GetMask("Entity"));
+        foreach (var raycast in attackRaycast) {
+            raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
+            if (isPlayer && !raycast.collider.GetComponent<EnHealth>().alive) {
+                GetComponent<EnMain>().susCoins += (int)raycast.collider.GetComponent<EnHealth>().maxHealth;
+                GetComponent<EnMain>().SusCoinsText.text = GetComponent<EnMain>().susCoins.ToString();
+            }
+        }
     }
 
     void Start() {
@@ -34,25 +44,13 @@ public class EnAttack : MonoBehaviour {
 
         if (GetComponent<EnMove>().fastDropStoppedFrame) {
             // fastdrop attack
-            var attackRaycastL = attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y * 0.5f), Vector2.left, FASTDROP_HITBOT_SIZE);
-            var attackRaycastR = attackRaycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y * 0.5f), Vector2.right, FASTDROP_HITBOT_SIZE);
-            foreach (var raycast in attackRaycastL) {
-                raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
-            }
-            foreach (var raycast in attackRaycastR) {
-                raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
-            }
+            attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y * 0.5f), Vector2.left, FASTDROP_HITBOT_SIZE);
+            attackRaycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y * 0.5f), Vector2.right, FASTDROP_HITBOT_SIZE);
             GetComponent<EnMove>().inputLagTime = FASTDROP_LAG;
-        } else if (GetComponent<EnMove>().inputs.attack1 && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
+        } else if (GetComponent<EnMove>().inputs.attackMelee && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
             // normal attack
-            var attackRaycastL = attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y), Vector2.left, BASIC_HITBOT_SIZE);
-            var attackRaycastR = attackRaycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y), Vector2.right, BASIC_HITBOT_SIZE);
-            foreach (var raycast in attackRaycastL) {
-                raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
-            }
-            foreach (var raycast in attackRaycastR) {
-                raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
-            }
+            attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y), Vector2.left, BASIC_HITBOT_SIZE);
+            attackRaycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y), Vector2.right, BASIC_HITBOT_SIZE);
             attackCooldown = ATTACK_COOLDOWN;
         }
 
