@@ -1,0 +1,14 @@
+/.vscode/ linguist-generated
+/Packages/ linguist-generated
+/ProjectSettings/ linguist-generated
+/UserSettings/ linguist-generated
+*.asmdef linguist-generated
+*.asset linguist-generated
+*.inputactions linguist-generated
+*.mat linguist-generated
+*.mtl linguist-generated
+*.meta linguist-generated
+*.obj linguist-generated
+*.prefab linguist-generated
+*.unity linguist-generated
+*.vsconfig linguist-generated

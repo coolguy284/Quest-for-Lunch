@@ -163,8 +163,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712ffef125cf1844ca1025f19da8397c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isNormalState: 1
   isWallCling: 0
   isFastDropping: 0
+  inputLagTime: 0
   fastDropStoppedFrame: 0
 --- !u!114 &296770118407215705
 MonoBehaviour:
@@ -178,9 +180,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18462bbac2417b242b090b9bbebbc34a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 50
-  maxHealth: 50
+  DODGE_INVULN: 0.5
+  health: 180
+  maxHealth: 180
   alive: 1
+  invulnTime: 0
 --- !u!114 &8622637211522995862
 MonoBehaviour:
   m_ObjectHideFlags: 0
