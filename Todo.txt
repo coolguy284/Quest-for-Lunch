@@ -1,5 +1,4 @@
 when wall cling strength runs out, make it so you can't re-grab wall at all until you either touch grass or jump
-if isholdingwall movement towards wall disabled
 add teleport attack
 using any weapon halts momentum
 knockback and hitboxes
