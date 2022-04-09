@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PostProcess : MonoBehaviour
-{
+[ExecuteInEditMode]
+public class PostProcess : MonoBehaviour {
     public Material material;
     public bool vignette = true;
     public bool psychedelic = false;

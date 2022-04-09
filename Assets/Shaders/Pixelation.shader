@@ -1,8 +1,10 @@
 Shader "Custom/Pixelation" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
-        _pixelsWidth ("_pixelsWidth", Float) = 0
-        _pixelsHeight ("_pixelsHeight", Float) = 0
+        _pixelWidthInv ("_pixelWidthInv", Float) = 0
+        _pixelHeightInv ("_pixelHeightInv", Float) = 0
+        _pixelXOffset ("_pixelXOffset", Float) = 0
+        _pixelYOffset ("_pixelYOffset", Float) = 0
     }
     SubShader {
         // No culling or depth
@@ -16,8 +18,10 @@ Shader "Custom/Pixelation" {
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;
-            float _pixelsWidth;
-            float _pixelsHeight;
+            float _pixelWidthInv;
+            float _pixelHeightInv;
+            float _pixelXOffset;
+            float _pixelYOffset;
 
             struct appdata {
                 float4 vertex : POSITION;
@@ -37,8 +41,10 @@ Shader "Custom/Pixelation" {
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                i.uv.x = floor(i.uv.x * _pixelsWidth) / _pixelsWidth;
-                i.uv.y = floor(i.uv.y * _pixelsHeight) / _pixelsHeight;
+                i.uv.x -= _pixelXOffset;
+                i.uv.y -= _pixelYOffset;
+                i.uv.x = floor((i.uv.x) * _pixelWidthInv) / _pixelWidthInv;
+                i.uv.y = floor((i.uv.y) * _pixelHeightInv) / _pixelHeightInv;
                 fixed4 col = tex2D(_MainTex, i.uv);
                 return col;
             }
