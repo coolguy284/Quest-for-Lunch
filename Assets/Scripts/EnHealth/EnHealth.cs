@@ -23,6 +23,12 @@ public class EnHealth : MonoBehaviour {
     public float maxHealth = 100.0f;
     public bool alive = true;
     [HideInInspector]
+    public float hitInvulnTime = 0.0f;
+    [HideInInspector]
+    public float dodgeInvulnTime = 0.0f;
+    [HideInInspector]
+    public float pastDodgeInvulnTime = 0.0f;
+    [HideInInspector]
     public float invulnTime = 0.0f;
 
     bool isPlayer = false;
@@ -60,6 +66,7 @@ public class EnHealth : MonoBehaviour {
         if (Time.timeScale == 0.0f) return;
         // update state variables
         isPlayer = GetComponent<EnMain>().isPlayer;
+        invulnTime = Mathf.Max(hitInvulnTime, dodgeInvulnTime);
 
         // get tile at feet
         var celCoords = GroundGridLayout.WorldToCell(new Vector2(Self.transform.position.x, Self.transform.position.y - Self_BoxCollider.bounds.extents.y));
@@ -72,18 +79,27 @@ public class EnHealth : MonoBehaviour {
                 // if tile is spikes do damage
                 if (tileAt == "Spikes") {
                     changeHealth(-SPIKES_DAMAGE);
-                    invulnTime = SPIKES_INVULN;
+                    hitInvulnTime = SPIKES_INVULN;
                 }
             }
         }
 
         // reduce invuln time by time passed
-        if (invulnTime > 0.0f) {
-            invulnTime -= Time.deltaTime;
-            if (invulnTime < 0.0f) invulnTime = 0.0f;
+        if (hitInvulnTime > 0.0f) {
+            hitInvulnTime -= Time.deltaTime;
+            if (hitInvulnTime < 0.0f) hitInvulnTime = 0.0f;
+        }
+
+        if (dodgeInvulnTime > 0.0f) {
+            dodgeInvulnTime -= Time.deltaTime;
+            if (dodgeInvulnTime < 0.0f) dodgeInvulnTime = 0.0f;
         }
 
         // debug text
-        if (isPlayer) DebugText2.text = string.Format("TileCoord: {0}\nTileAt: {1}\nInvulnTime: {2:0.000}", celCoords, tileAt, invulnTime);
+        if (isPlayer) DebugText2.text = string.Format("TileCoord: {0}\nTileAt: {1}\nHitInvulnTime: {2:0.000}\nDodgeInvulnTime: {3:0.000}", celCoords, tileAt, hitInvulnTime, dodgeInvulnTime);
+    }
+
+    void LateUpdate() {
+        pastDodgeInvulnTime = dodgeInvulnTime;
     }
 }
