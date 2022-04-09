@@ -53,6 +53,7 @@ public class EnMove : MonoBehaviour {
     bool ignorePlatform = false;
     bool queuedPlatPullVelReset = false;
     float trueGravityScale = 0.0f;
+    bool facingRight = true;
 
     int layerCollisionMask;
     bool isPlayer = false;
@@ -277,6 +278,11 @@ public class EnMove : MonoBehaviour {
             inputs.attackTele = false;
         }
         inputs.Update();
+        if (inputs.horizontal > 0.0f) {
+            facingRight = true;
+        } else if (inputs.horizontal < 0.0f) {
+            facingRight = false;
+        }
     }
 
     void updateState() {
@@ -423,8 +429,8 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // dodging
-                if (inputs.dodge && inputs.horizontal != 0.0f) {
-                    Self_RigidBody.AddForce(new Vector2(Mathf.Sign(inputs.horizontal) * DODGE_FORCE, 0.0f), ForceMode2D.Impulse);
+                if (inputs.dodge) {
+                    Self_RigidBody.AddForce(new Vector2(facingRight ? DODGE_FORCE : -DODGE_FORCE, 0.0f), ForceMode2D.Impulse);
                     GetComponent<EnHealth>().invulnTime = GetComponent<EnHealth>().DODGE_INVULN;
                     inputLagTime = GetComponent<EnHealth>().DODGE_INVULN;
                 }
