@@ -525,13 +525,15 @@ MonoBehaviour:
 
     Jump: Space
 
-    Dodge: Middle Click
-    or Left Shift
+    Dodge: Return
 
-    Weapon 1: Left Click or Left Ctrl
+    Weapon
+    1: Left Click or Left Ctrl
 
-    Weapon 2: Right Click
-    or Left Alt
+    Weapon 2: Right Click or Left Alt
+
+    Teleport
+    Attack: Middle Click or Left Shift
 
     Menu: Escape'
   m_isRightToLeft: 0

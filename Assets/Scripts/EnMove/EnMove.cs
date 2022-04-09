@@ -12,7 +12,7 @@ public class EnMove : MonoBehaviour {
     GameObject Player;
     TextMeshProUGUI debugText;
 
-    float MOVEMENT_FORCE = 36.0f;
+    float MOVEMENT_FORCE = 15.0f;
     float MOVEMENT_SPEED = 5.0f;
 
     float JUMP_FORCE = 7.5f;
@@ -83,9 +83,10 @@ public class EnMove : MonoBehaviour {
         bool _jumpDone = false;
         bool _jumpReleaseDone = false;
         public bool jumpHeld = false;
-        public bool attack1 = false;
-        public bool attack2 = false;
         public bool dodge = false;
+        public bool attackMelee = false;
+        public bool attackRanged = false;
+        public bool attackTele = false;
         
         public void Update() {
             if (jumpHeld) {
@@ -238,39 +239,42 @@ public class EnMove : MonoBehaviour {
                 inputs.horizontal = Mathf.Abs(inputs.horizontal) < 0.35 ? 0 : Mathf.Sign(inputs.horizontal);
                 inputs.vertical = Mathf.Abs(inputs.vertical) < 0.35 ? 0 : Mathf.Sign(inputs.vertical);
                 inputs.jumpHeld = Input.GetButton("Jump");
-                inputs.attack1 = Input.GetButtonDown("Fire1");
-                inputs.attack2 = Input.GetButtonDown("Fire2");
-                inputs.dodge = Input.GetButtonDown("Fire3");
+                inputs.dodge = Input.GetButtonDown("Submit");
+                inputs.attackMelee = Input.GetButtonDown("Fire1");
+                inputs.attackRanged = Input.GetButtonDown("Fire2");
+                inputs.attackTele = Input.GetButtonDown("Fire3");
             } else {
                 // calculate inputs of entity
                 var relPlayerPos = Player.transform.position - Self.transform.position;
                 if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f) {
                     if (relPlayerPos.x > 1.0f) {
                         inputs.horizontal = 1.0f;
-                        inputs.attack1 = false;
+                        inputs.attackMelee = false;
                     } else if (relPlayerPos.x < -1.0f) {
                         inputs.horizontal = -1.0f;
-                        inputs.attack1 = false;
+                        inputs.attackMelee = false;
                     } else {
                         inputs.horizontal = 0.0f;
-                        inputs.attack1 = true;
+                        inputs.attackMelee = true;
                     }
                 } else {
                     inputs.horizontal = 0.0f;
-                    inputs.attack1 = false;
+                    inputs.attackMelee = false;
                 }
                 inputs.vertical = 0.0f;
                 inputs.jumpHeld = false;
-                inputs.attack2 = false;
                 inputs.dodge = false;
+                inputs.attackRanged = false;
+                inputs.attackTele = false;
             }
         } else {
             inputs.horizontal = 0.0f;
             inputs.vertical = 0.0f;
             inputs.jumpHeld = false;
-            inputs.attack1 = false;
-            inputs.attack2 = false;
             inputs.dodge = false;
+            inputs.attackMelee = false;
+            inputs.attackRanged = false;
+            inputs.attackTele = false;
         }
         inputs.Update();
     }

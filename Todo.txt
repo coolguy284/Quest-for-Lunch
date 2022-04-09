@@ -1,6 +1,9 @@
-gitattribute linguist-generated, basically prevent github from counting certain files as source code
-make fire3 teleport weapon and make dodge key something else
-add sus coin on screen, 1.25x enemy health added upon enemy kill
+keep track of facing direction
+dodge stationary follows facing direction
+when wall cling strength runs out, make it so you can't re-grab wall at all until you either touch grass or jump
+if isholdingwall movement towards wall disabled
+any input cancels dodge
+add teleport attack
 using any weapon halts momentum
 knockback and hitboxes
 inventory system for picking up and dropping weapons for the 2 slots
