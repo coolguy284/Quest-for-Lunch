@@ -354,12 +354,14 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // pull up through platform
-                if (isInPlatform && wallClingLagTime == 0.0f && !ignorePlatform) {
-                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
-                    queuedPlatPullVelReset = true;
-                } else if (queuedPlatPullVelReset) {
-                    Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-                    queuedPlatPullVelReset = false;
+                if (isPlayer) {
+                    if (isInPlatform && wallClingLagTime == 0.0f && !ignorePlatform) {
+                        Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
+                        queuedPlatPullVelReset = true;
+                    } else if (queuedPlatPullVelReset) {
+                        Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+                        queuedPlatPullVelReset = false;
+                    }
                 }
 
                 // stop ignoring platforms after falling through one enough
@@ -390,15 +392,13 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // establish wall cling
-                if (wallClingLagTime == 0.0f && !ignorePlatform) {
-                    if (isHoldingWall && !isGrounded && !isInPlatform) {
-                        if (Self_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
-                            // simple cling
-                            StartWallCling(false);
-                        } else {
-                            // climb up
-                            StartWallCling(true);
-                        }
+                if (isPlayer && wallClingLagTime == 0.0f && !ignorePlatform && isHoldingWall && !isGrounded && !isInPlatform) {
+                    if (Self_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
+                        // simple cling
+                        StartWallCling(false);
+                    } else {
+                        // climb up
+                        StartWallCling(true);
                     }
                 }
 
