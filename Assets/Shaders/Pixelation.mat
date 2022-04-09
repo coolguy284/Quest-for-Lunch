@@ -74,8 +74,14 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _pixelsHeight: 105
-    - _pixelsWidth: 193
+    - _pixelHeight: 458.26086
+    - _pixelHeightInv: 64
+    - _pixelWidth: 840
+    - _pixelWidthInv: 117.3131
+    - _pixelXOffset: -0
+    - _pixelYOffset: -0
+    - _pixelsHeight: 105.4
+    - _pixelsWidth: 193.2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

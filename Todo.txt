@@ -3,3 +3,5 @@ currency (ingredients?), weapons, things on the weapons (stats), abilities
 list of how many ingredients collected (from dead mobs) as part of inventory
 finish weapons and picking weapons from inventory
 animations for stuff
+make rendering and 3d rendering pixel perfect
+potential upscaling to combat 3d texture jitteryness, can just upscale the entity cam to a render texture
