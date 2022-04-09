@@ -1,5 +1,4 @@
 gitattribute linguist-generated, basically prevent github from counting certain files as source code
-main character 200 health, enemies 190 health
 make fire3 teleport weapon and make dodge key something else
 add sus coin on screen, 1.25x enemy health added upon enemy kill
 using any weapon halts momentum
@@ -7,7 +6,7 @@ knockback and hitboxes
 inventory system for picking up and dropping weapons for the 2 slots
 sword is melee, fork is ranged (for now)
 projectiles, arrow count of 5
-sword does 50 damage, arrow does 13 damage, enemies do 35 damage
+sword does 60 damage, arrow does 13 damage, enemies do 35 damage
 arrows come back quickest-longest, ground, wall, enemy, except that if enemy killed with arrows, the arrows come back immediately
 
 put platform tiles in both regular tilemap and platform tilemap (for visuals alone at this point), and turn on and off platform effector as necessary to fix platform stuck bug

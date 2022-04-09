@@ -11,6 +11,7 @@ public class LevelStart : MonoBehaviour {
     public GameObject[] Rooms;
 
     IEnumerator PlaceRoom(int roomId, int locX, int locY) {
+        // place tiles
         float locXPos = locX / 2f;
         float locYPos = locY / 2f;
         var RoomGroundTilemap = Rooms[roomId].transform.Find("Grid/Ground Tilemap").gameObject.GetComponent<Tilemap>();
@@ -29,8 +30,11 @@ public class LevelStart : MonoBehaviour {
                 PlatformTilemap.SetTile(new Vector3Int(x + locX, y + locY, 0), PlatformTile);
             }
         }
+
         // the tilemap collider does not update immediately so need to wait a frame before placing enemies
         yield return null;
+
+        // place enemies
         var RoomEnemies = Rooms[roomId].transform.Find("Enemies").gameObject.transform;
         for (int i = 0; i < RoomEnemies.childCount; i++) {
             var enemy = RoomEnemies.GetChild(i).gameObject;

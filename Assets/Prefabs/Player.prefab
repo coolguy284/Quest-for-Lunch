@@ -164,7 +164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712ffef125cf1844ca1025f19da8397c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DODGE_FORCE: 7
   isNormalState: 1
   isWallCling: 0
   isFastDropping: 0
@@ -183,8 +182,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DODGE_INVULN: 0.5
-  health: 100
-  maxHealth: 100
+  health: 200
+  maxHealth: 200
   alive: 1
   invulnTime: 0
 --- !u!114 &3302888008240005975
