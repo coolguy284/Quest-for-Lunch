@@ -45,6 +45,7 @@ public class LevelStart : MonoBehaviour {
     }
 
     void Start() {
+        //Time.timeScale = 0.1f;
         StartCoroutine(PlaceRoom(0, -7, -35));
     }
 }
