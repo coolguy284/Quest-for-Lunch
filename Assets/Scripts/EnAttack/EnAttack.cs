@@ -23,8 +23,12 @@ public class EnAttack : MonoBehaviour {
     float extraMomentumHalt = 0.0f; // extra momentum halt time
 
     void attackRaycast(Vector2 origin, Vector2 direction, float distance) {
-        Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f), isPlayer ? Color.red : Color.yellow, 0.1f, false);
-        var attackRaycast = Physics2D.RaycastAll(origin, direction, distance, LayerMask.GetMask("Entity"));
+        var wallRaycast = Physics2D.Raycast(origin, direction, distance, LayerMask.GetMask("Default", "Platform"));
+        float attackDistance;
+        if (wallRaycast.collider == null) attackDistance = distance;
+        else attackDistance = wallRaycast.fraction;
+        Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f) * attackDistance, isPlayer ? Color.red : Color.yellow, 0.1f, false);
+        var attackRaycast = Physics2D.RaycastAll(origin, direction, attackDistance, LayerMask.GetMask("Entity"));
         foreach (var raycast in attackRaycast) {
             raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
             if (isPlayer && !raycast.collider.GetComponent<EnHealth>().alive) {
