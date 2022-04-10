@@ -1,4 +1,3 @@
-when wall cling strength runs out, make it so you can't re-grab wall at all until you either touch grass or jump
 add teleport attack
 knockback and hitboxes
 inventory system for picking up and dropping weapons for the 2 slots
