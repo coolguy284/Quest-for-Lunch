@@ -6,7 +6,6 @@ sword is melee, fork is ranged (for now)
 projectiles, arrow count of 5
 sword does 60 damage, arrow does 13 damage, enemies do 35 damage
 arrows come back quickest-longest, ground, wall, enemy, except that if enemy killed with arrows, the arrows come back immediately
-make bottom of player have diagonal boxcollider to roll up pseudo-bumps
 
 currency (ingredients?), things on the weapons (stats), abilities
 secondary currency for extra abilities

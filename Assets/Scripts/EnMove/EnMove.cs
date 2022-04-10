@@ -9,6 +9,7 @@ public class EnMove : MonoBehaviour {
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
     Rigidbody2D Self_RigidBody;
+    EnMain EnMainInst;
     GameObject Player;
     TextMeshProUGUI debugText;
 
@@ -30,6 +31,7 @@ public class EnMove : MonoBehaviour {
 
     float WALL_SLIDE_TIMER = 3.0f;
     float WALL_DROP_TIMER = 4.0f;
+    float WALLHOVER_MAGIC_CONS = 0.42f;
     float WALL_DROP_SPEED = 1.0f;
     float PLATFORM_PULLUP_SPEED = 8.0f;
 
@@ -68,6 +70,7 @@ public class EnMove : MonoBehaviour {
     bool isPlatform = false;
     bool isLooseInPlatform = false;
     bool isInPlatform = false;
+    bool useLooseForL = false; // once isinplatform is true this switches to islooseinplatform until that is false
     bool isWalledLeft = false;
     bool isWalledRight = false;
     bool isWalled = false;
@@ -136,39 +139,39 @@ public class EnMove : MonoBehaviour {
     }
 
     bool isOnGround() {
-        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x, transform.position.y - Self_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Self_BoxCollider.bounds.size.x, layerCollisionMask & (~LayerMask.GetMask("Entity")));
+        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, layerCollisionMask & (~LayerMask.GetMask("Entity")));
         return groundRaycast.collider != null;
     }
 
     bool isOnTrueGround() {
-        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x, transform.position.y - Self_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Self_BoxCollider.bounds.size.x, LayerMask.GetMask("Default"));
+        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, LayerMask.GetMask("Default"));
         return groundRaycast.collider != null;
     }
 
     bool isOnPlatform() {
-        var platformRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x, transform.position.y - Self_BoxCollider.bounds.extents.y - 0.02f), Vector2.right, Self_BoxCollider.bounds.size.x, LayerMask.GetMask("Platform"));
+        var platformRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, LayerMask.GetMask("Platform"));
         return platformRaycast.collider != null;
     }
 
     bool isLooseInsidePlatform() {
-        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x, transform.position.y + Self_BoxCollider.bounds.extents.y + 0.02f), Vector2.down, Self_BoxCollider.bounds.size.y + 0.04f, LayerMask.GetMask("Platform"));
-        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x, transform.position.y + Self_BoxCollider.bounds.extents.y + 0.02f), Vector2.down, Self_BoxCollider.bounds.size.y + 0.04f, LayerMask.GetMask("Platform"));
+        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY + EnMainInst.bounds.extraGap), Vector2.down, EnMainInst.bounds.sizeY + 0.04f, LayerMask.GetMask("Platform"));
+        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY + EnMainInst.bounds.extraGap), Vector2.down, EnMainInst.bounds.sizeY + 0.04f, LayerMask.GetMask("Platform"));
         return platformRaycastL.collider != null || platformRaycastR.collider != null;
     }
 
     bool isInsidePlatform() {
-        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x, transform.position.y + Self_BoxCollider.bounds.extents.y), Vector2.down, Self_BoxCollider.bounds.size.y, LayerMask.GetMask("Platform"));
-        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x, transform.position.y + Self_BoxCollider.bounds.extents.y), Vector2.down, Self_BoxCollider.bounds.size.y, LayerMask.GetMask("Platform"));
+        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Platform"));
+        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Platform"));
         return platformRaycastL.collider != null || platformRaycastR.collider != null;
     }
 
     bool isOnWallLeft() {
-        var leftWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y), Vector2.up, Self_BoxCollider.bounds.size.y, LayerMask.GetMask("Default"));
+        var leftWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX - EnMainInst.bounds.extraGap, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Default"));
         return leftWallRaycast.collider != null;
     }
 
     bool isOnWallRight() {
-        var rightWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y), Vector2.up, Self_BoxCollider.bounds.size.y, LayerMask.GetMask("Default"));
+        var rightWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Default"));
         return rightWallRaycast.collider != null;
     }
 
@@ -256,7 +259,7 @@ public class EnMove : MonoBehaviour {
                 var relPlayerPos = Player.transform.position - Self.transform.position;
                 if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f &&
                     Physics2D.Raycast(
-                        new Vector2(transform.position.x, transform.position.y + Self_BoxCollider.bounds.extents.y * 0.8f),
+                        new Vector2(transform.position.x, transform.position.y + EnMainInst.bounds.extentY * 0.8f),
                         relPlayerPos,
                         relPlayerPos.magnitude,
                         LayerMask.GetMask("Default", "Platform")
@@ -299,7 +302,7 @@ public class EnMove : MonoBehaviour {
     }
 
     void updateState() {
-        isPlayer = GetComponent<EnMain>().isPlayer;
+        isPlayer = EnMainInst.isPlayer;
         alive = GetComponent<EnHealth>().alive;
         isGrounded = isOnGround();
         isTrueGrounded = isOnTrueGround();
@@ -320,6 +323,7 @@ public class EnMove : MonoBehaviour {
         Self = this.gameObject;
         Self_BoxCollider = GetComponent<BoxCollider2D>();
         Self_RigidBody = GetComponent<Rigidbody2D>();
+        EnMainInst = GetComponent<EnMain>();
         Player = GameObject.Find("Player");
         debugText = GameObject.Find("Debug Text").GetComponent<TextMeshProUGUI>();
         trueGravityScale = Self_RigidBody.gravityScale;
@@ -329,7 +333,9 @@ public class EnMove : MonoBehaviour {
 
     void Update() {
         if (Time.timeScale == 0.0f) return;
-        // update state and movement
+        // update state and movement variables
+        if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
+
         updateInput();
         updateState();
 
@@ -363,14 +369,15 @@ public class EnMove : MonoBehaviour {
             if (isNormalState) {
                 // normal state
 
-                // hover very slightly above ground in order to not get stuck on 0m ledges between ground and platform
-                if (isGrounded && inputs.horizontal != 0.0f) {
-                    Self_RigidBody.velocity += new Vector2(0.0f, 0.1f);
+                if (!useLooseForL && isInPlatform) {
+                    useLooseForL = true;
+                } else if (useLooseForL && !isLooseInPlatform) {
+                    useLooseForL = false;
                 }
 
                 // pull up through platform
                 if (isPlayer) {
-                    if (isInPlatform && wallClingLagTime == 0.0f && !ignorePlatform) {
+                    if (useLooseForL && wallClingLagTime == 0.0f && !ignorePlatform) {
                         Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
                         queuedPlatPullVelReset = true;
                     } else if (queuedPlatPullVelReset) {
@@ -385,7 +392,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // horizontal movement
-                if (!GetComponent<EnMain>().haltMotion && (!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
+                if (!EnMainInst.haltMotion && (!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
                     if (Self_RigidBody.velocity.x * inputs.horizontal > 0) {
                         Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
                     } else {
@@ -467,9 +474,9 @@ public class EnMove : MonoBehaviour {
                 // wall cling
 
                 if (wallClingTimer < WALL_SLIDE_TIMER) {
-                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, 0.3f));
+                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, WALLHOVER_MAGIC_CONS));
                 } else if (wallClingTimer < WALL_DROP_TIMER) {
-                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, -WALL_DROP_SPEED));
+                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, WALLHOVER_MAGIC_CONS + -WALL_DROP_SPEED));
                 } else {
                     StopWallCling(WALL_DROPOFF_LAG);
                 }
@@ -529,7 +536,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nInputLag: {4:0.000}\nWallClingLag: {5:0.000}\nDodgeLag: {6:0.000}\nIgnorePlatform: {7}\nHorz: {8}\nVert: {9}\nJump: {10}\nInAirTime: {11:0.000}", isGrounded, isHoldingWall, isWallCling, jumps, inputLagTime, wallClingLagTime, dodgeLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld, inAirTime);
+        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nWallClingLag: {6:0.000}\nDodgeLag: {7:0.000}\nIgnorePlatform: {8}\nHorz: {9}\nVert: {10}\nJump: {11}\nInAirTime: {12:0.000}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, wallClingLagTime, dodgeLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld, inAirTime);
     }
 
     #endregion

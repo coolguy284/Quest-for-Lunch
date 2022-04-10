@@ -6,6 +6,7 @@ using TMPro;
 public class EnAttack : MonoBehaviour {
     BoxCollider2D Self_BoxCollider;
     Rigidbody2D Self_RigidBody;
+    EnMain EnMainInst;
     public TextMeshProUGUI DebugText3;
     bool isPlayer = false;
 
@@ -23,17 +24,25 @@ public class EnAttack : MonoBehaviour {
     float extraMomentumHalt = 0.0f; // extra momentum halt time
 
     void attackRaycast(Vector2 origin, Vector2 direction, float distance) {
+        // check for intersection with wall
         var wallRaycast = Physics2D.Raycast(origin, direction, distance, LayerMask.GetMask("Default", "Platform"));
         float attackDistance;
         if (wallRaycast.collider == null) attackDistance = distance;
         else attackDistance = wallRaycast.fraction;
+
+        // calculate attack ray
         Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f) * attackDistance, isPlayer ? Color.red : Color.yellow, 0.1f, false);
         var attackRaycast = Physics2D.RaycastAll(origin, direction, attackDistance, LayerMask.GetMask("Entity"));
+        
+        // for each thing ray hit
         foreach (var raycast in attackRaycast) {
+            // perform damage
             raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
+
+            // grant suscoins
             if (isPlayer && !raycast.collider.GetComponent<EnHealth>().alive) {
-                GetComponent<EnMain>().susCoins += (int)raycast.collider.GetComponent<EnHealth>().maxHealth;
-                GetComponent<EnMain>().SusCoinsText.text = GetComponent<EnMain>().susCoins.ToString();
+                EnMainInst.susCoins += (int)(raycast.collider.GetComponent<EnHealth>().maxHealth * 1.25f);
+                EnMainInst.SusCoinsText.text = EnMainInst.susCoins.ToString();
             }
         }
     }
@@ -41,7 +50,8 @@ public class EnAttack : MonoBehaviour {
     void Start() {
         Self_BoxCollider = GetComponent<BoxCollider2D>();
         Self_RigidBody = GetComponent<Rigidbody2D>();
-        isPlayer = GetComponent<EnMain>().isPlayer;
+        EnMainInst = GetComponent<EnMain>();
+        isPlayer = EnMainInst.isPlayer;
         if (isPlayer) {
             ATTACK_COOLDOWN = 0.3f;
         } else {
@@ -51,43 +61,45 @@ public class EnAttack : MonoBehaviour {
 
     void Update() {
         if (Time.timeScale == 0.0f) return;
-        isPlayer = GetComponent<EnMain>().isPlayer;
+        // update state variables
+        if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
+        isPlayer = EnMainInst.isPlayer;
 
         if (GetComponent<EnMove>().fastDropStoppedFrame) {
             // fastdrop attack
-            attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y * 0.5f), Vector2.left, FASTDROP_HITBOT_SIZE);
-            attackRaycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y - Self_BoxCollider.bounds.extents.y * 0.5f), Vector2.right, FASTDROP_HITBOT_SIZE);
+            attackRaycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX - EnMainInst.bounds.extraGap, transform.position.y - EnMainInst.bounds.extentY * 0.5f), Vector2.left, FASTDROP_HITBOT_SIZE);
+            attackRaycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y - EnMainInst.bounds.extentY * 0.5f), Vector2.right, FASTDROP_HITBOT_SIZE);
             GetComponent<EnMove>().inputLagTime = FASTDROP_LAG;
         } else if (GetComponent<EnMove>().inputs.attackMelee && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
             // normal attack
             if (GetComponent<EnMove>().facingRight) {
-                attackRaycast(new Vector2(transform.position.x + Self_BoxCollider.bounds.extents.x + 0.02f, transform.position.y), Vector2.right, BASIC_HITBOT_SIZE);
+                attackRaycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y), Vector2.right, BASIC_HITBOT_SIZE);
             } else {
-                attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y), Vector2.left, BASIC_HITBOT_SIZE);
+                attackRaycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX - EnMainInst.bounds.extraGap, transform.position.y), Vector2.left, BASIC_HITBOT_SIZE);
             }
             attackCooldown = ATTACK_COOLDOWN;
 
             // halt momentum
             if (!givenMomentumHalt) {
                 Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-                GetComponent<EnMain>().haltMotion = true;
+                EnMainInst.haltMotion = true;
                 givenMomentumHalt = true;
                 if (GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME) {
                     extraMomentumHalt = GetComponent<EnMove>().inAirTime;
                 }
             } else if (GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) {
                 Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-                GetComponent<EnMain>().haltMotion = true;
+                EnMainInst.haltMotion = true;
             } else {
-                GetComponent<EnMain>().haltMotion = false;
+                EnMainInst.haltMotion = false;
             }
         }
 
         if (attackCooldown > 0.0f && (!givenMomentumHalt || GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt)) {
             Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-            GetComponent<EnMain>().haltMotion = true;
+            EnMainInst.haltMotion = true;
         } else {
-            GetComponent<EnMain>().haltMotion = false;
+            EnMainInst.haltMotion = false;
         }
 
         // refresh momentumhalts if on ground

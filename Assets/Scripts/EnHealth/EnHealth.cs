@@ -8,6 +8,7 @@ using TMPro;
 public class EnHealth : MonoBehaviour {
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
+    EnMain EnMainInst;
     GridLayout GroundGridLayout;
     Tilemap GroundTileMap;
     Image HealthBarImage;
@@ -55,6 +56,7 @@ public class EnHealth : MonoBehaviour {
     void Start() {
         Self = this.gameObject;
         Self_BoxCollider = GetComponent<BoxCollider2D>();
+        EnMainInst = GetComponent<EnMain>();
         GroundGridLayout = GameObject.Find("Grid").GetComponent<GridLayout>();
         GroundTileMap = GameObject.Find("Ground Tilemap").GetComponent<Tilemap>();
         HealthBarImage = GameObject.Find("Health Bar").GetComponent<Image>();
@@ -65,11 +67,12 @@ public class EnHealth : MonoBehaviour {
     void Update() {
         if (Time.timeScale == 0.0f) return;
         // update state variables
-        isPlayer = GetComponent<EnMain>().isPlayer;
+        if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
+        isPlayer = EnMainInst.isPlayer;
         invulnTime = Mathf.Max(hitInvulnTime, dodgeInvulnTime);
 
         // get tile at feet
-        var celCoords = GroundGridLayout.WorldToCell(new Vector2(Self.transform.position.x, Self.transform.position.y - Self_BoxCollider.bounds.extents.y));
+        var celCoords = GroundGridLayout.WorldToCell(new Vector2(Self.transform.position.x, Self.transform.position.y - EnMainInst.bounds.extentY));
         var tile = GroundTileMap.GetTile(celCoords);
         var tileAt = tile ? tile.name : "None";
         

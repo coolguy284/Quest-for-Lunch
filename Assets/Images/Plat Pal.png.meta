@@ -229,7 +229,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Platform N
+      name: Platform NF
       rect:
         serializedVersion: 2
         x: 32
@@ -253,6 +253,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Platform N
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6167d41484cb93848b72ee6efe3ca5e1
+      internalID: -690945727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -268,8 +289,9 @@ TextureImporter:
       Platform LF: 243352235
       Platform R: -439362475
       Platform RF: -2089063362
-      Platform N: -82895024
+      Platform N: -690945727
       Platform L: -1869398434
+      Platform NF: -82895024
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
