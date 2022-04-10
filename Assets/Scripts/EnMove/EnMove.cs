@@ -53,6 +53,7 @@ public class EnMove : MonoBehaviour {
 
     float wallClingLagTime = 0.0f; // amount of time that the wall cannot be clinged to
     float wallClingTimer = 0.0f;
+    bool wallLetGo = false; // if wall has been involuntarily let go, resets if touch ground or air jump
     [HideInInspector]
     public float inputLagTime = 0.0f; // amount of time that inputs will be ignored
     bool ignorePlatform = false;
@@ -61,9 +62,9 @@ public class EnMove : MonoBehaviour {
     [HideInInspector]
     public bool facingRight = true;
 
-    int layerCollisionMask;
     bool isPlayer = false;
     bool alive = false;
+    int layerCollisionMask;
     [HideInInspector]
     public bool isGrounded = false;
     bool isTrueGrounded = false;
@@ -369,6 +370,8 @@ public class EnMove : MonoBehaviour {
             if (isNormalState) {
                 // normal state
 
+                if (isGrounded && wallLetGo) wallLetGo = false;
+
                 if (!useLooseForL && isInPlatform) {
                     useLooseForL = true;
                 } else if (useLooseForL && !isLooseInPlatform) {
@@ -414,7 +417,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // establish wall cling
-                if (isPlayer && wallClingLagTime == 0.0f && !ignorePlatform && isHoldingWall && !isGrounded && !isInPlatform) {
+                if (isPlayer && wallClingLagTime == 0.0f && !ignorePlatform && isHoldingWall && !isGrounded && !isInPlatform && !wallLetGo) {
                     if (Self_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
                         // simple cling
                         StartWallCling(false);
@@ -443,6 +446,7 @@ public class EnMove : MonoBehaviour {
                             // air jump
                             AirJump();
                             jumps--;
+                            if (wallLetGo) wallLetGo = false;
                         }
                     }
                     if (isGrounded) lockGround = true;
@@ -479,6 +483,7 @@ public class EnMove : MonoBehaviour {
                     Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, WALLHOVER_MAGIC_CONS + -WALL_DROP_SPEED));
                 } else {
                     StopWallCling(WALL_DROPOFF_LAG);
+                    wallLetGo = true;
                 }
                 
                 // jump off wall actions
