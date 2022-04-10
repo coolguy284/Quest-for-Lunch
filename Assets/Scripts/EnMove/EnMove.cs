@@ -254,7 +254,13 @@ public class EnMove : MonoBehaviour {
             } else {
                 // calculate inputs of entity
                 var relPlayerPos = Player.transform.position - Self.transform.position;
-                if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f) {
+                if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f &&
+                    Physics2D.Raycast(
+                        new Vector2(transform.position.x, transform.position.y + Self_BoxCollider.bounds.extents.y * 0.8f),
+                        relPlayerPos,
+                        relPlayerPos.magnitude,
+                        LayerMask.GetMask("Default", "Platform")
+                    ).collider == null) {
                     if (relPlayerPos.x > 1.0f) {
                         inputs.horizontal = 1.0f;
                         inputs.attackMelee = false;
