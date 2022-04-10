@@ -132,7 +132,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 1
   m_AngularDrag: 0.05
-  m_GravityScale: 1.5
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -150,7 +150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69347a0db6f91c54e865202b5ac5e09a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SusCoinsText: {fileID: 0}
   isPlayer: 1
+  susCoins: 0
   Player: {fileID: 0}
 --- !u!114 &3026333166035380683
 MonoBehaviour:
@@ -168,6 +170,9 @@ MonoBehaviour:
   isWallCling: 0
   isFastDropping: 0
   inputLagTime: 0
+  facingRight: 1
+  isGrounded: 0
+  inAirTime: 0
   fastDropStoppedFrame: 0
 --- !u!114 &4021388766387843322
 MonoBehaviour:
@@ -185,6 +190,9 @@ MonoBehaviour:
   health: 200
   maxHealth: 200
   alive: 1
+  hitInvulnTime: 0
+  dodgeInvulnTime: 0
+  pastDodgeInvulnTime: 0
   invulnTime: 0
 --- !u!114 &3302888008240005975
 MonoBehaviour:

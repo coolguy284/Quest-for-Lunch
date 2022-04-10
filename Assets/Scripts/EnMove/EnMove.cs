@@ -62,7 +62,8 @@ public class EnMove : MonoBehaviour {
     int layerCollisionMask;
     bool isPlayer = false;
     bool alive = false;
-    bool isGrounded = false;
+    [HideInInspector]
+    public bool isGrounded = false;
     bool isTrueGrounded = false;
     bool isPlatform = false;
     bool isLooseInPlatform = false;
@@ -71,6 +72,8 @@ public class EnMove : MonoBehaviour {
     bool isWalledRight = false;
     bool isWalled = false;
     bool isHoldingWall = false;
+    [HideInInspector]
+    public float inAirTime = 0.0f;
     
     bool jumpButtonDaemon = false; // whether jump button is being held down, but becomes false once falling
     [HideInInspector]
@@ -324,6 +327,12 @@ public class EnMove : MonoBehaviour {
         updateInput();
         updateState();
 
+        if (!isGrounded) {
+            inAirTime += Time.deltaTime;
+        } else {
+            inAirTime = 0.0f;
+        }
+
         if (fastDropStoppedFrame) {
             fastDropStoppedFrame = false;
         }
@@ -370,7 +379,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // horizontal movement
-                if ((!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
+                if (!GetComponent<EnMain>().haltMotion && (!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
                     if (Self_RigidBody.velocity.x * inputs.horizontal > 0) {
                         Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
                     } else {
@@ -514,7 +523,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nInputLag: {4:0.000}\nWallClingLag: {5:0.000}\nDodgeLag: {6:0.000}\nIgnorePlatform: {7}\nHorz: {8}\nVert: {9}\nJump: {10}", isGrounded, isHoldingWall, isWallCling, jumps, inputLagTime, wallClingLagTime, dodgeLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
+        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nJumps: {3}\nInputLag: {4:0.000}\nWallClingLag: {5:0.000}\nDodgeLag: {6:0.000}\nIgnorePlatform: {7}\nHorz: {8}\nVert: {9}\nJump: {10}\nInAirTime: {11:0.000}", isGrounded, isHoldingWall, isWallCling, jumps, inputLagTime, wallClingLagTime, dodgeLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld, inAirTime);
     }
 
     #endregion

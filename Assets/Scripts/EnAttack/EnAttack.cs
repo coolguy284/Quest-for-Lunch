@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EnAttack : MonoBehaviour {
     BoxCollider2D Self_BoxCollider;
+    Rigidbody2D Self_RigidBody;
+    public TextMeshProUGUI DebugText3;
     bool isPlayer = false;
 
     float ATTACK_COOLDOWN = 1.0f;
@@ -11,10 +14,13 @@ public class EnAttack : MonoBehaviour {
     float FASTDROP_HITBOT_SIZE = 0.6f;
     float FASTDROP_LAG = 0.5f;
     //float TELEPORT_ATTACK_MAX = 10.0f;
-
+    float MOMENTUM_HALT_TIME = 1.0f;
+    
     float attackCooldown = 0.0f;
     //float teleportAttack = 0.0f;
     //int attackCombo = 0;
+    bool givenMomentumHalt = false; // for the one guaranteed momentum halt
+    float extraMomentumHalt = 0.0f; // extra momentum halt time
 
     void attackRaycast(Vector2 origin, Vector2 direction, float distance) {
         Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f), isPlayer ? Color.red : Color.yellow, 0.1f, false);
@@ -30,9 +36,10 @@ public class EnAttack : MonoBehaviour {
 
     void Start() {
         Self_BoxCollider = GetComponent<BoxCollider2D>();
+        Self_RigidBody = GetComponent<Rigidbody2D>();
         isPlayer = GetComponent<EnMain>().isPlayer;
         if (isPlayer) {
-            ATTACK_COOLDOWN = 0.1f;
+            ATTACK_COOLDOWN = 0.3f;
         } else {
             ATTACK_COOLDOWN = 2.0f;
         }
@@ -55,6 +62,34 @@ public class EnAttack : MonoBehaviour {
                 attackRaycast(new Vector2(transform.position.x - Self_BoxCollider.bounds.extents.x - 0.02f, transform.position.y), Vector2.left, BASIC_HITBOT_SIZE);
             }
             attackCooldown = ATTACK_COOLDOWN;
+
+            // halt momentum
+            if (!givenMomentumHalt) {
+                Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+                GetComponent<EnMain>().haltMotion = true;
+                givenMomentumHalt = true;
+                if (GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME) {
+                    extraMomentumHalt = GetComponent<EnMove>().inAirTime;
+                }
+            } else if (GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) {
+                Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+                GetComponent<EnMain>().haltMotion = true;
+            } else {
+                GetComponent<EnMain>().haltMotion = false;
+            }
+        }
+
+        if (attackCooldown > 0.0f && (!givenMomentumHalt || GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt)) {
+            Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+            GetComponent<EnMain>().haltMotion = true;
+        } else {
+            GetComponent<EnMain>().haltMotion = false;
+        }
+
+        // refresh momentumhalts if on ground
+        if (GetComponent<EnMove>().isGrounded) {
+            givenMomentumHalt = false;
+            extraMomentumHalt = 0.0f;
         }
 
         // reduce attack cooldown by time passed
@@ -62,5 +97,8 @@ public class EnAttack : MonoBehaviour {
             attackCooldown -= Time.deltaTime;
             if (attackCooldown < 0.0f) attackCooldown = 0.0f;
         }
+        
+        // debug text
+        if (isPlayer) DebugText3.text = string.Format("GivenHalt: {0}\nExtraHalt: {1:0.000}", givenMomentumHalt, extraMomentumHalt);
     }
 }

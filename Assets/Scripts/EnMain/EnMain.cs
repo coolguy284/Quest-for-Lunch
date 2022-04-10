@@ -9,6 +9,8 @@ public class EnMain : MonoBehaviour {
     public bool isPlayer = true;
     [HideInInspector]
     public int susCoins = 0;
+    [HideInInspector]
+    public bool haltMotion = false;
 
     [HideInInspector]
     public GameObject Player;

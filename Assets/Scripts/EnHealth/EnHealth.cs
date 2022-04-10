@@ -6,11 +6,6 @@ using UnityEngine.Tilemaps;
 using TMPro;
 
 public class EnHealth : MonoBehaviour {
-    float SPIKES_DAMAGE = 48.0f;
-    float SPIKES_INVULN = 1.8f;
-    [HideInInspector]
-    public float DODGE_INVULN = 0.5f;
-
     GameObject Self;
     BoxCollider2D Self_BoxCollider;
     GridLayout GroundGridLayout;
@@ -18,6 +13,11 @@ public class EnHealth : MonoBehaviour {
     Image HealthBarImage;
     GameObject DeadText;
     TextMeshProUGUI DebugText2;
+
+    float SPIKES_DAMAGE = 48.0f;
+    float SPIKES_INVULN = 1.8f;
+    [HideInInspector]
+    public float DODGE_INVULN = 0.5f;
 
     public float health = 100.0f;
     public float maxHealth = 100.0f;
