@@ -34,7 +34,7 @@ public class EnAttack : MonoBehaviour {
 
         // calculate attack ray
         Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f) * attackDistance, isPlayer ? Color.red : Color.yellow, 0.1f, false);
-        var attackRaycast = Physics2D.RaycastAll(origin, direction, attackDistance, LayerMask.GetMask("Entity"));
+        var attackRaycast = Physics2D.RaycastAll(origin, direction, attackDistance, isPlayer ? LayerMask.GetMask("Enemy") : LayerMask.GetMask("Player"));
         
         float damage = isPlayer ? 50.0f : 10.0f;
 

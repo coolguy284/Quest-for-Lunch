@@ -140,7 +140,7 @@ public class EnMove : MonoBehaviour {
     }
 
     bool isOnGround() {
-        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, layerCollisionMask & (~LayerMask.GetMask("Entity")));
+        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, layerCollisionMask & (~LayerMask.GetMask("Player", "Enemy")));
         return groundRaycast.collider != null;
     }
 
@@ -223,7 +223,7 @@ public class EnMove : MonoBehaviour {
     void StopIgnorePlatform() {
         if (ignorePlatform) {
             ignorePlatform = false;
-            Self.layer = LayerMask.NameToLayer("Entity");
+            Self.layer = isPlayer ? LayerMask.NameToLayer("Player") : LayerMask.NameToLayer("Enemy");
             layerCollisionMask = getLayerCollisionMask();
         }
     }
