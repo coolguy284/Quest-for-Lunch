@@ -1,4 +1,3 @@
-display health on health bar
 chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon
 make debug menu only visible with check in game but set as default
 add teleport attack
