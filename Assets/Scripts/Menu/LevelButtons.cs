@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelButtons : MonoBehaviour {
     public void PickLevel(int level) {
-        SceneManager.LoadScene("Test Scn");
+        SceneManager.LoadScene("Game");
     }
 
     public void BackToMenu() {

@@ -13,6 +13,7 @@ public class EnHealth : MonoBehaviour {
     Tilemap GroundTileMap;
     Image HealthBarImage;
     GameObject DeadText;
+    TextMeshProUGUI HealthText;
     TextMeshProUGUI DebugText2;
 
     float SPIKES_DAMAGE = 48.0f;
@@ -37,7 +38,10 @@ public class EnHealth : MonoBehaviour {
     public void changeHealth(float amount) {
         if (!alive || invulnTime > 0.0f && amount < 0.0f) return;
         health = Mathf.Min(Mathf.Max(health + amount, 0.0f), maxHealth);
-        if (isPlayer) HealthBarImage.fillAmount = health / maxHealth;
+        if (isPlayer) {
+            HealthBarImage.fillAmount = health / maxHealth;
+            HealthText.text = string.Format("{0:0}/{1:0} ({2:0.0}%)", health, maxHealth, health / maxHealth * 100.0f);
+        }
         if (health == 0.0f) {
             alive = false;
             if (isPlayer) {
@@ -61,6 +65,7 @@ public class EnHealth : MonoBehaviour {
         GroundTileMap = GameObject.Find("Ground Tilemap").GetComponent<Tilemap>();
         HealthBarImage = GameObject.Find("Health Bar").GetComponent<Image>();
         DeadText = GameObject.Find("HUD").transform.Find("Dead Text").gameObject;
+        HealthText = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
         DebugText2 = GameObject.Find("Debug Text 2").GetComponent<TextMeshProUGUI>();
     }
 
