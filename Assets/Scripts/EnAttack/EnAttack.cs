@@ -70,10 +70,17 @@ public class EnAttack : MonoBehaviour {
 
     IEnumerator NormalAttack() {
         // startup lag
-        attackCooldown = ATTACK_STARTUP;
-        yield return new WaitForSeconds(ATTACK_STARTUP);
+        GetComponent<EnMove>().inAttack = true;
+        for (int i = 0; i < ATTACK_STARTUP / 0.1f; i++) {
+            if (GetComponent<EnMove>().inputLagTime > 0.0f) {
+                GetComponent<EnMove>().inAttack = false;
+                yield break;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
 
         // normal attack
+        GetComponent<EnMove>().inAttack = false;
         if (GetComponent<EnMove>().facingRight) {
             attackRaycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y), Vector2.right, BASIC_HITBOT_SIZE);
         } else {

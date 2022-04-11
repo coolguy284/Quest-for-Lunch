@@ -56,6 +56,8 @@ public class EnMove : MonoBehaviour {
     bool wallLetGo = false; // if wall has been involuntarily let go, resets if touch ground or air jump
     [HideInInspector]
     public float inputLagTime = 0.0f; // amount of time that inputs will be ignored
+    [HideInInspector]
+    public bool inAttack = false; // inputs will also be ignored if currently attacking
     bool ignorePlatform = false;
     bool queuedPlatPullVelReset = false;
     float trueGravityScale = 0.0f;
@@ -244,7 +246,7 @@ public class EnMove : MonoBehaviour {
     #region State Update Functions
 
     void updateInput() {
-        if (alive && inputLagTime == 0.0f) {
+        if (alive && inputLagTime == 0.0f && !inAttack) {
             if (isPlayer) {
                 // take inputs from user
                 inputs.horizontal = Input.GetAxisRaw("Horizontal");
@@ -548,7 +550,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nWallClingLag: {6:0.000}\nDodgeLag: {7:0.000}\nIgnorePlatform: {8}\nHorz: {9}\nVert: {10}\nJump: {11}\nInAirTime: {12:0.000}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, wallClingLagTime, dodgeLagTime, ignorePlatform, inputs.horizontal, inputs.vertical, inputs.jumpHeld, inAirTime);
+        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nInAttack {6}\nWallClingLag: {7:0.000}\nDodgeLag: {8:0.000}\nIgnorePlatform: {9}\nInAirTime: {10:0.000}\nHorz: {11}\nVert: {12}\nJump: {13}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
     }
 
     #endregion
