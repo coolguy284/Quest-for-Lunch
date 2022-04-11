@@ -236,6 +236,7 @@ public class EnMove : MonoBehaviour {
     void StopFastDrop() {
         isFastDropping = false;
         fastDropStoppedFrame = true;
+        Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
     }
 
     #endregion
@@ -272,7 +273,13 @@ public class EnMove : MonoBehaviour {
                         inputs.horizontal = -1.0f;
                         inputs.attackMelee = false;
                     } else {
-                        inputs.horizontal = 0.0f;
+                        if (relPlayerPos.x > 0.0f && !facingRight) {
+                            inputs.horizontal = 1.0f;
+                        } else if (relPlayerPos.x < 0.0f && facingRight) {
+                            inputs.horizontal = -1.0f;
+                        } else {
+                            inputs.horizontal = 0.0f;
+                        }
                         inputs.attackMelee = true;
                     }
                 } else {
@@ -367,16 +374,21 @@ public class EnMove : MonoBehaviour {
                 dodgeLagTime = DODGE_LAG;
             }
 
+            // stop ignoring platforms after falling through one enough
+            if (ignorePlatform && !isLooseInPlatform) {
+                StopIgnorePlatform();
+            }
+
+            if (!useLooseForL && isInPlatform) {
+                useLooseForL = true;
+            } else if (useLooseForL && !isLooseInPlatform) {
+                useLooseForL = false;
+            }
+
             if (isNormalState) {
                 // normal state
 
                 if (isGrounded && wallLetGo) wallLetGo = false;
-
-                if (!useLooseForL && isInPlatform) {
-                    useLooseForL = true;
-                } else if (useLooseForL && !isLooseInPlatform) {
-                    useLooseForL = false;
-                }
 
                 // pull up through platform
                 if (isPlayer) {
@@ -387,11 +399,6 @@ public class EnMove : MonoBehaviour {
                         Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
                         queuedPlatPullVelReset = false;
                     }
-                }
-
-                // stop ignoring platforms after falling through one enough
-                if (ignorePlatform && !isLooseInPlatform) {
-                    StopIgnorePlatform();
                 }
 
                 // horizontal movement
