@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class LevelStart : MonoBehaviour {
+public class Level : MonoBehaviour {
     public Tilemap GroundTilemap;
     public Tilemap PlatformTilemap;
     public GameObject EnemiesList;
     public GameObject EnemyPrefab;
     public GameObject[] Rooms;
+    public GameObject DebugTexts;
 
     IEnumerator PlaceRoom(int roomId, int locX, int locY) {
         // place tiles
@@ -45,6 +46,9 @@ public class LevelStart : MonoBehaviour {
     }
 
     void Start() {
+        if (Application.isEditor) {
+            DebugTexts.SetActive(true);
+        }
         StartCoroutine(PlaceRoom(0, -7, -35));
     }
 }

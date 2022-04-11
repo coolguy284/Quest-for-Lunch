@@ -11,7 +11,7 @@ public class EnMove : MonoBehaviour {
     Rigidbody2D Self_RigidBody;
     EnMain EnMainInst;
     GameObject Player;
-    TextMeshProUGUI debugText;
+    public TextMeshProUGUI DebugText;
 
     float MOVEMENT_FORCE = 15.0f;
     float MOVEMENT_SPEED = 5.0f;
@@ -335,7 +335,6 @@ public class EnMove : MonoBehaviour {
         Self_RigidBody = GetComponent<Rigidbody2D>();
         EnMainInst = GetComponent<EnMain>();
         Player = GameObject.Find("Player");
-        debugText = GameObject.Find("Debug Text").GetComponent<TextMeshProUGUI>();
         trueGravityScale = Self_RigidBody.gravityScale;
         layerCollisionMask = getLayerCollisionMask();
         jumps = JUMPS_FROM_GND;
@@ -550,7 +549,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) debugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nInAttack {6}\nWallClingLag: {7:0.000}\nDodgeLag: {8:0.000}\nIgnorePlatform: {9}\nInAirTime: {10:0.000}\nHorz: {11}\nVert: {12}\nJump: {13}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
+        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nInAttack {6}\nWallClingLag: {7:0.000}\nDodgeLag: {8:0.000}\nIgnorePlatform: {9}\nInAirTime: {10:0.000}\nHorz: {11}\nVert: {12}\nJump: {13}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
     }
 
     #endregion

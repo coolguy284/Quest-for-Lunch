@@ -14,7 +14,7 @@ public class EnHealth : MonoBehaviour {
     Image HealthBarImage;
     GameObject DeadText;
     TextMeshProUGUI HealthText;
-    TextMeshProUGUI DebugText2;
+    public TextMeshProUGUI DebugText2;
 
     float SPIKES_DAMAGE = 48.0f;
     float SPIKES_INVULN = 1.8f;
@@ -66,7 +66,6 @@ public class EnHealth : MonoBehaviour {
         HealthBarImage = GameObject.Find("Health Bar").GetComponent<Image>();
         DeadText = GameObject.Find("HUD").transform.Find("Dead Text").gameObject;
         HealthText = GameObject.Find("Health Text").GetComponent<TextMeshProUGUI>();
-        DebugText2 = GameObject.Find("Debug Text 2").GetComponent<TextMeshProUGUI>();
     }
 
     void Update() {
