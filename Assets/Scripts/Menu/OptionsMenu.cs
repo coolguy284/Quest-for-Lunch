@@ -9,6 +9,8 @@ public class OptionsMenu : MonoBehaviour {
     public AudioMixer audioMixer;
     public TMP_Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
+    public Toggle debugToggle;
+    public GameObject DebugTexts;
 
     Resolution[] resolutionsList;
     bool ignoreSetting = true;
@@ -85,5 +87,8 @@ public class OptionsMenu : MonoBehaviour {
         updateResolutions();
         fullscreenToggle.isOn = Screen.fullScreen;
         ignoreSetting = false;
+        if (DebugTexts != null && DebugTexts.activeSelf) {
+            debugToggle.isOn = true;
+        }
     }
 }
