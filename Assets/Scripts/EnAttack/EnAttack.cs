@@ -16,6 +16,8 @@ public class EnAttack : MonoBehaviour {
     float FASTDROP_LAG = 0.5f;
     //float TELEPORT_ATTACK_MAX = 10.0f;
     float MOMENTUM_HALT_TIME = 1.0f;
+    float KNOCKBACK_SCALE = 0.9f; // what amount of the damage is the knockback force
+    float HITSTUN_SCALE = 0.02f;
     
     float attackCooldown = 0.0f;
     //float teleportAttack = 0.0f;
@@ -34,15 +36,26 @@ public class EnAttack : MonoBehaviour {
         Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f) * attackDistance, isPlayer ? Color.red : Color.yellow, 0.1f, false);
         var attackRaycast = Physics2D.RaycastAll(origin, direction, attackDistance, LayerMask.GetMask("Entity"));
         
+        float damage = isPlayer ? 50.0f : 10.0f;
+
         // for each thing ray hit
         foreach (var raycast in attackRaycast) {
-            // perform damage
-            raycast.collider.GetComponent<EnHealth>().changeHealth(isPlayer ? -50.0f : -10.0f);
+            var entity = raycast.collider;
+            // only attack if vulnerable
+            if (entity.GetComponent<EnHealth>().invulnTime == 0.0f) {
+                // perform damage
+                entity.GetComponent<EnHealth>().changeHealth(-damage);
 
-            // grant suscoins
-            if (isPlayer && !raycast.collider.GetComponent<EnHealth>().alive) {
-                EnMainInst.susCoins += (int)(raycast.collider.GetComponent<EnHealth>().maxHealth * 1.25f);
-                EnMainInst.SusCoinsText.text = EnMainInst.susCoins.ToString();
+                // perform knockback
+                entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * Mathf.Pow(damage, 0.25f) * KNOCKBACK_SCALE, ForceMode2D.Impulse);
+                entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
+                entity.GetComponent<EnMove>().inputLagTime = damage * HITSTUN_SCALE;
+
+                // grant suscoins
+                if (isPlayer && !entity.GetComponent<EnHealth>().alive) {
+                    EnMainInst.susCoins += (int)(entity.GetComponent<EnHealth>().maxHealth * 1.25f);
+                    EnMainInst.SusCoinsText.text = EnMainInst.susCoins.ToString();
+                }
             }
         }
     }

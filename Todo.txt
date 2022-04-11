@@ -1,5 +1,7 @@
+make enemies only attack player
+add startup on attack
 add teleport attack
-knockback and hitboxes
+hitboxes
 inventory system for picking up and dropping weapons for the 2 slots
 sword is melee, fork is ranged (for now)
 projectiles, arrow count of 5
