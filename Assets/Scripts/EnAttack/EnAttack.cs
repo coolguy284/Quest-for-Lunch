@@ -28,17 +28,21 @@ public class EnAttack : MonoBehaviour {
     float extraMomentumHalt = 0.0f; // extra momentum halt time
 
     void attack() {
-        // check for intersection with wall
-        /*var wallRaycast = Physics2D.Raycast(origin, direction, distance, LayerMask.GetMask("Default", "Platform"));
-        float attackDistance;
-        if (wallRaycast.collider == null) attackDistance = distance;
-        else attackDistance = wallRaycast.fraction;*/
-
         var colliders = transform.Find("HitBox").GetComponent<ColliderTracker>().colliders;
 
         // for each thing hitbox hit
         foreach (var entity in new List<Collider2D>(colliders)) {
             var direction = entity.transform.position - transform.position;
+
+            // check for intersection with wall
+            var wallRaycast = Physics2D.Raycast(
+                new Vector2(transform.position.x, transform.position.y),
+                direction,
+                direction.magnitude,
+                LayerMask.GetMask("Default", "Platform")
+            );
+            if (wallRaycast.collider != null) continue;
+            
             // only attack if vulnerable
             if (entity.GetComponent<EnHealth>() != null && entity.GetComponent<EnHealth>().invulnTime == 0.0f) {
                 // perform damage
