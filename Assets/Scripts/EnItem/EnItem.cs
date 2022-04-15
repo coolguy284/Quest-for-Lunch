@@ -7,6 +7,7 @@ using UnityEngine.U2D;
 public class EnItem : MonoBehaviour {
     public GameObject UISlots;
     EnMain EnMainInst;
+    EnHealth EnHealthInst;
     public string[] Slots = new string[2] { "", "" };
 
     void DisplaySlot(Image image, string name) {
@@ -41,6 +42,7 @@ public class EnItem : MonoBehaviour {
     }
 
     void PickupItem() {
+        if (!EnHealthInst.alive) return;
         var freeSlot = GetFreeSlot();
         if (freeSlot > -1) {
             var collidersList = transform.Find("ItemGrabBox").GetComponent<ColliderTracker>().colliders;
@@ -54,7 +56,7 @@ public class EnItem : MonoBehaviour {
     }
 
     public void DropItem(int slot) {
-        if (slot < 0 || slot > Slots.Length || Slots[slot] == "") return;
+        if (slot < 0 || slot > Slots.Length || Slots[slot] == "" || !EnHealthInst.alive) return;
         var instantiatedItem = Instantiate(EnMainInst.ItemPrefab, transform.position, Quaternion.identity);
         instantiatedItem.GetComponent<SpriteRenderer>().sprite = EnMainInst.SpriteDict[Slots[slot]];
         instantiatedItem.name = "Item " + Slots[slot];
@@ -64,14 +66,15 @@ public class EnItem : MonoBehaviour {
 
     void Start() {
         EnMainInst = GetComponent<EnMain>();
+        EnHealthInst = GetComponent<EnHealth>();
     }
 
     void Update() {
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
-        if (EnMainInst.inputs.pickupItem) {
+        if (EnHealthInst.alive && EnMainInst.inputs.pickupItem) {
             PickupItem();
         }
-        if (EnMainInst.inputs.dropItem) {
+        if (EnHealthInst.alive && EnMainInst.inputs.dropItem) {
             DropItem(GetTakenSlot());
         }
     }

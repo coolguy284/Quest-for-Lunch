@@ -11,6 +11,7 @@ public class EnMove : MonoBehaviour {
     Rigidbody2D Self_RigidBody;
     EnMain EnMainInst;
     GameObject Player;
+    public Animator animator;
     public TextMeshProUGUI DebugText;
 
     float MOVEMENT_FORCE = 15.0f;
@@ -58,6 +59,10 @@ public class EnMove : MonoBehaviour {
     public float inputLagTime = 0.0f; // amount of time that inputs will be ignored
     [HideInInspector]
     public bool inAttack = false; // inputs will also be ignored if currently attacking
+    [HideInInspector]
+    public bool inAttackFastFall = false;
+    [HideInInspector]
+    public bool inAttackSword = false;
     bool ignorePlatform = false;
     bool queuedPlatPullVelReset = false;
     float trueGravityScale = 0.0f;
@@ -269,6 +274,7 @@ public class EnMove : MonoBehaviour {
         isWalledRight = isOnWallRight();
         isWalled = isWalledLeft || isWalledRight;
         isHoldingWall = alive && (EnMainInst.inputs.horizontal > 0 && isWalledRight || EnMainInst.inputs.horizontal < 0 && isWalledLeft);
+        inAttack = inAttackFastFall || inAttackSword;
     }
 
     #endregion
@@ -298,12 +304,27 @@ public class EnMove : MonoBehaviour {
             facingRight = false;
         }
 
+        if (!facingRight) {
+            transform.localScale = new Vector3(-1.0f, transform.localScale.y, transform.localScale.z);
+        } else {
+            transform.localScale = new Vector3(1.0f, transform.localScale.y, transform.localScale.z);
+        }
+
         updateState();
 
         if (!isGrounded) {
             inAirTime += Time.deltaTime;
         } else {
             inAirTime = 0.0f;
+        }
+
+        if (animator != null) {
+            if (isPlayer) {
+                animator.SetBool("IsAttackSword", inAttackSword);
+                animator.SetBool("IsAttackFastFall", inAttackFastFall);
+            } else {
+                animator.SetBool("IsAttackBasic", inAttackSword);
+            }
         }
 
         if (fastDropStoppedFrame) {
