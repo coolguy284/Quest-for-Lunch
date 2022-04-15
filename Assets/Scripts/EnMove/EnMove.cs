@@ -66,7 +66,6 @@ public class EnMove : MonoBehaviour {
 
     bool isPlayer = false;
     bool alive = false;
-    int layerCollisionMask;
     [HideInInspector]
     public bool isGrounded = false;
     bool isTrueGrounded = false;
@@ -87,62 +86,10 @@ public class EnMove : MonoBehaviour {
 
     #endregion
 
-    #region Input
-
-    public class Inputs {
-        public float horizontal = 0.0f;
-        public float vertical = 0.0f;
-        public bool jump = false;
-        public bool jumpRelease = false;
-        bool _jumpDone = false;
-        bool _jumpReleaseDone = false;
-        public bool jumpHeld = false;
-        public bool dodge = false;
-        public bool attackMelee = false;
-        public bool attackRanged = false;
-        public bool attackTele = false;
-        
-        public void Update() {
-            if (jumpHeld) {
-                _jumpReleaseDone = false;
-                jumpRelease = false;
-                if (!_jumpDone && !jump) {
-                    jump = true;
-                    _jumpDone = true;
-                } else {
-                    jump = false;
-                }
-            } else {
-                _jumpDone = false;
-                jump = false;
-                if (!_jumpReleaseDone && !jumpRelease) {
-                    jumpRelease = true;
-                    _jumpReleaseDone = true;
-                } else {
-                    jumpRelease = false;
-                }
-            }
-        }
-    }
-    
-    public Inputs inputs = new Inputs();
-
-    #endregion
-
     #region Getter Functions
 
-    int getLayerCollisionMask() {
-        int collisionMask = 0;
-        for (int i = 0; i < 32; i++) {
-            if (!Physics.GetIgnoreLayerCollision(Self.layer, i)) {
-                collisionMask |= 1 << i;
-            }
-        }
-        return collisionMask;
-    }
-
     bool isOnGround() {
-        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, layerCollisionMask & (~LayerMask.GetMask("Player", "Enemy")));
+        var groundRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, LayerMask.GetMask("Default", "Platform"));
         return groundRaycast.collider != null;
     }
 
@@ -218,7 +165,6 @@ public class EnMove : MonoBehaviour {
         if (!ignorePlatform) {
             ignorePlatform = true;
             Self.layer = LayerMask.NameToLayer("Ignore Platform");
-            layerCollisionMask = getLayerCollisionMask();
         }
     }
 
@@ -226,7 +172,6 @@ public class EnMove : MonoBehaviour {
         if (ignorePlatform) {
             ignorePlatform = false;
             Self.layer = isPlayer ? LayerMask.NameToLayer("Player") : LayerMask.NameToLayer("Enemy");
-            layerCollisionMask = getLayerCollisionMask();
         }
     }
 
@@ -249,15 +194,17 @@ public class EnMove : MonoBehaviour {
         if (alive && inputLagTime == 0.0f && !inAttack) {
             if (isPlayer) {
                 // take inputs from user
-                inputs.horizontal = Input.GetAxisRaw("Horizontal");
-                inputs.vertical = Input.GetAxisRaw("Vertical");
-                inputs.horizontal = Mathf.Abs(inputs.horizontal) < 0.35 ? 0 : Mathf.Sign(inputs.horizontal);
-                inputs.vertical = Mathf.Abs(inputs.vertical) < 0.35 ? 0 : Mathf.Sign(inputs.vertical);
-                inputs.jumpHeld = Input.GetButton("Jump");
-                inputs.dodge = Input.GetButtonDown("Submit");
-                inputs.attackMelee = Input.GetButtonDown("Fire1");
-                inputs.attackRanged = Input.GetButtonDown("Fire2");
-                inputs.attackTele = Input.GetButtonDown("Fire3");
+                EnMainInst.inputs.horizontal = Input.GetAxisRaw("Horizontal");
+                EnMainInst.inputs.vertical = Input.GetAxisRaw("Vertical");
+                EnMainInst.inputs.horizontal = Mathf.Abs(EnMainInst.inputs.horizontal) < 0.35 ? 0 : Mathf.Sign(EnMainInst.inputs.horizontal);
+                EnMainInst.inputs.vertical = Mathf.Abs(EnMainInst.inputs.vertical) < 0.35 ? 0 : Mathf.Sign(EnMainInst.inputs.vertical);
+                EnMainInst.inputs.jumpHeld = Input.GetButton("Jump");
+                EnMainInst.inputs.dodge = Input.GetButtonDown("Submit");
+                EnMainInst.inputs.attackMelee = Input.GetButtonDown("Fire1");
+                EnMainInst.inputs.attackRanged = Input.GetButtonDown("Fire2");
+                EnMainInst.inputs.attackTele = Input.GetButtonDown("Fire3");
+                EnMainInst.inputs.pickupItem = Input.GetKeyDown(KeyCode.I);
+                EnMainInst.inputs.dropItem = Input.GetKeyDown(KeyCode.K);
             } else {
                 // calculate inputs of entity
                 var relPlayerPos = Player.transform.position - Self.transform.position;
@@ -269,46 +216,45 @@ public class EnMove : MonoBehaviour {
                         LayerMask.GetMask("Default", "Platform")
                     ).collider == null) {
                     if (relPlayerPos.x > 1.0f) {
-                        inputs.horizontal = 1.0f;
-                        inputs.attackMelee = false;
+                        EnMainInst.inputs.horizontal = 1.0f;
+                        EnMainInst.inputs.attackMelee = false;
                     } else if (relPlayerPos.x < -1.0f) {
-                        inputs.horizontal = -1.0f;
-                        inputs.attackMelee = false;
+                        EnMainInst.inputs.horizontal = -1.0f;
+                        EnMainInst.inputs.attackMelee = false;
                     } else {
                         if (relPlayerPos.x > 0.0f && !facingRight) {
-                            inputs.horizontal = 1.0f;
+                            EnMainInst.inputs.horizontal = 1.0f;
                         } else if (relPlayerPos.x < 0.0f && facingRight) {
-                            inputs.horizontal = -1.0f;
+                            EnMainInst.inputs.horizontal = -1.0f;
                         } else {
-                            inputs.horizontal = 0.0f;
+                            EnMainInst.inputs.horizontal = 0.0f;
                         }
-                        inputs.attackMelee = true;
+                        EnMainInst.inputs.attackMelee = true;
                     }
                 } else {
-                    inputs.horizontal = 0.0f;
-                    inputs.attackMelee = false;
+                    EnMainInst.inputs.horizontal = 0.0f;
+                    EnMainInst.inputs.attackMelee = false;
                 }
-                inputs.vertical = 0.0f;
-                inputs.jumpHeld = false;
-                inputs.dodge = false;
-                inputs.attackRanged = false;
-                inputs.attackTele = false;
+                EnMainInst.inputs.vertical = 0.0f;
+                EnMainInst.inputs.jumpHeld = false;
+                EnMainInst.inputs.dodge = false;
+                EnMainInst.inputs.attackRanged = false;
+                EnMainInst.inputs.attackTele = false;
+                EnMainInst.inputs.pickupItem = false;
+                EnMainInst.inputs.dropItem = false;
             }
         } else {
-            inputs.horizontal = 0.0f;
-            inputs.vertical = 0.0f;
-            inputs.jumpHeld = false;
-            inputs.dodge = false;
-            inputs.attackMelee = false;
-            inputs.attackRanged = false;
-            inputs.attackTele = false;
+            EnMainInst.inputs.horizontal = 0.0f;
+            EnMainInst.inputs.vertical = 0.0f;
+            EnMainInst.inputs.jumpHeld = false;
+            EnMainInst.inputs.dodge = false;
+            EnMainInst.inputs.attackMelee = false;
+            EnMainInst.inputs.attackRanged = false;
+            EnMainInst.inputs.attackTele = false;
+            EnMainInst.inputs.pickupItem = false;
+            EnMainInst.inputs.dropItem = false;
         }
-        inputs.Update();
-        if (inputs.horizontal > 0.0f) {
-            facingRight = true;
-        } else if (inputs.horizontal < 0.0f) {
-            facingRight = false;
-        }
+        EnMainInst.inputs.Update();
     }
 
     void updateState() {
@@ -322,7 +268,7 @@ public class EnMove : MonoBehaviour {
         isWalledLeft = isOnWallLeft();
         isWalledRight = isOnWallRight();
         isWalled = isWalledLeft || isWalledRight;
-        isHoldingWall = alive && (inputs.horizontal > 0 && isWalledRight || inputs.horizontal < 0 && isWalledLeft);
+        isHoldingWall = alive && (EnMainInst.inputs.horizontal > 0 && isWalledRight || EnMainInst.inputs.horizontal < 0 && isWalledLeft);
     }
 
     #endregion
@@ -336,16 +282,22 @@ public class EnMove : MonoBehaviour {
         EnMainInst = GetComponent<EnMain>();
         Player = GameObject.Find("Player");
         trueGravityScale = Self_RigidBody.gravityScale;
-        layerCollisionMask = getLayerCollisionMask();
         jumps = JUMPS_FROM_GND;
     }
 
     void Update() {
         if (Time.timeScale == 0.0f) return;
-        // update state and movement variables
+        // update state variables
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
 
         updateInput();
+        
+        if (EnMainInst.inputs.horizontal > 0.0f) {
+            facingRight = true;
+        } else if (EnMainInst.inputs.horizontal < 0.0f) {
+            facingRight = false;
+        }
+
         updateState();
 
         if (!isGrounded) {
@@ -366,7 +318,7 @@ public class EnMove : MonoBehaviour {
 
         if (alive) {
             // cancel dodge invulnerability for any input
-            if ((inputs.jump || inputs.attackMelee || inputs.attackRanged || inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
+            if ((EnMainInst.inputs.jump || EnMainInst.inputs.attackMelee || EnMainInst.inputs.attackRanged || EnMainInst.inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
                 GetComponent<EnHealth>().dodgeInvulnTime = 0.0f;
             }
 
@@ -404,10 +356,10 @@ public class EnMove : MonoBehaviour {
 
                 // horizontal movement
                 if (!EnMainInst.haltMotion && (!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
-                    if (Self_RigidBody.velocity.x * inputs.horizontal > 0) {
-                        Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
+                    if (Self_RigidBody.velocity.x * EnMainInst.inputs.horizontal > 0) {
+                        Self_RigidBody.AddForce(new Vector2(EnMainInst.inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
                     } else {
-                        Self_RigidBody.AddForce(new Vector2(inputs.horizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Force);
+                        Self_RigidBody.AddForce(new Vector2(EnMainInst.inputs.horizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Force);
                     }
                 }
 
@@ -436,9 +388,9 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // jumping
-                if (inputs.jump) {
+                if (EnMainInst.inputs.jump) {
                     if (isGrounded) {
-                        if (inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
+                        if (EnMainInst.inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
                             // drop through platform
                             StartIgnorePlatform();
                             wallClingLagTime = PLATFORM_FALL_LAG;
@@ -447,7 +399,7 @@ public class EnMove : MonoBehaviour {
                             jumpButtonDaemon = true;
                         }
                     } else {
-                        if (inputs.vertical < 0.0f) {
+                        if (EnMainInst.inputs.vertical < 0.0f) {
                             // fastdrop
                             StartFastDrop();
                         } else if (jumps > 0) {
@@ -472,12 +424,12 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // make jumping false once jump button is released
-                if (inputs.jumpRelease && jumpButtonDaemon) {
+                if (EnMainInst.inputs.jumpRelease && jumpButtonDaemon) {
                     jumpButtonDaemon = false;
                 }
 
                 // dodging
-                if (inputs.dodge && dodgeLagTime == 0.0f) {
+                if (EnMainInst.inputs.dodge && dodgeLagTime == 0.0f) {
                     Self_RigidBody.velocity = new Vector2(facingRight ? DODGE_SPEED : -DODGE_SPEED, Self_RigidBody.velocity.y);
                     GetComponent<EnHealth>().dodgeInvulnTime = GetComponent<EnHealth>().DODGE_INVULN;
                     dodgeLagTime = DODGE_LAG;
@@ -495,19 +447,19 @@ public class EnMove : MonoBehaviour {
                 }
                 
                 // jump off wall actions
-                if (inputs.jump) {
-                    if (inputs.vertical < 0.0f) {
+                if (EnMainInst.inputs.jump) {
+                    if (EnMainInst.inputs.vertical < 0.0f) {
                         // fast drop
                         StopWallCling(0.0f);
                         StartFastDrop();
-                    } else if (inputs.horizontal < 0.0f && isWalledRight || inputs.horizontal > 0.0f && isWalledLeft) {
+                    } else if (EnMainInst.inputs.horizontal < 0.0f && isWalledRight || EnMainInst.inputs.horizontal > 0.0f && isWalledLeft) {
                         // jump away
                         StopWallCling(WALL_JUMP_LAG);
-                        WallJump(inputs.horizontal < 0.0f, 2.0f);
-                    } else if (inputs.horizontal > 0.0f && isWalledRight || inputs.horizontal < 0.0f && isWalledLeft) {
+                        WallJump(EnMainInst.inputs.horizontal < 0.0f, 2.0f);
+                    } else if (EnMainInst.inputs.horizontal > 0.0f && isWalledRight || EnMainInst.inputs.horizontal < 0.0f && isWalledLeft) {
                         // jump towards
                         StopWallCling(WALL_JUMP_LAG);
-                        WallJump(inputs.horizontal > 0.0f, 1.0f);
+                        WallJump(EnMainInst.inputs.horizontal > 0.0f, 1.0f);
                     } else {
                         // jump neutral
                         StopWallCling(WALL_JUMP_LAG);
@@ -549,7 +501,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nInAttack {6}\nWallClingLag: {7:0.000}\nDodgeLag: {8:0.000}\nIgnorePlatform: {9}\nInAirTime: {10:0.000}\nHorz: {11}\nVert: {12}\nJump: {13}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, inputs.horizontal, inputs.vertical, inputs.jumpHeld);
+        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nInAttack {6}\nWallClingLag: {7:0.000}\nDodgeLag: {8:0.000}\nIgnorePlatform: {9}\nInAirTime: {10:0.000}\nHorz: {11}\nVert: {12}\nJump: {13}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
     }
 
     #endregion

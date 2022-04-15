@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4a0fec4d85ed6604983d0c1dc24ecc8e
+guid: c4b4a4e99c2577e44aea00074c739d96
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -33,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -42,13 +42,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 48
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 160, y: 160, z: 160, w: 160}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -69,7 +69,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -116,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sword
+      name: Dialog_0
       rect:
         serializedVersion: 2
-        x: 76
-        y: 51
-        width: 24
-        height: 24
+        x: 0
+        y: 320
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,20 +130,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c8950b96eb4348644a51097c8a4a9326
-      internalID: -893535826
+      spriteID: 2b3b9e82e8c1a534d819306fa0d02964
+      internalID: -221664401
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fork
+      name: Dialog_1
       rect:
         serializedVersion: 2
-        x: 1
-        y: 51
-        width: 24
-        height: 24
+        x: 160
+        y: 320
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,20 +151,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e4811c1e76c67064a8147e0c926d3ca1
-      internalID: -1529595454
+      spriteID: 6f129f242e36c4447b3e8c88eaa6fb4a
+      internalID: 977790129
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Knife
+      name: Dialog_2
       rect:
         serializedVersion: 2
-        x: 26
-        y: 51
-        width: 24
-        height: 24
+        x: 320
+        y: 320
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -172,20 +172,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb88392b06dbd7a40b2cd5846f675aeb
-      internalID: 538537773
+      spriteID: 0e874b84ea1cf324d8f5885cfd4b0538
+      internalID: -1154738208
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Chopsticks
+      name: Dialog_3
       rect:
         serializedVersion: 2
-        x: 51
-        y: 51
-        width: 24
-        height: 24
+        x: 0
+        y: 160
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -193,20 +193,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a099218bf78f73d4485eae1d8aa8a79e
-      internalID: 1236502801
+      spriteID: 07b4b9fe588e4f64aa1ece3cd7face93
+      internalID: -1745480670
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Weapon X
+      name: Dialog_4
       rect:
         serializedVersion: 2
-        x: 1
-        y: 26
-        width: 24
-        height: 24
+        x: 160
+        y: 160
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -214,20 +214,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4910ae3c7c3faeb49a25003322c25b05
-      internalID: 840190676
+      spriteID: 2e7fddd6a5a5a6a49b2c906645dc68c4
+      internalID: 983557521
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Weapon O
+      name: Dialog_5
       rect:
         serializedVersion: 2
-        x: 26
-        y: 26
-        width: 24
-        height: 24
+        x: 320
+        y: 160
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -235,20 +235,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ca704a7a0c0ba84bbf45f84c7925c93
-      internalID: 1929666422
+      spriteID: 3286b46b762b37247acfcd339ca3b1e9
+      internalID: -1241940718
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Weapon Plus
+      name: Dialog_6
       rect:
         serializedVersion: 2
-        x: 51
-        y: 26
-        width: 24
-        height: 24
+        x: 0
+        y: 0
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -256,20 +256,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 891cf6a3169685c45ba9daa3c896bdd9
-      internalID: -1481130756
+      spriteID: a46f9dd326f50244e823032b6f9f60e5
+      internalID: -128771296
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Weapon Square
+      name: Dialog_7
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 24
-        height: 24
+        x: 160
+        y: 0
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -277,20 +277,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bd8729e38f69b1e469c7e9c043f86b67
-      internalID: -1920305411
+      spriteID: c46020e1f26e93f4fa79222daa0a5688
+      internalID: 707399858
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Weapon Diamond
+      name: Dialog_8
       rect:
         serializedVersion: 2
-        x: 26
-        y: 1
-        width: 24
-        height: 24
+        x: 320
+        y: 0
+        width: 160
+        height: 160
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -298,29 +298,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fd4cdd0193ca0f4eba7c8453c5b7243
-      internalID: 281953203
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Weapon Grid
-      rect:
-        serializedVersion: 2
-        x: 51
-        y: 1
-        width: 24
-        height: 24
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b989ff955eed90040a2058d656f19730
-      internalID: 1499115215
+      spriteID: bdf304c8d3f74ac41871d1efb3cf6673
+      internalID: 880283844
       vertices: []
       indices: 
       edges: []
@@ -329,24 +308,22 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Weapon Diamond: 281953203
-      Chopsticks: 1236502801
-      Weapon Plus: -1481130756
-      SusCoin: -1756557331
-      Weapon O: 1929666422
-      Fork: -1529595454
-      Sword: -893535826
-      Knife: 538537773
-      Weapon X: 840190676
-      Weapon Square: -1920305411
-      Weapon Grid: 1499115215
+      Dialog_7: 707399858
+      Dialog_3: -1745480670
+      Dialog_5: -1241940718
+      Dialog_4: 983557521
+      Dialog_0: -221664401
+      Dialog_1: 977790129
+      Dialog_2: -1154738208
+      Dialog_8: 880283844
+      Dialog_6: -128771296
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

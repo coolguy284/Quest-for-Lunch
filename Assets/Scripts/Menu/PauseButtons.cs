@@ -8,11 +8,14 @@ public class PauseButtons : MonoBehaviour {
     public GameObject PauseMainMenu;
     public GameObject OptionsMenu;
     public GameObject TutorialMenu;
+    public Transform PauseSlots;
     [HideInInspector]
     public bool gamePaused = false;
+    GameObject Player;
 
     public void Pause() {
         PauseMenu.SetActive(true);
+        Player.GetComponent<EnItem>().DisplaySlots(PauseSlots);
         Time.timeScale = 0.0f;
         gamePaused = true;
     }
@@ -30,7 +33,12 @@ public class PauseButtons : MonoBehaviour {
         SceneManager.LoadScene("Levels");
     }
 
+    void Start() {
+        Player = GameObject.Find("Player");
+    }
+
     void Update() {
+        if (Player == null) Player = GameObject.Find("Player");
         // press esc to return to title
         if (Input.GetButtonDown("Cancel")) {
             if (PauseMenu.activeSelf) {
