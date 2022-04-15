@@ -20,7 +20,7 @@ public class EnAttack : MonoBehaviour {
     float MOMENTUM_HALT_TIME = 1.0f;
     float KNOCKBACK_SCALE = 0.9f; // what amount of the damage is the knockback force
     float HITSTUN_SCALE = 0.02f;
-    float HITINVULN_SCALE = 0.04f;
+    float HITINVULN_SCALE = 0.02f;
     
     float attackCooldown = 0.0f;
     //float teleportAttack = 0.0f;
@@ -49,12 +49,12 @@ public class EnAttack : MonoBehaviour {
 
             // perform damage
             entity.GetComponent<EnHealth>().changeHealth(-ATTACK_DAMAGE);
+            entity.GetComponent<EnHealth>().hitInvulnTime = ATTACK_DAMAGE * HITINVULN_SCALE * (isPlayer ? 1.0f : 4.0f);
 
             // perform knockback
             entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * Mathf.Pow(ATTACK_DAMAGE, 0.25f) * KNOCKBACK_SCALE, ForceMode2D.Impulse);
             entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
             entity.GetComponent<EnMove>().inputLagTime = ATTACK_DAMAGE * HITSTUN_SCALE;
-            entity.GetComponent<EnHealth>().hitInvulnTime = ATTACK_DAMAGE * HITINVULN_SCALE;
 
             // grant suscoins
             if (isPlayer && !entity.GetComponent<EnHealth>().alive) {

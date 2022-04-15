@@ -31,7 +31,11 @@ public class EnHealth : MonoBehaviour {
     [HideInInspector]
     public float pastDodgeInvulnTime = 0.0f;
     [HideInInspector]
-    public float invulnTime = 0.0f;
+    public float invulnTime {
+        get {
+            return Mathf.Max(hitInvulnTime, dodgeInvulnTime);
+        }
+    }
 
     bool isPlayer = false;
 
@@ -73,7 +77,6 @@ public class EnHealth : MonoBehaviour {
         // update state variables
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
         isPlayer = EnMainInst.isPlayer;
-        invulnTime = Mathf.Max(hitInvulnTime, dodgeInvulnTime);
 
         // get tile at feet
         var celCoords = GroundGridLayout.WorldToCell(new Vector2(Self.transform.position.x, Self.transform.position.y - EnMainInst.bounds.extentY));
