@@ -14,8 +14,6 @@ public class EnAttack : MonoBehaviour {
     float ATTACK_STARTUP = 2.0f;
     float ATTACK_ACTIVE = 0.5f;
     float ATTACK_COOLDOWN = 2.0f;
-    float BASIC_HITBOT_SIZE = 1.0f;
-    float FASTDROP_HITBOT_SIZE = 0.6f;
     float FASTDROP_LAG = 0.5f;
     //float TELEPORT_ATTACK_MAX = 10.0f;
     float MOMENTUM_HALT_TIME = 1.0f;
@@ -29,20 +27,18 @@ public class EnAttack : MonoBehaviour {
     bool givenMomentumHalt = false; // for the one guaranteed momentum halt
     float extraMomentumHalt = 0.0f; // extra momentum halt time
 
-    void attackRaycast(Vector2 origin, Vector2 direction, float distance) {
+    void attack() {
         // check for intersection with wall
-        var wallRaycast = Physics2D.Raycast(origin, direction, distance, LayerMask.GetMask("Default", "Platform"));
+        /*var wallRaycast = Physics2D.Raycast(origin, direction, distance, LayerMask.GetMask("Default", "Platform"));
         float attackDistance;
         if (wallRaycast.collider == null) attackDistance = distance;
-        else attackDistance = wallRaycast.fraction;
+        else attackDistance = wallRaycast.fraction;*/
 
-        // calculate attack ray
-        Debug.DrawRay(new Vector3(origin.x, origin.y, 0.0f), new Vector3(direction.x, direction.y, 0.0f) * attackDistance, isPlayer ? Color.red : Color.yellow, 0.1f, false);
-        var attackRaycast = Physics2D.RaycastAll(origin, direction, attackDistance, isPlayer ? LayerMask.GetMask("Enemy") : LayerMask.GetMask("Player"));
+        var colliders = transform.Find("HitBox").GetComponent<ColliderTracker>().colliders;
 
-        // for each thing ray hit
-        foreach (var raycast in attackRaycast) {
-            var entity = raycast.collider;
+        // for each thing hitbox hit
+        foreach (var entity in new List<Collider2D>(colliders)) {
+            var direction = entity.transform.position - transform.position;
             // only attack if vulnerable
             if (entity.GetComponent<EnHealth>() != null && entity.GetComponent<EnHealth>().invulnTime == 0.0f) {
                 // perform damage
@@ -65,31 +61,28 @@ public class EnAttack : MonoBehaviour {
 
     void FastDropAttack() {
         // fastdrop attack
-        attackRaycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX - EnMainInst.bounds.extraGap, transform.position.y - EnMainInst.bounds.extentY * 0.5f), Vector2.left, FASTDROP_HITBOT_SIZE);
-        attackRaycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y - EnMainInst.bounds.extentY * 0.5f), Vector2.right, FASTDROP_HITBOT_SIZE);
+        attack();
         GetComponent<EnMove>().inputLagTime = FASTDROP_LAG;
     }
 
     IEnumerator NormalAttack() {
         // startup lag
         GetComponent<EnMove>().inAttackSword = true;
-        for (int i = 0; i < ATTACK_STARTUP / 0.1f; i++) {
+        float startupTime = 0.0f;
+        while (startupTime < ATTACK_STARTUP) {
             if (GetComponent<EnMove>().inputLagTime > 0.0f) {
                 GetComponent<EnMove>().inAttackSword = false;
                 yield break;
             }
-            yield return new WaitForSeconds(0.1f);
+            startupTime += Time.deltaTime;
+            yield return null;
         }
 
         // normal attack
         attackCooldown = ATTACK_ACTIVE;
         float activeTime = 0.0f;
         while (activeTime < ATTACK_ACTIVE) {
-            if (GetComponent<EnMove>().facingRight) {
-                attackRaycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y), Vector2.right, BASIC_HITBOT_SIZE);
-            } else {
-                attackRaycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX - EnMainInst.bounds.extraGap, transform.position.y), Vector2.left, BASIC_HITBOT_SIZE);
-            }
+            attack();
             activeTime += Time.deltaTime;
             yield return null;
         }

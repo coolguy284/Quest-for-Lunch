@@ -1,2 +1,3 @@
+hitboxes go through wall
 if quality low, movement speed crazy and jumps all over the place, jumps, everything basically 5.0x speed
 double jump gone when regular jump if game lags enough

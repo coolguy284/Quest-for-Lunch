@@ -121,8 +121,8 @@ PolygonCollider2D:
       - {x: -0.3, y: 0.6}
       - {x: -0.3, y: -0.5}
       - {x: -0.2, y: -0.6}
-      - {x: -0.2, y: -0.58}
-      - {x: 0.2, y: -0.58}
+      - {x: -0.18, y: -0.58}
+      - {x: 0.18, y: -0.58}
       - {x: 0.2, y: -0.6}
       - {x: 0.3, y: -0.5}
 --- !u!50 &493426261116116562
@@ -183,6 +183,8 @@ MonoBehaviour:
   isFastDropping: 0
   inputLagTime: 0
   inAttack: 0
+  inAttackFastFall: 0
+  inAttackSword: 0
   facingRight: 1
   isGrounded: 0
   inAirTime: 0
