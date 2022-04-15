@@ -1,7 +1,6 @@
 chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon
 add teleport attack
 hitboxes
-inventory system for picking up and dropping weapons for the 2 slots
 sword is melee, fork is ranged (for now)
 projectiles, arrow count of 5
 sword does 60 damage, arrow does 13 damage, enemies do 35 damage

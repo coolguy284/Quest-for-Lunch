@@ -43,7 +43,7 @@ public class EnAttack : MonoBehaviour {
         foreach (var raycast in attackRaycast) {
             var entity = raycast.collider;
             // only attack if vulnerable
-            if (entity.GetComponent<EnHealth>().invulnTime == 0.0f) {
+            if (entity.GetComponent<EnHealth>() != null && entity.GetComponent<EnHealth>().invulnTime == 0.0f) {
                 // perform damage
                 entity.GetComponent<EnHealth>().changeHealth(-damage);
 
@@ -126,7 +126,7 @@ public class EnAttack : MonoBehaviour {
 
         if (GetComponent<EnMove>().fastDropStoppedFrame) {
             FastDropAttack();
-        } else if (GetComponent<EnMove>().inputs.attackMelee && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
+        } else if (EnMainInst.inputs.attackMelee && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
             StartCoroutine(NormalAttack());
         }
 

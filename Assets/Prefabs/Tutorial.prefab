@@ -307,7 +307,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 393.7232, y: 370.7863}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7322317085466779903
 GameObject:
@@ -491,7 +491,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.7017, y: -4.7002}
-  m_SizeDelta: {x: 275.0323, y: 245.1347}
+  m_SizeDelta: {x: 285.0672, y: 192.0925}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4463129088666386306
 CanvasRenderer:
@@ -525,15 +525,19 @@ MonoBehaviour:
 
     Jump: Space
 
-    Dodge: Return
+    Dodge: Left Shift or
+    Left Ctrl
 
-    Weapon
-    1: Left Click or Left Ctrl
+    Weapon 1: Left Click
 
-    Weapon 2: Right Click or Left Alt
+    Weapon 2: Right Click
 
     Teleport
-    Attack: Middle Click or Left Shift
+    Attack: R
+
+    Pick Up Item: I
+
+    Drop Item: K
 
     Menu: Escape'
   m_isRightToLeft: 0

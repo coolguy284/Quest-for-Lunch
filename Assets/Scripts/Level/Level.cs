@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Level : MonoBehaviour {
+    public Sprite[] Sprites;
+    [HideInInspector]
+    public Dictionary<string, Sprite> SpriteDict = new Dictionary<string, Sprite>();
     public Tilemap GroundTilemap;
     public Tilemap PlatformTilemap;
     public GameObject EnemiesList;
     public GameObject EnemyPrefab;
     public GameObject[] Rooms;
+    public GameObject ItemPrefab;
     public GameObject DebugTexts;
 
     IEnumerator PlaceRoom(int roomId, int locX, int locY) {
@@ -50,5 +54,8 @@ public class Level : MonoBehaviour {
             DebugTexts.SetActive(true);
         }
         StartCoroutine(PlaceRoom(0, -7, -35));
+        foreach (var sprite in Sprites) {
+            SpriteDict.Add(sprite.name, sprite);
+        }
     }
 }
