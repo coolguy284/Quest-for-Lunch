@@ -14,6 +14,7 @@ public class EnAttack : MonoBehaviour {
     float ATTACK_STARTUP = 2.0f;
     float ATTACK_ACTIVE = 0.5f;
     float ATTACK_COOLDOWN = 2.0f;
+    float FASTDROP_ACTIVE = 0.2f;
     float FASTDROP_LAG = 0.5f;
     //float TELEPORT_ATTACK_MAX = 10.0f;
     float MOMENTUM_HALT_TIME = 1.0f;
@@ -44,29 +45,41 @@ public class EnAttack : MonoBehaviour {
             if (wallRaycast.collider != null) continue;
             
             // only attack if vulnerable
-            if (entity.GetComponent<EnHealth>() != null && entity.GetComponent<EnHealth>().invulnTime == 0.0f) {
-                // perform damage
-                entity.GetComponent<EnHealth>().changeHealth(-ATTACK_DAMAGE);
+            if (entity.GetComponent<EnHealth>() == null || entity.GetComponent<EnHealth>().invulnTime != 0.0f) continue;
 
-                // perform knockback
-                entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * Mathf.Pow(ATTACK_DAMAGE, 0.25f) * KNOCKBACK_SCALE, ForceMode2D.Impulse);
-                entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
-                entity.GetComponent<EnMove>().inputLagTime = ATTACK_DAMAGE * HITSTUN_SCALE;
-                entity.GetComponent<EnHealth>().hitInvulnTime = ATTACK_DAMAGE * HITINVULN_SCALE;
+            // perform damage
+            entity.GetComponent<EnHealth>().changeHealth(-ATTACK_DAMAGE);
 
-                // grant suscoins
-                if (isPlayer && !entity.GetComponent<EnHealth>().alive) {
-                    EnMainInst.susCoins += (int)(entity.GetComponent<EnHealth>().maxHealth * 1.25f);
-                    EnMainInst.SusCoinsText.text = EnMainInst.susCoins.ToString();
-                }
+            // perform knockback
+            entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * Mathf.Pow(ATTACK_DAMAGE, 0.25f) * KNOCKBACK_SCALE, ForceMode2D.Impulse);
+            entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
+            entity.GetComponent<EnMove>().inputLagTime = ATTACK_DAMAGE * HITSTUN_SCALE;
+            entity.GetComponent<EnHealth>().hitInvulnTime = ATTACK_DAMAGE * HITINVULN_SCALE;
+
+            // grant suscoins
+            if (isPlayer && !entity.GetComponent<EnHealth>().alive) {
+                EnMainInst.susCoins += (int)(entity.GetComponent<EnHealth>().maxHealth * 1.25f);
+                EnMainInst.SusCoinsText.text = EnMainInst.susCoins.ToString();
             }
         }
     }
 
-    void FastDropAttack() {
+    IEnumerator FastDropAttack() {
+        // set up attack
+        GetComponent<EnMove>().inAttackFastFall = true;
+        yield return null;
+
         // fastdrop attack
-        attack();
+        float activeTime = 0.0f;
+        while (activeTime < FASTDROP_ACTIVE) {
+            attack();
+            activeTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // back to normal
         GetComponent<EnMove>().inputLagTime = FASTDROP_LAG;
+        GetComponent<EnMove>().inAttackFastFall = false;
     }
 
     IEnumerator NormalAttack() {
@@ -128,7 +141,7 @@ public class EnAttack : MonoBehaviour {
         isPlayer = EnMainInst.isPlayer;
 
         if (GetComponent<EnMove>().fastDropStoppedFrame) {
-            FastDropAttack();
+            StartCoroutine(FastDropAttack());
         } else if (EnMainInst.inputs.attackMelee && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
             StartCoroutine(NormalAttack());
         }
