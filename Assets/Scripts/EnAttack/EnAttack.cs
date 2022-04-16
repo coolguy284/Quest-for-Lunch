@@ -55,35 +55,20 @@ public class EnAttack : MonoBehaviour {
         }
     }
 
-    IEnumerator FastDropAttack() {
-        // get stats
-        var attackStats = EnMainInst.WeaponStats["Fastdrop"];
-
-        // set up attack
-        GetComponent<EnMove>().StartAttack("Fastdrop");
-        yield return null;
-
-        // fastdrop attack
-        float activeTime = 0.0f;
-        while (activeTime < attackStats.active) {
-            AttackHitbox(attackStats);
-            activeTime += Time.deltaTime;
-            yield return null;
-        }
-
-        // back to normal
-        GetComponent<EnMove>().StopAttack();
-        GetComponent<EnMove>().inputLagTime = attackStats.cooldown;
-    }
-
-    IEnumerator NormalAttack(int attackSlot) {
+    IEnumerator PerformAttack(int attackSlot) {
         // get stats
         Level.TWeaponStats attackStats;
-        if (isPlayer) {
-            var weaponSlot = GetComponent<EnItem>().Slots[attackSlot];
-            attackStats = EnMainInst.WeaponStats[weaponSlot == "" ? "Player_Basic" : weaponSlot];
+        if (attackSlot == -1) {
+            // fastdrop attack
+            attackStats = EnMainInst.WeaponStats["Fastdrop"];
         } else {
-            attackStats = EnMainInst.WeaponStats["Enemy_Basic1"];
+            // other attacks
+            if (isPlayer) {
+                var weaponSlot = GetComponent<EnItem>().Slots[attackSlot];
+                attackStats = EnMainInst.WeaponStats[weaponSlot == "" ? "Player_Basic" : weaponSlot];
+            } else {
+                attackStats = EnMainInst.WeaponStats["Enemy_Basic1"];
+            }
         }
 
         // startup lag
@@ -138,11 +123,11 @@ public class EnAttack : MonoBehaviour {
         isPlayer = EnMainInst.isPlayer;
 
         if (GetComponent<EnMove>().fastDropStoppedFrame) {
-            StartCoroutine(FastDropAttack());
+            StartCoroutine(PerformAttack(-1));
         } else if (EnMainInst.inputs.attack1 && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
-            StartCoroutine(NormalAttack(0));
+            StartCoroutine(PerformAttack(0));
         } else if (EnMainInst.inputs.attack2 && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
-            StartCoroutine(NormalAttack(1));
+            StartCoroutine(PerformAttack(1));
         }
 
         if (attackCooldown > 0.0f && (!givenMomentumHalt || GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt)) {
