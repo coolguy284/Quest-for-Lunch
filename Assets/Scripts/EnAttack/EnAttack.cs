@@ -13,11 +13,13 @@ public class EnAttack : MonoBehaviour {
     //float TELEPORT_ATTACK_MAX = 10.0f;
     float MOMENTUM_HALT_TIME = 1.0f;
     
-    float attackCooldown = 0.0f;
+    public float attackCooldown = 0.0f;
     //float teleportAttack = 0.0f;
     //int attackCombo = 0;
     bool givenMomentumHalt = false; // for the one guaranteed momentum halt
     float extraMomentumHalt = 0.0f; // extra momentum halt time
+    [HideInInspector]
+    public int arrowsFired = 0; // number of arrows fired from a bow, goes down when arrows return
 
     void AttackHitbox(Level.TWeaponStats attackStats) {
         var colliders = transform.Find("HitBox").GetComponent<ColliderTracker>().colliders;
@@ -56,7 +58,15 @@ public class EnAttack : MonoBehaviour {
     }
 
     void AttackRanged(Level.TWeaponStats attackStats) {
-        Instantiate(EnMainInst.ProjectileDict[attackStats.fires], transform.position, Quaternion.identity);
+        var projectile = Instantiate(EnMainInst.ProjectileDict[attackStats.fires], transform.position, Quaternion.identity);
+        projectile.transform.parent = EnMainInst.ProjectilesList.transform;
+        projectile.GetComponent<Rigidbody2D>().AddForce(new Vector2(GetComponent<EnMove>().facingRight ? attackStats.damage : -attackStats.damage, 0.0f), ForceMode2D.Impulse);
+        projectile.transform.rotation = Quaternion.Euler(0.0f, 0.0f, GetComponent<EnMove>().facingRight ? -45.0f : 135.0f);
+        var projectileDamage = projectile.GetComponent<ProjectileDamage>();
+        projectileDamage.EnMainInst = EnMainInst;
+        projectileDamage.EnAttackInst = this;
+        projectileDamage.isPlayer = isPlayer;
+        projectileDamage.attackStats = EnMainInst.WeaponStats[attackStats.fires];
     }
 
     IEnumerator PerformAttack(int attackSlot) {
@@ -73,6 +83,11 @@ public class EnAttack : MonoBehaviour {
             } else {
                 attackStats = EnMainInst.WeaponStats["Enemy_Basic1"];
             }
+        }
+
+        if (attackStats.type == "ranged") {
+            if (arrowsFired >= attackStats.extra[0]) yield break;
+            else arrowsFired++;
         }
 
         // startup lag

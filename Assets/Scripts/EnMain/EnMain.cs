@@ -69,15 +69,22 @@ public class EnMain : MonoBehaviour {
     [HideInInspector]
     public Dictionary<string, GameObject> ProjectileDict;
     [HideInInspector]
+    public GameObject ItemsList;
+    [HideInInspector]
+    public GameObject ProjectilesList;
+    [HideInInspector]
     public GameObject ItemPrefab;
     [HideInInspector]
     public Dictionary<string, Level.TWeaponStats> WeaponStats;
 
     void Start() {
         Player = GameObject.Find("Player");
-        SpriteDict = GameObject.Find("Main Level Script").GetComponent<Level>().SpriteDict;
-        ProjectileDict = GameObject.Find("Main Level Script").GetComponent<Level>().ProjectileDict;
-        ItemPrefab = GameObject.Find("Main Level Script").GetComponent<Level>().ItemPrefab;
-        WeaponStats = GameObject.Find("Main Level Script").GetComponent<Level>().WeaponStats;
+        var LevelComponent = GameObject.Find("Main Level Script").GetComponent<Level>();
+        SpriteDict = LevelComponent.SpriteDict;
+        ProjectileDict = LevelComponent.ProjectileDict;
+        ItemsList = LevelComponent.ItemsList;
+        ProjectilesList = LevelComponent.ProjectilesList;
+        ItemPrefab = LevelComponent.ItemPrefab;
+        WeaponStats = LevelComponent.WeaponStats;
     }
 }
