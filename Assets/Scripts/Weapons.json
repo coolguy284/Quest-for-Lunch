@@ -2,7 +2,7 @@
     "weaponStats": [
         {
             "name": "Fastdrop",
-            "type": "fastdrop",
+            "type": "normal",
             "fires": "None",
             "damage": 80,
             "startup": 0,
@@ -14,7 +14,7 @@
         },
         {
             "name": "Player_Basic",
-            "type": "melee",
+            "type": "normal",
             "fires": "None",
             "damage": 10,
             "startup": 0,
@@ -26,7 +26,7 @@
         },
         {
             "name": "Sword",
-            "type": "melee",
+            "type": "normal",
             "fires": "None",
             "damage": 60,
             "startup": 0.1,
@@ -38,7 +38,7 @@
         },
         {
             "name": "Fork",
-            "type": "melee",
+            "type": "normal",
             "fires": "None",
             "damage": 20,
             "startup": 0.1,
@@ -50,7 +50,7 @@
         },
         {
             "name": "Knife",
-            "type": "tactical",
+            "type": "normal",
             "fires": "None",
             "damage": 20,
             "startup": 0.1,
@@ -62,7 +62,7 @@
         },
         {
             "name": "Chopsticks",
-            "type": "melee",
+            "type": "normal",
             "fires": "None",
             "damage": 20,
             "startup": 0.1,
@@ -74,7 +74,7 @@
         },
         {
             "name": "Tenderizer",
-            "type": "melee",
+            "type": "normal",
             "fires": "None",
             "damage": 20,
             "startup": 0.1,
@@ -86,7 +86,7 @@
         },
         {
             "name": "Spatula",
-            "type": "melee",
+            "type": "normal",
             "fires": "None",
             "damage": 20,
             "startup": 0.1,
@@ -98,11 +98,11 @@
         },
         {
             "name": "Weapon Plus",
-            "type": "melee",
+            "type": "ranged",
             "fires": "Arrow",
             "damage": 0,
-            "startup": 0.1,
-            "active": 0.3,
+            "startup": 0.4,
+            "active": 0,
             "cooldown": 0.1,
             "knockback": 0,
             "hitstun": 0,
@@ -122,7 +122,7 @@
         },
         {
             "name": "Enemy_Basic1",
-            "type": "enemy1",
+            "type": "normal",
             "fires": "None",
             "damage": 35,
             "startup": 2,
