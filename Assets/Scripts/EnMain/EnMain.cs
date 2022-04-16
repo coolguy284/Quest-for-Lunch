@@ -25,8 +25,8 @@ public class EnMain : MonoBehaviour {
         bool _jumpReleaseDone = false;
         public bool jumpHeld = false;
         public bool dodge = false;
-        public bool attackMelee = false;
-        public bool attackRanged = false;
+        public bool attack1 = false;
+        public bool attack2 = false;
         public bool attackTele = false;
         public bool pickupItem = false;
         public bool dropItem = false;
@@ -68,10 +68,13 @@ public class EnMain : MonoBehaviour {
     public Dictionary<string, Sprite> SpriteDict;
     [HideInInspector]
     public GameObject ItemPrefab;
+    [HideInInspector]
+    public Dictionary<string, Level.TWeaponStats> WeaponStats;
 
     void Start() {
         Player = GameObject.Find("Player");
         SpriteDict = GameObject.Find("Main Level Script").GetComponent<Level>().SpriteDict;
         ItemPrefab = GameObject.Find("Main Level Script").GetComponent<Level>().ItemPrefab;
+        WeaponStats = GameObject.Find("Main Level Script").GetComponent<Level>().WeaponStats;
     }
 }

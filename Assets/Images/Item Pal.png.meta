@@ -116,27 +116,6 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sword
-      rect:
-        serializedVersion: 2
-        x: 76
-        y: 51
-        width: 24
-        height: 24
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c8950b96eb4348644a51097c8a4a9326
-      internalID: -893535826
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: Fork
       rect:
         serializedVersion: 2
@@ -151,8 +130,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e4811c1e76c67064a8147e0c926d3ca1
-      internalID: -1529595454
+      spriteID: 01b2513703e68524ca70030c5c8a4db8
+      internalID: 1022586777
       vertices: []
       indices: 
       edges: []
@@ -172,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb88392b06dbd7a40b2cd5846f675aeb
-      internalID: 538537773
+      spriteID: 4c3dcceb51a63e347ab27bbdce7937cc
+      internalID: 1946107438
       vertices: []
       indices: 
       edges: []
@@ -193,14 +172,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a099218bf78f73d4485eae1d8aa8a79e
-      internalID: 1236502801
+      spriteID: a4e137d8940caaf44bd54f1e1918ad00
+      internalID: -63494930
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Weapon X
+      name: Sword
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 51
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84de64c649fdade499920ff817ce2430
+      internalID: -992786336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tenderizer
       rect:
         serializedVersion: 2
         x: 1
@@ -214,14 +214,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4910ae3c7c3faeb49a25003322c25b05
-      internalID: 840190676
+      spriteID: c565bd77d2cccda4fbb617a7487ed9d4
+      internalID: -593929074
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Weapon O
+      name: Spatula
       rect:
         serializedVersion: 2
         x: 26
@@ -235,8 +235,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3ca704a7a0c0ba84bbf45f84c7925c93
-      internalID: 1929666422
+      spriteID: 2b5ea23944fbba14a9fd8939b700e890
+      internalID: -44726265
       vertices: []
       indices: 
       edges: []
@@ -256,8 +256,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 891cf6a3169685c45ba9daa3c896bdd9
-      internalID: -1481130756
+      spriteID: ea79c041a2b4aee4b9ed081863c05554
+      internalID: 88351197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Arrow
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 26
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 807273e8d22724247b135bffa2355a13
+      internalID: -1711837164
       vertices: []
       indices: 
       edges: []
@@ -277,8 +298,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bd8729e38f69b1e469c7e9c043f86b67
-      internalID: -1920305411
+      spriteID: 374e7ff8a773eed4d9b8736baeaf4838
+      internalID: 612339118
       vertices: []
       indices: 
       edges: []
@@ -298,8 +319,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fd4cdd0193ca0f4eba7c8453c5b7243
-      internalID: 281953203
+      spriteID: 15a8ca6a31b1d914783d599a3e2ac0ea
+      internalID: -1400177762
       vertices: []
       indices: 
       edges: []
@@ -319,8 +340,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b989ff955eed90040a2058d656f19730
-      internalID: 1499115215
+      spriteID: 22b7e2acc138cd9469db92d7f2f62fad
+      internalID: 829780919
       vertices: []
       indices: 
       edges: []
@@ -336,17 +357,17 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Weapon Diamond: 281953203
-      Chopsticks: 1236502801
-      Weapon Plus: -1481130756
-      SusCoin: -1756557331
-      Weapon O: 1929666422
-      Fork: -1529595454
-      Sword: -893535826
-      Knife: 538537773
-      Weapon X: 840190676
-      Weapon Square: -1920305411
-      Weapon Grid: 1499115215
+      Weapon Diamond: -1400177762
+      Chopsticks: -63494930
+      Weapon Plus: 88351197
+      Spatula: -44726265
+      Arrow: -1711837164
+      Fork: 1022586777
+      Sword: -992786336
+      Knife: 1946107438
+      Weapon Square: 612339118
+      Tenderizer: -593929074
+      Weapon Grid: 829780919
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

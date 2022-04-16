@@ -60,9 +60,7 @@ public class EnMove : MonoBehaviour {
     [HideInInspector]
     public bool inAttack = false; // inputs will also be ignored if currently attacking
     [HideInInspector]
-    public bool inAttackFastFall = false;
-    [HideInInspector]
-    public bool inAttackSword = false;
+    public string attackType = "";
     bool ignorePlatform = false;
     bool queuedPlatPullVelReset = false;
     float trueGravityScale = 0.0f;
@@ -191,6 +189,21 @@ public class EnMove : MonoBehaviour {
         Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
     }
 
+    public void StartAttack(string attackTypeVal) {
+        inAttack = true;
+        attackType = attackTypeVal;
+        var prefix = isPlayer ? "Player" : "Enemy";
+        var animation = prefix + "_Attack" + attackType;
+        if (animator.HasState(0, Animator.StringToHash(animation))) animator.Play(animation);
+        else animator.Play(isPlayer ? "Player_AttackSword" : "Enemy_AttackBasic1");
+    }
+    
+    public void StopAttack() {
+        inAttack = false;
+        var prefix = isPlayer ? "Player" : "Enemy";
+        animator.Play(prefix + "_Idle");
+    }
+
     #endregion
 
     #region State Update Functions
@@ -205,8 +218,8 @@ public class EnMove : MonoBehaviour {
                 EnMainInst.inputs.vertical = Mathf.Abs(EnMainInst.inputs.vertical) < 0.35 ? 0 : Mathf.Sign(EnMainInst.inputs.vertical);
                 EnMainInst.inputs.jumpHeld = Input.GetButton("Jump");
                 EnMainInst.inputs.dodge = Input.GetButtonDown("Submit");
-                EnMainInst.inputs.attackMelee = Input.GetButtonDown("Fire1");
-                EnMainInst.inputs.attackRanged = Input.GetButtonDown("Fire2");
+                EnMainInst.inputs.attack1 = Input.GetButtonDown("Fire1");
+                EnMainInst.inputs.attack2 = Input.GetButtonDown("Fire2");
                 EnMainInst.inputs.attackTele = Input.GetButtonDown("Fire3");
                 EnMainInst.inputs.pickupItem = Input.GetKeyDown(KeyCode.I);
                 EnMainInst.inputs.dropItem = Input.GetKeyDown(KeyCode.K);
@@ -222,10 +235,10 @@ public class EnMove : MonoBehaviour {
                     ).collider == null) {
                     if (relPlayerPos.x > 1.0f) {
                         EnMainInst.inputs.horizontal = 1.0f;
-                        EnMainInst.inputs.attackMelee = false;
+                        EnMainInst.inputs.attack1 = false;
                     } else if (relPlayerPos.x < -1.0f) {
                         EnMainInst.inputs.horizontal = -1.0f;
-                        EnMainInst.inputs.attackMelee = false;
+                        EnMainInst.inputs.attack1 = false;
                     } else {
                         if (relPlayerPos.x > 0.0f && !facingRight) {
                             EnMainInst.inputs.horizontal = 1.0f;
@@ -234,16 +247,16 @@ public class EnMove : MonoBehaviour {
                         } else {
                             EnMainInst.inputs.horizontal = 0.0f;
                         }
-                        EnMainInst.inputs.attackMelee = true;
+                        EnMainInst.inputs.attack1 = true;
                     }
                 } else {
                     EnMainInst.inputs.horizontal = 0.0f;
-                    EnMainInst.inputs.attackMelee = false;
+                    EnMainInst.inputs.attack1 = false;
                 }
                 EnMainInst.inputs.vertical = 0.0f;
                 EnMainInst.inputs.jumpHeld = false;
                 EnMainInst.inputs.dodge = false;
-                EnMainInst.inputs.attackRanged = false;
+                EnMainInst.inputs.attack2 = false;
                 EnMainInst.inputs.attackTele = false;
                 EnMainInst.inputs.pickupItem = false;
                 EnMainInst.inputs.dropItem = false;
@@ -253,8 +266,8 @@ public class EnMove : MonoBehaviour {
             EnMainInst.inputs.vertical = 0.0f;
             EnMainInst.inputs.jumpHeld = false;
             EnMainInst.inputs.dodge = false;
-            EnMainInst.inputs.attackMelee = false;
-            EnMainInst.inputs.attackRanged = false;
+            EnMainInst.inputs.attack1 = false;
+            EnMainInst.inputs.attack2 = false;
             EnMainInst.inputs.attackTele = false;
             EnMainInst.inputs.pickupItem = false;
             EnMainInst.inputs.dropItem = false;
@@ -274,7 +287,6 @@ public class EnMove : MonoBehaviour {
         isWalledRight = isOnWallRight();
         isWalled = isWalledLeft || isWalledRight;
         isHoldingWall = alive && (EnMainInst.inputs.horizontal > 0 && isWalledRight || EnMainInst.inputs.horizontal < 0 && isWalledLeft);
-        inAttack = inAttackFastFall || inAttackSword;
     }
 
     #endregion
@@ -318,15 +330,6 @@ public class EnMove : MonoBehaviour {
             inAirTime = 0.0f;
         }
 
-        if (animator != null) {
-            if (isPlayer) {
-                animator.SetBool("IsAttackSword", inAttackSword);
-                animator.SetBool("IsAttackFastFall", inAttackFastFall);
-            } else {
-                animator.SetBool("IsAttackBasic", inAttackSword);
-            }
-        }
-
         if (fastDropStoppedFrame) {
             fastDropStoppedFrame = false;
         }
@@ -339,7 +342,7 @@ public class EnMove : MonoBehaviour {
 
         if (alive) {
             // cancel dodge invulnerability for any input
-            if ((EnMainInst.inputs.jump || EnMainInst.inputs.attackMelee || EnMainInst.inputs.attackRanged || EnMainInst.inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
+            if ((EnMainInst.inputs.jump || EnMainInst.inputs.attack1 || EnMainInst.inputs.attack2 || EnMainInst.inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
                 GetComponent<EnHealth>().dodgeInvulnTime = 0.0f;
             }
 
@@ -523,10 +526,6 @@ public class EnMove : MonoBehaviour {
 
         // debug text
         if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nInAttack {6}\nWallClingLag: {7:0.000}\nDodgeLag: {8:0.000}\nIgnorePlatform: {9}\nInAirTime: {10:0.000}\nHorz: {11}\nVert: {12}\nJump: {13}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
-    }
-
-    void LateUpdate() {
-        inAttack = inAttackFastFall || inAttackSword;
     }
 
     #endregion

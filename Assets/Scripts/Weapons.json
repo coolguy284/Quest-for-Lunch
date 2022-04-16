@@ -1,0 +1,136 @@
+{
+    "weaponStats": [
+        {
+            "name": "Fastdrop",
+            "type": "fastdrop",
+            "fires": "None",
+            "damage": 80,
+            "startup": 0,
+            "active": 0.2,
+            "cooldown": 0.5,
+            "knockback": 8,
+            "hitstun": 2,
+            "invuln": 4
+        },
+        {
+            "name": "Player_Basic",
+            "type": "melee",
+            "fires": "None",
+            "damage": 10,
+            "startup": 0,
+            "active": 0.2,
+            "cooldown": 0.1,
+            "knockback": 1,
+            "hitstun": 0.1,
+            "invuln": 0.2
+        },
+        {
+            "name": "Sword",
+            "type": "melee",
+            "fires": "None",
+            "damage": 60,
+            "startup": 0.1,
+            "active": 0.3,
+            "cooldown": 0.1,
+            "knockback": 2,
+            "hitstun": 0.1,
+            "invuln": 1
+        },
+        {
+            "name": "Fork",
+            "type": "melee",
+            "fires": "None",
+            "damage": 20,
+            "startup": 0.1,
+            "active": 0.3,
+            "cooldown": 0.1,
+            "knockback": 6,
+            "hitstun": 0.1,
+            "invuln": 1
+        },
+        {
+            "name": "Knife",
+            "type": "tactical",
+            "fires": "None",
+            "damage": 20,
+            "startup": 0.1,
+            "active": 0.3,
+            "cooldown": 0.1,
+            "knockback": 6,
+            "hitstun": 0.1,
+            "invuln": 1
+        },
+        {
+            "name": "Chopsticks",
+            "type": "melee",
+            "fires": "None",
+            "damage": 20,
+            "startup": 0.1,
+            "active": 0.3,
+            "cooldown": 0.1,
+            "knockback": 6,
+            "hitstun": 0.1,
+            "invuln": 1
+        },
+        {
+            "name": "Tenderizer",
+            "type": "melee",
+            "fires": "None",
+            "damage": 20,
+            "startup": 0.1,
+            "active": 0.3,
+            "cooldown": 0.1,
+            "knockback": 6,
+            "hitstun": 0.1,
+            "invuln": 1
+        },
+        {
+            "name": "Spatula",
+            "type": "melee",
+            "fires": "None",
+            "damage": 20,
+            "startup": 0.1,
+            "active": 0.3,
+            "cooldown": 0.1,
+            "knockback": 6,
+            "hitstun": 0.1,
+            "invuln": 1
+        },
+        {
+            "name": "Weapon Plus",
+            "type": "melee",
+            "fires": "Arrow",
+            "damage": 0,
+            "startup": 0.1,
+            "active": 0.3,
+            "cooldown": 0.1,
+            "knockback": 0,
+            "hitstun": 0,
+            "invuln": 0
+        },
+        {
+            "name": "Arrow",
+            "type": "detatched",
+            "fires": "None",
+            "damage": 13,
+            "startup": 0,
+            "active": 0,
+            "cooldown": 0,
+            "knockback": 6,
+            "hitstun": 0.1,
+            "invuln": 1
+        },
+        {
+            "name": "Enemy_Basic1",
+            "type": "enemy1",
+            "fires": "None",
+            "damage": 35,
+            "startup": 2,
+            "active": 0.5,
+            "cooldown": 2,
+            "knockback": 2,
+            "hitstun": 0.2,
+            "invuln": 1
+        }
+    ]
+}
