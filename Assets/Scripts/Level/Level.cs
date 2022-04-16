@@ -19,6 +19,7 @@ public class Level : MonoBehaviour {
         public float knockback;
         public float hitstun;
         public float invuln;
+        public float[] extra;
     }
 
     [System.Serializable]
@@ -40,6 +41,8 @@ public class Level : MonoBehaviour {
     public Tilemap GroundTilemap;
     public Tilemap PlatformTilemap;
     public GameObject EnemiesList;
+    public GameObject ItemsList;
+    public GameObject ProjectilesList;
     public GameObject EnemyPrefab;
     public GameObject[] Rooms;
     public GameObject ItemPrefab;

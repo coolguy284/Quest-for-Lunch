@@ -6,7 +6,6 @@ using UnityEngine.U2D;
 
 public class EnItem : MonoBehaviour {
     public GameObject UISlots;
-    public GameObject ItemsList;
     EnMain EnMainInst;
     EnHealth EnHealthInst;
     public string[] Slots = new string[2] { "", "" };
@@ -58,10 +57,10 @@ public class EnItem : MonoBehaviour {
 
     public void DropItem(int slot) {
         if (slot < 0 || slot > Slots.Length || Slots[slot] == "" || !EnHealthInst.alive) return;
-        var instantiatedItem = Instantiate(EnMainInst.ItemPrefab, transform.position, Quaternion.identity);
-        instantiatedItem.GetComponent<SpriteRenderer>().sprite = EnMainInst.SpriteDict[Slots[slot]];
-        instantiatedItem.transform.parent = ItemsList.transform;
-        instantiatedItem.name = "Item " + Slots[slot];
+        var item = Instantiate(EnMainInst.ItemPrefab, transform.position, Quaternion.identity);
+        item.GetComponent<SpriteRenderer>().sprite = EnMainInst.SpriteDict[Slots[slot]];
+        item.transform.parent = EnMainInst.ItemsList.transform;
+        item.name = "Item " + Slots[slot];
         Slots[slot] = "";
         DisplaySlots();
     }

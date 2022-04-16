@@ -1,7 +1,11 @@
+make arrowsleft a visible quantity
+make arrows hitbox match arrow body (use polygoncollider2d)
+make arrow despawn time depend on factors
+
 chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon
 add teleport attack
 sword is melee, fork is ranged (for now)
-projectiles, arrow count of 5
+arrow count of 5
 arrows come back quickest-longest, ground, wall, enemy, except that if enemy killed with arrows, the arrows come back immediately
 save player data
 

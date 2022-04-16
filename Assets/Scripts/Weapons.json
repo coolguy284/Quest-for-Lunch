@@ -8,9 +8,10 @@
             "startup": 0,
             "active": 0.2,
             "cooldown": 0.5,
-            "knockback": 8,
+            "knockback": 3,
             "hitstun": 2,
-            "invuln": 4
+            "invuln": 4,
+            "extra": []
         },
         {
             "name": "Player_Basic",
@@ -22,7 +23,8 @@
             "cooldown": 0.1,
             "knockback": 1,
             "hitstun": 0.1,
-            "invuln": 0.2
+            "invuln": 0.2,
+            "extra": []
         },
         {
             "name": "Sword",
@@ -34,7 +36,8 @@
             "cooldown": 0.1,
             "knockback": 2,
             "hitstun": 0.1,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         },
         {
             "name": "Fork",
@@ -46,7 +49,8 @@
             "cooldown": 0.1,
             "knockback": 6,
             "hitstun": 0.1,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         },
         {
             "name": "Knife",
@@ -58,7 +62,8 @@
             "cooldown": 0.1,
             "knockback": 6,
             "hitstun": 0.1,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         },
         {
             "name": "Chopsticks",
@@ -70,7 +75,8 @@
             "cooldown": 0.1,
             "knockback": 6,
             "hitstun": 0.1,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         },
         {
             "name": "Tenderizer",
@@ -82,7 +88,8 @@
             "cooldown": 0.1,
             "knockback": 6,
             "hitstun": 0.1,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         },
         {
             "name": "Spatula",
@@ -94,19 +101,21 @@
             "cooldown": 0.1,
             "knockback": 6,
             "hitstun": 0.1,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         },
         {
             "name": "Weapon Plus",
             "type": "ranged",
             "fires": "Arrow",
-            "damage": 0,
+            "damage": 30,
             "startup": 0.4,
             "active": 0,
             "cooldown": 0.1,
             "knockback": 0,
             "hitstun": 0,
-            "invuln": 0
+            "invuln": 0,
+            "extra": [5]
         },
         {
             "name": "Arrow",
@@ -118,7 +127,8 @@
             "cooldown": 0,
             "knockback": 6,
             "hitstun": 0.1,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         },
         {
             "name": "Enemy_Basic1",
@@ -130,7 +140,8 @@
             "cooldown": 2,
             "knockback": 2,
             "hitstun": 0.2,
-            "invuln": 1
+            "invuln": 1,
+            "extra": []
         }
     ]
 }
