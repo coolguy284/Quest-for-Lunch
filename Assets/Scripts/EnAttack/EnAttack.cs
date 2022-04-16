@@ -55,6 +55,10 @@ public class EnAttack : MonoBehaviour {
         }
     }
 
+    void AttackRanged(Level.TWeaponStats attackStats) {
+        Instantiate(EnMainInst.ProjectileDict[attackStats.fires], transform.position, Quaternion.identity);
+    }
+
     IEnumerator PerformAttack(int attackSlot) {
         // get stats
         Level.TWeaponStats attackStats;
@@ -83,12 +87,21 @@ public class EnAttack : MonoBehaviour {
             yield return null;
         }
 
-        // normal attack
-        float activeTime = 0.0f;
-        while (activeTime < attackStats.active) {
-            AttackHitbox(attackStats);
-            activeTime += Time.deltaTime;
-            yield return null;
+        // perform attack
+        attackCooldown = attackStats.active;
+        switch (attackStats.type) {
+            case "normal":
+                float activeTime = 0.0f;
+                while (activeTime < attackStats.active) {
+                    AttackHitbox(attackStats);
+                    activeTime += Time.deltaTime;
+                    yield return null;
+                }
+                break;
+            
+            case "ranged":
+                AttackRanged(attackStats);
+                break;
         }
         GetComponent<EnMove>().StopAttack();
         attackCooldown = attackStats.cooldown;

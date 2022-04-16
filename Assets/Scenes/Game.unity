@@ -1872,6 +1872,8 @@ MonoBehaviour:
   - {fileID: 612339118, guid: 4a0fec4d85ed6604983d0c1dc24ecc8e, type: 3}
   - {fileID: -1400177762, guid: 4a0fec4d85ed6604983d0c1dc24ecc8e, type: 3}
   - {fileID: 829780919, guid: 4a0fec4d85ed6604983d0c1dc24ecc8e, type: 3}
+  Projectiles:
+  - {fileID: 7415768903280695414, guid: 6f21029d0b89f114481527e8dd4f5d1e, type: 3}
   GroundTilemap: {fileID: 1104581081}
   PlatformTilemap: {fileID: 761828870}
   EnemiesList: {fileID: 999674149}

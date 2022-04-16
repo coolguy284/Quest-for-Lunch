@@ -32,8 +32,11 @@ public class Level : MonoBehaviour {
     public Dictionary<string, TWeaponStats> WeaponStats = new Dictionary<string, TWeaponStats>();
 
     public Sprite[] Sprites;
+    public GameObject[] Projectiles;
     [HideInInspector]
     public Dictionary<string, Sprite> SpriteDict = new Dictionary<string, Sprite>();
+    [HideInInspector]
+    public Dictionary<string, GameObject> ProjectileDict = new Dictionary<string, GameObject>();
     public Tilemap GroundTilemap;
     public Tilemap PlatformTilemap;
     public GameObject EnemiesList;
@@ -77,20 +80,31 @@ public class Level : MonoBehaviour {
     }
 
     void Start() {
+        // load weapons json
         Assert.IsNotNull(WeaponsJson);
-
         baseWeaponsStats = JsonUtility.FromJson<WeaponStatsArr>(WeaponsJson.text);
 
+        // parse weapons json
         foreach (var stat in baseWeaponsStats.weaponStats) {
             WeaponStats.Add(stat.name, stat);
         }
 
-        if (Application.isEditor) {
-            DebugTexts.SetActive(true);
-        }
-        StartCoroutine(PlaceRoom(0, -7, -35));
+        // parse sprites dict
         foreach (var sprite in Sprites) {
             SpriteDict.Add(sprite.name, sprite);
         }
+
+        // parse projectiles dict
+        foreach (var prefab in Projectiles) {
+            ProjectileDict.Add(prefab.name, prefab);
+        }
+
+        // activate debug text in editor mode
+        if (Application.isEditor) {
+            DebugTexts.SetActive(true);
+        }
+
+        // place test room
+        StartCoroutine(PlaceRoom(0, -7, -35));
     }
 }

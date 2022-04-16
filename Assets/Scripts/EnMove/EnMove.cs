@@ -192,6 +192,7 @@ public class EnMove : MonoBehaviour {
     public void StartAttack(string attackTypeVal) {
         inAttack = true;
         attackType = attackTypeVal;
+        if (attackTypeVal == "Weapon Plus") return; // TEMPORARY
         var prefix = isPlayer ? "Player" : "Enemy";
         var animation = prefix + "_Attack" + attackType;
         if (animator.HasState(0, Animator.StringToHash(animation))) animator.Play(animation);
