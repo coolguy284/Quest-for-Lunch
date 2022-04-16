@@ -1,9 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
 
 public class Level : MonoBehaviour {
+    public TextAsset WeaponsJson;
+
+    [System.Serializable]
+    public class TWeaponStats {
+        public string name;
+        public string type;
+        public string fires;
+        public float damage;
+        public float startup;
+        public float active;
+        public float cooldown;
+        public float knockback;
+        public float hitstun;
+        public float invuln;
+    }
+
+    [System.Serializable]
+    public class WeaponStatsArr {
+        public TWeaponStats[] weaponStats;
+    }
+
+    WeaponStatsArr baseWeaponsStats;
+
+    [HideInInspector]
+    public Dictionary<string, TWeaponStats> WeaponStats = new Dictionary<string, TWeaponStats>();
+
     public Sprite[] Sprites;
     [HideInInspector]
     public Dictionary<string, Sprite> SpriteDict = new Dictionary<string, Sprite>();
@@ -50,6 +77,14 @@ public class Level : MonoBehaviour {
     }
 
     void Start() {
+        Assert.IsNotNull(WeaponsJson);
+
+        baseWeaponsStats = JsonUtility.FromJson<WeaponStatsArr>(WeaponsJson.text);
+
+        foreach (var stat in baseWeaponsStats.weaponStats) {
+            WeaponStats.Add(stat.name, stat);
+        }
+
         if (Application.isEditor) {
             DebugTexts.SetActive(true);
         }

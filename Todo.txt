@@ -2,7 +2,6 @@ chance that enemy is stunned on hit is enemy base stun chance plus stun chance o
 add teleport attack
 sword is melee, fork is ranged (for now)
 projectiles, arrow count of 5
-sword does 60 damage, arrow does 13 damage, enemies do 35 damage
 arrows come back quickest-longest, ground, wall, enemy, except that if enemy killed with arrows, the arrows come back immediately
 save player data
 

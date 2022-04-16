@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Weapon O
+  m_Name: Arrow
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 1929666422, guid: 4a0fec4d85ed6604983d0c1dc24ecc8e, type: 3}
+  m_Sprite: {fileID: -1711837164, guid: 4a0fec4d85ed6604983d0c1dc24ecc8e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

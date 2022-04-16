@@ -209,7 +209,6 @@ MonoBehaviour:
   hitInvulnTime: 0
   dodgeInvulnTime: 0
   pastDodgeInvulnTime: 0
-  invulnTime: 0
 --- !u!114 &8622637211522995862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugText3: {fileID: 0}
-  ATTACK_DAMAGE: 10
+  ATTACK_DAMAGE: 35
 --- !u!95 &3843454410269108498
 Animator:
   serializedVersion: 4

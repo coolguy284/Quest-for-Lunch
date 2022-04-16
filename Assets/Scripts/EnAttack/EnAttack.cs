@@ -10,17 +10,8 @@ public class EnAttack : MonoBehaviour {
     public TextMeshProUGUI DebugText3;
     bool isPlayer = false;
 
-    public float ATTACK_DAMAGE = 10.0f;
-    float ATTACK_STARTUP = 2.0f;
-    float ATTACK_ACTIVE = 0.5f;
-    float ATTACK_COOLDOWN = 2.0f;
-    float FASTDROP_ACTIVE = 0.2f;
-    float FASTDROP_LAG = 0.5f;
     //float TELEPORT_ATTACK_MAX = 10.0f;
     float MOMENTUM_HALT_TIME = 1.0f;
-    float KNOCKBACK_SCALE = 0.9f; // what amount of the damage is the knockback force
-    float HITSTUN_SCALE = 0.02f;
-    float HITINVULN_SCALE = 0.02f;
     
     float attackCooldown = 0.0f;
     //float teleportAttack = 0.0f;
@@ -28,7 +19,7 @@ public class EnAttack : MonoBehaviour {
     bool givenMomentumHalt = false; // for the one guaranteed momentum halt
     float extraMomentumHalt = 0.0f; // extra momentum halt time
 
-    void attack() {
+    void AttackHitbox(Level.TWeaponStats attackStats) {
         var colliders = transform.Find("HitBox").GetComponent<ColliderTracker>().colliders;
 
         // for each thing hitbox hit
@@ -48,13 +39,13 @@ public class EnAttack : MonoBehaviour {
             if (entity.GetComponent<EnHealth>() == null || entity.GetComponent<EnHealth>().invulnTime != 0.0f) continue;
 
             // perform damage
-            entity.GetComponent<EnHealth>().changeHealth(-ATTACK_DAMAGE);
-            entity.GetComponent<EnHealth>().hitInvulnTime = ATTACK_DAMAGE * HITINVULN_SCALE * (isPlayer ? 1.0f : 4.0f);
+            entity.GetComponent<EnHealth>().changeHealth(-attackStats.damage);
+            entity.GetComponent<EnHealth>().hitInvulnTime = attackStats.invuln;
 
             // perform knockback
-            entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * Mathf.Pow(ATTACK_DAMAGE, 0.25f) * KNOCKBACK_SCALE, ForceMode2D.Impulse);
+            entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * attackStats.knockback, ForceMode2D.Impulse);
             entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
-            entity.GetComponent<EnMove>().inputLagTime = ATTACK_DAMAGE * HITSTUN_SCALE;
+            entity.GetComponent<EnMove>().inputLagTime = attackStats.hitstun;
 
             // grant suscoins
             if (isPlayer && !entity.GetComponent<EnHealth>().alive) {
@@ -65,30 +56,42 @@ public class EnAttack : MonoBehaviour {
     }
 
     IEnumerator FastDropAttack() {
+        // get stats
+        var attackStats = EnMainInst.WeaponStats["Fastdrop"];
+
         // set up attack
-        GetComponent<EnMove>().inAttackFastFall = true;
+        GetComponent<EnMove>().StartAttack("Fastdrop");
         yield return null;
 
         // fastdrop attack
         float activeTime = 0.0f;
-        while (activeTime < FASTDROP_ACTIVE) {
-            attack();
+        while (activeTime < attackStats.active) {
+            AttackHitbox(attackStats);
             activeTime += Time.deltaTime;
             yield return null;
         }
 
         // back to normal
-        GetComponent<EnMove>().inputLagTime = FASTDROP_LAG;
-        GetComponent<EnMove>().inAttackFastFall = false;
+        GetComponent<EnMove>().StopAttack();
+        GetComponent<EnMove>().inputLagTime = attackStats.cooldown;
     }
 
-    IEnumerator NormalAttack() {
+    IEnumerator NormalAttack(int attackSlot) {
+        // get stats
+        Level.TWeaponStats attackStats;
+        if (isPlayer) {
+            var weaponSlot = GetComponent<EnItem>().Slots[attackSlot];
+            attackStats = EnMainInst.WeaponStats[weaponSlot == "" ? "Player_Basic" : weaponSlot];
+        } else {
+            attackStats = EnMainInst.WeaponStats["Enemy_Basic1"];
+        }
+
         // startup lag
-        GetComponent<EnMove>().inAttackSword = true;
+        GetComponent<EnMove>().StartAttack(attackStats.name);
         float startupTime = 0.0f;
-        while (startupTime < ATTACK_STARTUP) {
+        while (startupTime < attackStats.startup) {
             if (GetComponent<EnMove>().inputLagTime > 0.0f) {
-                GetComponent<EnMove>().inAttackSword = false;
+                GetComponent<EnMove>().StopAttack();
                 yield break;
             }
             startupTime += Time.deltaTime;
@@ -96,15 +99,14 @@ public class EnAttack : MonoBehaviour {
         }
 
         // normal attack
-        attackCooldown = ATTACK_ACTIVE;
         float activeTime = 0.0f;
-        while (activeTime < ATTACK_ACTIVE) {
-            attack();
+        while (activeTime < attackStats.active) {
+            AttackHitbox(attackStats);
             activeTime += Time.deltaTime;
             yield return null;
         }
-        attackCooldown = ATTACK_COOLDOWN;
-        GetComponent<EnMove>().inAttackSword = false;
+        GetComponent<EnMove>().StopAttack();
+        attackCooldown = attackStats.cooldown;
 
         // halt momentum
         if (!givenMomentumHalt) {
@@ -127,11 +129,6 @@ public class EnAttack : MonoBehaviour {
         Self_RigidBody = GetComponent<Rigidbody2D>();
         EnMainInst = GetComponent<EnMain>();
         isPlayer = EnMainInst.isPlayer;
-        if (isPlayer) {
-            ATTACK_STARTUP = 0.1f;
-            ATTACK_ACTIVE = 0.3f;
-            ATTACK_COOLDOWN = 0.3f;
-        }
     }
 
     void Update() {
@@ -142,8 +139,10 @@ public class EnAttack : MonoBehaviour {
 
         if (GetComponent<EnMove>().fastDropStoppedFrame) {
             StartCoroutine(FastDropAttack());
-        } else if (EnMainInst.inputs.attackMelee && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
-            StartCoroutine(NormalAttack());
+        } else if (EnMainInst.inputs.attack1 && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
+            StartCoroutine(NormalAttack(0));
+        } else if (EnMainInst.inputs.attack2 && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
+            StartCoroutine(NormalAttack(1));
         }
 
         if (attackCooldown > 0.0f && (!givenMomentumHalt || GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt)) {
