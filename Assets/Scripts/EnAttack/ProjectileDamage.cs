@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class ProjectileDamage : MonoBehaviour {
     public EnMain EnMainInst;
+    public EnItem EnItemInst;
     public EnAttack EnAttackInst;
     public bool isPlayer;
     public Level.TWeaponStats attackStats;
+    public int slotId;
+    public EnItem.Slot slot;
     float existedTime;
+    bool destroyed = false;
 
     void DestroyProjectile() {
+        if (destroyed) return;
         Destroy(this.gameObject);
-        EnAttackInst.arrowsFired--;
+        slot.extra[0] = (int)slot.extra[0] - 1;
+        EnItemInst.DisplaySingleSlot(slotId);
+        destroyed = true;
     }
 
     void AttackHitbox() {
@@ -19,6 +26,11 @@ public class ProjectileDamage : MonoBehaviour {
 
         // for each thing hitbox hit
         foreach (var entity in new List<Collider2D>(colliders)) {
+            var relVel = entity.GetComponent<Rigidbody2D>().velocity - GetComponent<Rigidbody2D>().velocity;
+
+            // ignore collision if too slow
+            if (relVel.magnitude < 10.0f) continue;
+
             var direction = entity.transform.position - transform.position;
             
             // only attack if vulnerable
@@ -38,6 +50,8 @@ public class ProjectileDamage : MonoBehaviour {
                 EnMainInst.susCoins += (int)(entity.GetComponent<EnHealth>().maxHealth * 1.25f);
                 EnMainInst.SusCoinsText.text = EnMainInst.susCoins.ToString();
             }
+
+            // destroy arrow
             DestroyProjectile();
         }
     }

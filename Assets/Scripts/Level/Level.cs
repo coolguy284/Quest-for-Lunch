@@ -19,7 +19,7 @@ public class Level : MonoBehaviour {
         public float knockback;
         public float hitstun;
         public float invuln;
-        public float[] extra;
+        public int[] extraInt;
     }
 
     [System.Serializable]
