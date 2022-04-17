@@ -11,7 +11,7 @@
             "knockback": 3,
             "hitstun": 2,
             "invuln": 4,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Player_Basic",
@@ -24,7 +24,7 @@
             "knockback": 1,
             "hitstun": 0.1,
             "invuln": 0.2,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Sword",
@@ -37,7 +37,7 @@
             "knockback": 2,
             "hitstun": 0.1,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Fork",
@@ -50,7 +50,7 @@
             "knockback": 6,
             "hitstun": 0.1,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Knife",
@@ -63,7 +63,7 @@
             "knockback": 6,
             "hitstun": 0.1,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Chopsticks",
@@ -76,7 +76,7 @@
             "knockback": 6,
             "hitstun": 0.1,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Tenderizer",
@@ -89,7 +89,7 @@
             "knockback": 6,
             "hitstun": 0.1,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Spatula",
@@ -102,7 +102,7 @@
             "knockback": 6,
             "hitstun": 0.1,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Weapon Plus",
@@ -115,7 +115,7 @@
             "knockback": 0,
             "hitstun": 0,
             "invuln": 0,
-            "extra": [5]
+            "extraInt": [5]
         },
         {
             "name": "Arrow",
@@ -128,7 +128,7 @@
             "knockback": 6,
             "hitstun": 0.1,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         },
         {
             "name": "Enemy_Basic1",
@@ -141,7 +141,7 @@
             "knockback": 2,
             "hitstun": 0.2,
             "invuln": 1,
-            "extra": []
+            "extraInt": []
         }
     ]
 }

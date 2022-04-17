@@ -13,13 +13,12 @@ public class EnAttack : MonoBehaviour {
     //float TELEPORT_ATTACK_MAX = 10.0f;
     float MOMENTUM_HALT_TIME = 1.0f;
     
+    [HideInInspector]
     public float attackCooldown = 0.0f;
     //float teleportAttack = 0.0f;
     //int attackCombo = 0;
     bool givenMomentumHalt = false; // for the one guaranteed momentum halt
     float extraMomentumHalt = 0.0f; // extra momentum halt time
-    [HideInInspector]
-    public int arrowsFired = 0; // number of arrows fired from a bow, goes down when arrows return
 
     void AttackHitbox(Level.TWeaponStats attackStats) {
         var colliders = transform.Find("HitBox").GetComponent<ColliderTracker>().colliders;
@@ -57,37 +56,45 @@ public class EnAttack : MonoBehaviour {
         }
     }
 
-    void AttackRanged(Level.TWeaponStats attackStats) {
+    void AttackRanged(Level.TWeaponStats attackStats, EnItem.Slot weaponSlot, int weaponSlotId) {
         var projectile = Instantiate(EnMainInst.ProjectileDict[attackStats.fires], transform.position, Quaternion.identity);
         projectile.transform.parent = EnMainInst.ProjectilesList.transform;
         projectile.GetComponent<Rigidbody2D>().AddForce(new Vector2(GetComponent<EnMove>().facingRight ? attackStats.damage : -attackStats.damage, 0.0f), ForceMode2D.Impulse);
         projectile.transform.rotation = Quaternion.Euler(0.0f, 0.0f, GetComponent<EnMove>().facingRight ? -45.0f : 135.0f);
         var projectileDamage = projectile.GetComponent<ProjectileDamage>();
         projectileDamage.EnMainInst = EnMainInst;
+        projectileDamage.EnItemInst = GetComponent<EnItem>();
         projectileDamage.EnAttackInst = this;
         projectileDamage.isPlayer = isPlayer;
         projectileDamage.attackStats = EnMainInst.WeaponStats[attackStats.fires];
+        projectileDamage.slotId = weaponSlotId;
+        projectileDamage.slot = weaponSlot;
     }
 
     IEnumerator PerformAttack(int attackSlot) {
         // get stats
         Level.TWeaponStats attackStats;
+        EnItem.Slot weaponSlot;
         if (attackSlot == -1) {
             // fastdrop attack
+            weaponSlot = new EnItem.Slot();
             attackStats = EnMainInst.WeaponStats["Fastdrop"];
         } else {
             // other attacks
             if (isPlayer) {
-                var weaponSlot = GetComponent<EnItem>().Slots[attackSlot];
-                attackStats = EnMainInst.WeaponStats[weaponSlot == "" ? "Player_Basic" : weaponSlot];
+                weaponSlot = GetComponent<EnItem>().Slots[attackSlot];
+                attackStats = EnMainInst.WeaponStats[weaponSlot.name == "" ? "Player_Basic" : weaponSlot.name];
             } else {
+                weaponSlot = new EnItem.Slot();
                 attackStats = EnMainInst.WeaponStats["Enemy_Basic1"];
             }
         }
 
+        // check whether arrows available
         if (attackStats.type == "ranged") {
-            if (arrowsFired >= attackStats.extra[0]) yield break;
-            else arrowsFired++;
+            if ((int)weaponSlot.extra[0] >= attackStats.extraInt[0]) {
+                yield break;
+            }
         }
 
         // startup lag
@@ -115,11 +122,19 @@ public class EnAttack : MonoBehaviour {
                 break;
             
             case "ranged":
-                AttackRanged(attackStats);
+                AttackRanged(attackStats, weaponSlot, attackSlot);
                 break;
         }
         GetComponent<EnMove>().StopAttack();
         attackCooldown = attackStats.cooldown;
+
+        // decrease arrow count
+        if (attackStats.type == "ranged") {
+            if ((int)weaponSlot.extra[0] < attackStats.extraInt[0]) {
+                weaponSlot.extra[0] = (int)weaponSlot.extra[0] + 1;
+                GetComponent<EnItem>().DisplaySingleSlot(attackSlot);
+            }
+        }
 
         // halt momentum
         if (!givenMomentumHalt) {
