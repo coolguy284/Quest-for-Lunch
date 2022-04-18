@@ -14,6 +14,7 @@ public class EnMain : MonoBehaviour {
         public float sizeXBot = 0.4f;
         public float sizeYBot = 1.1f;
         public float extraGap = 0.02f;
+        public float extraSizeGap = 0.04f;
     }
     
     public class Inputs {
