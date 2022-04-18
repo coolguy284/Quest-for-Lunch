@@ -1,3 +1,23 @@
+kickback force when stop holding direction to stop motion, on ground and air
+fastfalling should not happen when right above platform, this prevents accidental fastfall and end lag, instead should immediately go to drop thru platform state
+much bigger wallclinglag, 0.7s
+arrows should hit ground much sooner, only slightly offscreen
+gravity on arrow starts at 0 and increases quickly at end of arrow range
+should be albe to hold left click on bow for quickfire bows
+slightly reduce endlag on bow
+should not be able to do any input in platform, no attacks or anything, it should cancel attacks that are halfway and also wallcling state
+when a weapon is used, do a halfhearted stop instead of a full and complete stop
+diagonal corners on top of player as well
+make dodge lag 1s
+jumping always cancels dodge, and always cancels dodge momentum
+reduce dodge impulse to 60% distance
+more vertical aspect ratios need fixing for debug text
+"competitive advantage" with very horizontal aspect ratio, and disadvantage with vertical ratio
+dodge in air send downward more
+soften speed cap so less jitter
+slight input lag on top of platform, basically extend the lag when going up through a platform to a little bit after it as well
+make wallclingstate and other halt states actually halt by changing rigibody to kinematic or something
+
 chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon
 add teleport attack
 sword is melee, fork is ranged (for now)
@@ -8,3 +28,7 @@ secondary currency for extra abilities
 animations for stuff
 make rendering and 3d rendering pixel perfect
 potential upscaling to combat 3d texture jitteryness, can just upscale the entity cam to a render texture
+
+bugs:
+if quality low, movement speed crazy and jumps all over the place, jumps, everything basically 5.0x speed
+double jump gone when regular jump if game lags enough
