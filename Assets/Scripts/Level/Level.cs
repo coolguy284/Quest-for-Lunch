@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Tilemaps;
+using Cinemachine;
 
 public class Level : MonoBehaviour {
     public TextAsset WeaponsJson;
@@ -46,6 +47,7 @@ public class Level : MonoBehaviour {
     public GameObject EnemyPrefab;
     public GameObject[] Rooms;
     public GameObject ItemPrefab;
+    public GameObject MainCamera;
     public GameObject DebugTexts;
 
     IEnumerator PlaceRoom(int roomId, int locX, int locY) {
@@ -109,5 +111,34 @@ public class Level : MonoBehaviour {
 
         // place test room
         StartCoroutine(PlaceRoom(0, -7, -35));
+    }
+
+    void Update() {
+        if (WeaponStats.Count == 0) {
+            // load weapons json
+            Assert.IsNotNull(WeaponsJson);
+            baseWeaponsStats = JsonUtility.FromJson<WeaponStatsArr>(WeaponsJson.text);
+
+            // parse weapons json
+            foreach (var stat in baseWeaponsStats.weaponStats) {
+                WeaponStats.Add(stat.name, stat);
+            }
+        }
+
+        if (SpriteDict.Count == 0) {
+            // parse sprites dict
+            foreach (var sprite in Sprites) {
+                SpriteDict.Add(sprite.name, sprite);
+            }
+        }
+
+        if (ProjectileDict.Count == 0) {
+            // parse projectiles dict
+            foreach (var prefab in Projectiles) {
+                ProjectileDict.Add(prefab.name, prefab);
+            }
+        }
+
+        MainCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 3.0f / Mathf.Max(MainCamera.GetComponent<Camera>().aspect, 1.77777777777f);
     }
 }
