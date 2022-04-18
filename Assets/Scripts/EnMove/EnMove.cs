@@ -25,7 +25,7 @@ public class EnMove : MonoBehaviour {
     int JUMPS_FROM_GND = 1;
     int JUMPS_FROM_WALL = 1;
 
-    float DODGE_SPEED = 10.0f;
+    float DODGE_SPEED = 7.0f;
     float FASTDROP_FORCE = 30.0f;
 
     float WALL_CLIMB_THRESHOLD = -0.3f;
@@ -39,7 +39,7 @@ public class EnMove : MonoBehaviour {
     float WALL_DROPOFF_LAG = 0.5f;
     float WALL_JUMP_LAG = 0.25f;
     float PLATFORM_FALL_LAG = 0.5f;
-    float DODGE_LAG = 0.5f;
+    float DODGE_LAG = 1.0f;
 
     int jumps = 0; // number of jumps available
     bool lockGround = false; // if true ground cannot refresh jump counter
@@ -343,11 +343,6 @@ public class EnMove : MonoBehaviour {
         isNormalState = !isWallCling && !isFastDropping;
 
         if (alive) {
-            // cancel dodge invulnerability for any input
-            if ((EnMainInst.inputs.jump || EnMainInst.inputs.attack1 || EnMainInst.inputs.attack2 || EnMainInst.inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
-                GetComponent<EnHealth>().dodgeInvulnTime = 0.0f;
-            }
-
             // add dodge lag when invulnerability disappears
             if (GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && GetComponent<EnHealth>().pastDodgeInvulnTime > 0.0f) {
                 dodgeLagTime = DODGE_LAG;
@@ -423,6 +418,11 @@ public class EnMove : MonoBehaviour {
                         } else {
                             Jump();
                             jumpButtonDaemon = true;
+                            
+                            // halt horizontal velocity if velocity is from a dodge
+                            if (GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
+                                Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
+                            }
                         }
                     } else {
                         if (EnMainInst.inputs.vertical < 0.0f) {
@@ -456,7 +456,13 @@ public class EnMove : MonoBehaviour {
 
                 // dodging
                 if (EnMainInst.inputs.dodge && dodgeLagTime == 0.0f) {
-                    Self_RigidBody.velocity = new Vector2(facingRight ? DODGE_SPEED : -DODGE_SPEED, Self_RigidBody.velocity.y);
+                    if (isGrounded) {
+                        // dodge on ground completely horizontal
+                        Self_RigidBody.velocity = new Vector2(facingRight ? DODGE_SPEED : -DODGE_SPEED, Self_RigidBody.velocity.y);
+                    } else {
+                        // dodge in air sends more downward
+                        Self_RigidBody.velocity = new Vector2(facingRight ? DODGE_SPEED : -DODGE_SPEED, -DODGE_SPEED * 0.4f);
+                    }
                     GetComponent<EnHealth>().dodgeInvulnTime = GetComponent<EnHealth>().DODGE_INVULN;
                     dodgeLagTime = DODGE_LAG;
                 }
@@ -507,6 +513,11 @@ public class EnMove : MonoBehaviour {
                 if (isGrounded || isPlatform) {
                     StopFastDrop();
                 }
+            }
+
+            // cancel dodge invulnerability for any input
+            if ((EnMainInst.inputs.jump || EnMainInst.inputs.attack1 || EnMainInst.inputs.attack2 || EnMainInst.inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
+                GetComponent<EnHealth>().dodgeInvulnTime = 0.0f;
             }
         }
 

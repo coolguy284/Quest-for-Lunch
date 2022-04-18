@@ -7,10 +7,6 @@ should be albe to hold left click on bow for quickfire bows
 slightly reduce endlag on bow
 should not be able to do any input in platform, no attacks or anything, it should cancel attacks that are halfway and also wallcling state
 when a weapon is used, do a halfhearted stop instead of a full and complete stop
-make dodge lag 1s
-jumping always cancels dodge, and always cancels dodge momentum
-reduce dodge impulse to 60% distance
-dodge in air send downward more
 soften speed cap so less jitter
 slight input lag on top of platform, basically extend the lag when going up through a platform to a little bit after it as well
 make wallclingstate and other halt states actually halt by changing rigibody to kinematic or something
