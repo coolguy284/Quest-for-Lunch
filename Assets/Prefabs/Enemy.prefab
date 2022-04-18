@@ -117,8 +117,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.3, y: 0.6}
-      - {x: -0.3, y: 0.6}
+    - - {x: 0.3, y: 0.5}
+      - {x: 0.2, y: 0.6}
+      - {x: -0.2, y: 0.6}
+      - {x: -0.3, y: 0.5}
       - {x: -0.3, y: -0.5}
       - {x: -0.2, y: -0.6}
       - {x: -0.18, y: -0.58}
@@ -163,6 +165,8 @@ MonoBehaviour:
   susCoins: 0
   haltMotion: 0
   Player: {fileID: 0}
+  ItemsList: {fileID: 0}
+  ProjectilesList: {fileID: 0}
   ItemPrefab: {fileID: 0}
 --- !u!114 &2109900321004936574
 MonoBehaviour:
@@ -183,8 +187,7 @@ MonoBehaviour:
   isFastDropping: 0
   inputLagTime: 0
   inAttack: 0
-  inAttackFastFall: 0
-  inAttackSword: 0
+  attackType: 
   facingRight: 1
   isGrounded: 0
   inAirTime: 0
@@ -222,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugText3: {fileID: 0}
-  ATTACK_DAMAGE: 35
+  attackCooldown: 0
 --- !u!95 &3843454410269108498
 Animator:
   serializedVersion: 4

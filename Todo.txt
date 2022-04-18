@@ -7,7 +7,6 @@ should be albe to hold left click on bow for quickfire bows
 slightly reduce endlag on bow
 should not be able to do any input in platform, no attacks or anything, it should cancel attacks that are halfway and also wallcling state
 when a weapon is used, do a halfhearted stop instead of a full and complete stop
-diagonal corners on top of player as well
 make dodge lag 1s
 jumping always cancels dodge, and always cancels dodge momentum
 reduce dodge impulse to 60% distance
