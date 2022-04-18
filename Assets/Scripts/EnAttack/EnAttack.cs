@@ -99,6 +99,7 @@ public class EnAttack : MonoBehaviour {
 
         // startup lag
         GetComponent<EnMove>().StartAttack(attackStats.name);
+        attackCooldown = attackStats.startup;
         float startupTime = 0.0f;
         while (startupTime < attackStats.startup) {
             if (GetComponent<EnMove>().inputLagTime > 0.0f) {
@@ -161,6 +162,7 @@ public class EnAttack : MonoBehaviour {
 
     void Update() {
         if (Time.timeScale == 0.0f) return;
+        
         // update state variables
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
         isPlayer = EnMainInst.isPlayer;
