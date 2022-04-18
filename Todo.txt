@@ -11,7 +11,6 @@ diagonal corners on top of player as well
 make dodge lag 1s
 jumping always cancels dodge, and always cancels dodge momentum
 reduce dodge impulse to 60% distance
-"competitive advantage" with very horizontal aspect ratio, and disadvantage with vertical ratio
 dodge in air send downward more
 soften speed cap so less jitter
 slight input lag on top of platform, basically extend the lag when going up through a platform to a little bit after it as well

@@ -64,6 +64,7 @@ public class EnMain : MonoBehaviour {
     public bool haltMotion = false;
     [HideInInspector]
     public GameObject Player;
+    Level LevelComponent;
     [HideInInspector]
     public Dictionary<string, Sprite> SpriteDict;
     [HideInInspector]
@@ -79,12 +80,23 @@ public class EnMain : MonoBehaviour {
 
     void Start() {
         Player = GameObject.Find("Player");
-        var LevelComponent = GameObject.Find("Main Level Script").GetComponent<Level>();
+        LevelComponent = GameObject.Find("Main Level Script").GetComponent<Level>();
         SpriteDict = LevelComponent.SpriteDict;
         ProjectileDict = LevelComponent.ProjectileDict;
         ItemsList = LevelComponent.ItemsList;
         ProjectilesList = LevelComponent.ProjectilesList;
         ItemPrefab = LevelComponent.ItemPrefab;
         WeaponStats = LevelComponent.WeaponStats;
+    }
+
+    void Update() {
+        if (Player == null) Player = GameObject.Find("Player");
+        if (LevelComponent == null) LevelComponent = GameObject.Find("Main Level Script").GetComponent<Level>();
+        if (SpriteDict == null) SpriteDict = LevelComponent.SpriteDict;
+        if (ProjectileDict == null) ProjectileDict = LevelComponent.ProjectileDict;
+        if (ItemsList == null) ItemsList = LevelComponent.ItemsList;
+        if (ProjectilesList == null) ProjectilesList = LevelComponent.ProjectilesList;
+        if (ItemPrefab == null) ItemPrefab = LevelComponent.ItemPrefab;
+        if (WeaponStats == null) WeaponStats = LevelComponent.WeaponStats;
     }
 }
