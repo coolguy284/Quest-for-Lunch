@@ -1,5 +1,4 @@
 kickback force when stop holding direction to stop motion, on ground and air
-fastfalling should not happen when right above platform, this prevents accidental fastfall and end lag, instead should immediately go to drop thru platform state
 much bigger wallclinglag, 0.7s
 arrows should hit ground much sooner, only slightly offscreen
 gravity on arrow starts at 0 and increases quickly at end of arrow range

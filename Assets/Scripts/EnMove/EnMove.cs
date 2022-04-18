@@ -74,6 +74,8 @@ public class EnMove : MonoBehaviour {
     bool isTrueGrounded = false;
     bool isPlatform = false;
     bool isLooseInPlatform = false;
+    bool isPLooseInPlatform = false;
+    bool looseInPlatDaemon = false;
     bool isInPlatform = false;
     bool useLooseForL = false; // once isinplatform is true this switches to islooseinplatform until that is false
     bool isWalledLeft = false;
@@ -102,13 +104,14 @@ public class EnMove : MonoBehaviour {
     }
 
     bool isOnPlatform() {
-        var platformRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentXBot, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.right, EnMainInst.bounds.sizeXBot, LayerMask.GetMask("Platform"));
-        return platformRaycast.collider != null;
+        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.down, 3.0f, LayerMask.GetMask("Platform"));
+        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX, transform.position.y - EnMainInst.bounds.extentY - EnMainInst.bounds.extraGap), Vector2.down, 3.0f, LayerMask.GetMask("Platform"));
+        return platformRaycastL.collider != null || platformRaycastR.collider != null;
     }
 
     bool isLooseInsidePlatform() {
-        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY + EnMainInst.bounds.extraGap), Vector2.down, EnMainInst.bounds.sizeY + 0.04f, LayerMask.GetMask("Platform"));
-        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY + EnMainInst.bounds.extraGap), Vector2.down, EnMainInst.bounds.sizeY + 0.04f, LayerMask.GetMask("Platform"));
+        var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY + EnMainInst.bounds.extraGap), Vector2.down, EnMainInst.bounds.sizeY + EnMainInst.bounds.extraSizeGap, LayerMask.GetMask("Platform"));
+        var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY + EnMainInst.bounds.extraGap), Vector2.down, EnMainInst.bounds.sizeY + EnMainInst.bounds.extraSizeGap, LayerMask.GetMask("Platform"));
         return platformRaycastL.collider != null || platformRaycastR.collider != null;
     }
 
@@ -167,6 +170,7 @@ public class EnMove : MonoBehaviour {
     void StartIgnorePlatform() {
         if (!ignorePlatform) {
             ignorePlatform = true;
+            looseInPlatDaemon = true;
             Self.layer = LayerMask.NameToLayer("Ignore Platform");
         }
     }
@@ -336,6 +340,10 @@ public class EnMove : MonoBehaviour {
             fastDropStoppedFrame = false;
         }
 
+        if (looseInPlatDaemon && isPLooseInPlatform && !isLooseInPlatform) {
+            looseInPlatDaemon = false;
+        }
+
         // unlock ground/wall jump counter reset
         if (!isGrounded && lockGround) lockGround = false;
         if (!isWalled && lockWall) lockWall = false;
@@ -349,7 +357,7 @@ public class EnMove : MonoBehaviour {
             }
 
             // stop ignoring platforms after falling through one enough
-            if (ignorePlatform && !isLooseInPlatform) {
+            if (ignorePlatform && !looseInPlatDaemon) {
                 StopIgnorePlatform();
             }
 
@@ -410,7 +418,7 @@ public class EnMove : MonoBehaviour {
 
                 // jumping
                 if (EnMainInst.inputs.jump) {
-                    if (isGrounded) {
+                    if (isGrounded || isPlatform) {
                         if (EnMainInst.inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
                             // drop through platform
                             StartIgnorePlatform();
@@ -510,7 +518,7 @@ public class EnMove : MonoBehaviour {
                 Self_RigidBody.AddForce(new Vector2(0, -FASTDROP_FORCE), ForceMode2D.Force);
 
                 // disable fast drop if grounded
-                if (isGrounded || isPlatform) {
+                if (isGrounded) {
                     StopFastDrop();
                 }
             }
@@ -538,7 +546,11 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsHoldingWall: {1}\nIsWallCling: {2}\nIsInPlatform: {3}\nJumps: {4}\nInputLag: {5:0.000}\nInAttack {6}\nWallClingLag: {7:0.000}\nDodgeLag: {8:0.000}\nIgnorePlatform: {9}\nInAirTime: {10:0.000}\nHorz: {11}\nVert: {12}\nJump: {13}", isGrounded, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
+        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
+    }
+
+    void LateUpdate() {
+        isPLooseInPlatform = isLooseInPlatform;
     }
 
     #endregion
