@@ -192,8 +192,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.3, y: 0.6}
-      - {x: -0.3, y: 0.6}
+    - - {x: 0.3, y: 0.5}
+      - {x: 0.2, y: 0.6}
+      - {x: -0.2, y: 0.6}
+      - {x: -0.3, y: 0.5}
       - {x: -0.3, y: -0.5}
       - {x: -0.2, y: -0.6}
       - {x: -0.18, y: -0.58}
@@ -238,6 +240,8 @@ MonoBehaviour:
   susCoins: 0
   haltMotion: 0
   Player: {fileID: 0}
+  ItemsList: {fileID: 0}
+  ProjectilesList: {fileID: 0}
   ItemPrefab: {fileID: 0}
 --- !u!114 &3026333166035380683
 MonoBehaviour:
@@ -258,8 +262,7 @@ MonoBehaviour:
   isFastDropping: 0
   inputLagTime: 0
   inAttack: 0
-  inAttackFastFall: 0
-  inAttackSword: 0
+  attackType: 
   facingRight: 1
   isGrounded: 0
   inAirTime: 0
@@ -284,7 +287,6 @@ MonoBehaviour:
   hitInvulnTime: 0
   dodgeInvulnTime: 0
   pastDodgeInvulnTime: 0
-  invulnTime: 0
 --- !u!114 &3302888008240005975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugText3: {fileID: 0}
-  ATTACK_DAMAGE: 50
+  attackCooldown: 0
 --- !u!114 &518227008849500309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,7 +314,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UISlots: {fileID: 0}
-  Slots: []
 --- !u!114 &6267435495100797197
 MonoBehaviour:
   m_ObjectHideFlags: 0
