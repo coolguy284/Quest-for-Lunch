@@ -74,6 +74,7 @@ public class EnHealth : MonoBehaviour {
 
     void Update() {
         if (Time.timeScale == 0.0f) return;
+        
         // update state variables
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
         isPlayer = EnMainInst.isPlayer;
