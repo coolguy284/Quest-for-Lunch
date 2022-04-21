@@ -139,6 +139,6 @@ public class Level : MonoBehaviour {
             }
         }
 
-        MainCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 3.0f / Mathf.Max(MainCamera.GetComponent<Camera>().aspect, 1.77777777777f);
+        MainCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 6.0f / Mathf.Max(MainCamera.GetComponent<Camera>().aspect, 1.77777777777f);
     }
 }

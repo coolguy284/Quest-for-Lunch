@@ -1,5 +1,3 @@
-arrows should hit ground much sooner, only slightly offscreen
-gravity on arrow starts at 0 and increases quickly at end of arrow range
 slightly reduce endlag on bow
 should not be able to do any input in platform, no attacks or anything, it should cancel attacks that are halfway and also wallcling state
 when a weapon is used, do a halfhearted stop instead of a full and complete stop

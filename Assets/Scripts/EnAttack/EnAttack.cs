@@ -61,6 +61,7 @@ public class EnAttack : MonoBehaviour {
         projectile.transform.parent = EnMainInst.ProjectilesList.transform;
         projectile.GetComponent<Rigidbody2D>().AddForce(new Vector2(GetComponent<EnMove>().facingRight ? attackStats.damage : -attackStats.damage, 0.0f), ForceMode2D.Impulse);
         projectile.transform.rotation = Quaternion.Euler(0.0f, 0.0f, GetComponent<EnMove>().facingRight ? -45.0f : 135.0f);
+        projectile.GetComponent<SpriteRenderer>().enabled = false;
         var projectileDamage = projectile.GetComponent<ProjectileDamage>();
         projectileDamage.EnMainInst = EnMainInst;
         projectileDamage.EnItemInst = GetComponent<EnItem>();
