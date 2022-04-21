@@ -81,8 +81,24 @@ public class ProjectileDamage : MonoBehaviour {
         }
     }
 
+    IEnumerator Start() {
+        var velocity = GetComponent<Rigidbody2D>().velocity;
+        transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(velocity.y, velocity.x));
+        yield return null;
+        GetComponent<SpriteRenderer>().enabled = true;
+    }
+
     void Update() {
         existedTime += Time.deltaTime;
+
+        // apply projectile gravity
+        if (GetComponent<Rigidbody2D>() != null) {
+            var rigidBody = GetComponent<Rigidbody2D>();
+            rigidBody.AddForce(new Vector2(0.0f, -Mathf.Min(Mathf.Pow(existedTime * 18.0f, 4.0f), 100.0f)), ForceMode2D.Force);
+            transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(rigidBody.velocity.y, rigidBody.velocity.x) * 180.0f / Mathf.PI - 45.0f);
+        }
+
+        // check for destroy condition
         if (destroyTime != null && existedTime > destroyTime ||
             collision != null && collision.collider != null && collision.collider.gameObject != null && collision.collider.gameObject.GetComponent<EnHealth>() != null && !collision.collider.gameObject.GetComponent<EnHealth>().alive) {
             DestroyProjectile();
