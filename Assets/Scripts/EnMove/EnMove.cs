@@ -36,8 +36,8 @@ public class EnMove : MonoBehaviour {
     float WALL_DROP_SPEED = 1.0f;
     float PLATFORM_PULLUP_SPEED = 8.0f;
 
-    float WALL_DROPOFF_LAG = 0.5f;
-    float WALL_JUMP_LAG = 0.25f;
+    float WALL_DROPOFF_LAG = 1.0f;
+    float WALL_JUMP_LAG = 0.5f;
     float PLATFORM_FALL_LAG = 0.5f;
     float DODGE_LAG = 1.0f;
 
@@ -75,7 +75,6 @@ public class EnMove : MonoBehaviour {
     bool isPlatform = false;
     bool isLooseInPlatform = false;
     bool isPLooseInPlatform = false;
-    bool looseInPlatDaemon = false;
     bool isInPlatform = false;
     bool useLooseForL = false; // once isinplatform is true this switches to islooseinplatform until that is false
     bool isWalledLeft = false;
@@ -88,6 +87,8 @@ public class EnMove : MonoBehaviour {
     bool jumpButtonDaemon = false; // whether jump button is being held down, but becomes false once falling
     [HideInInspector]
     public bool fastDropStoppedFrame  = false; // true only on the frame that fastdropping is stopped, used for fastdrop attack
+    bool looseInPlatDaemon = false;
+    float PinputsHorizontal = 0.0f;
 
     #endregion
 
@@ -392,6 +393,11 @@ public class EnMove : MonoBehaviour {
                     }
                 }
 
+                // kickback when stop moving
+                if (PinputsHorizontal > 0.5f && EnMainInst.inputs.horizontal < 0.5f || PinputsHorizontal < -0.5f && EnMainInst.inputs.horizontal > -0.5f) {
+                    Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
+                }
+
                 // refreshes jump counter if jump counter not locked, and locks jump counter
                 if (isGrounded) {
                     if (jumps < JUMPS_FROM_GND && !lockGround) {
@@ -551,6 +557,7 @@ public class EnMove : MonoBehaviour {
 
     void LateUpdate() {
         isPLooseInPlatform = isLooseInPlatform;
+        PinputsHorizontal = EnMainInst.inputs.horizontal;
     }
 
     #endregion
