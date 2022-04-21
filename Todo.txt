@@ -1,12 +1,11 @@
 arrows should hit ground much sooner, only slightly offscreen
 gravity on arrow starts at 0 and increases quickly at end of arrow range
-should be albe to hold left click on bow for quickfire bows
 slightly reduce endlag on bow
 should not be able to do any input in platform, no attacks or anything, it should cancel attacks that are halfway and also wallcling state
 when a weapon is used, do a halfhearted stop instead of a full and complete stop
 soften speed cap so less jitter
 slight input lag on top of platform, basically extend the lag when going up through a platform to a little bit after it as well
-make wallclingstate and other halt states actually halt by changing rigibody to kinematic or something
+make wallclingstate and other halt states actually halt by changing rigidbody to kinematic or something
 
 chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon
 add teleport attack
@@ -22,3 +21,6 @@ potential upscaling to combat 3d texture jitteryness, can just upscale the entit
 bugs:
 if quality low, movement speed crazy and jumps all over the place, jumps, everything basically 5.0x speed
 double jump gone when regular jump if game lags enough
+
+keep in mind:
+should be able to hold left click on bow for quickfire bows
