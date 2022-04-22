@@ -37,8 +37,8 @@ public class EnMove : MonoBehaviour {
     float PLATFORM_PULLUP_SPEED = 8.0f;
 
     float WALL_DROPOFF_LAG = 1.0f;
-    float WALL_JUMP_LAG = 0.5f;
-    float PLATFORM_FALL_LAG = 0.5f;
+    float WALL_JUMP_LAG = 0.8f;
+    float PLATFORM_FALL_LAG = 0.8f;
     float DODGE_LAG = 1.0f;
 
     int jumps = 0; // number of jumps available
@@ -84,6 +84,8 @@ public class EnMove : MonoBehaviour {
     [HideInInspector]
     public float inAirTime = 0.0f;
     
+    [HideInInspector]
+    public bool platformPullUp = false; // currently should be pulling up through platform
     bool jumpButtonDaemon = false; // whether jump button is being held down, but becomes false once falling
     [HideInInspector]
     public bool fastDropStoppedFrame  = false; // true only on the frame that fastdropping is stopped, used for fastdrop attack
@@ -215,13 +217,13 @@ public class EnMove : MonoBehaviour {
     #region State Update Functions
 
     void updateInput() {
-        if (alive && inputLagTime == 0.0f && !inAttack) {
+        if (alive && inputLagTime == 0.0f && !inAttack && !isInPlatform) {
             if (isPlayer) {
                 // take inputs from user
                 EnMainInst.inputs.horizontal = Input.GetAxisRaw("Horizontal");
                 EnMainInst.inputs.vertical = Input.GetAxisRaw("Vertical");
-                EnMainInst.inputs.horizontal = Mathf.Abs(EnMainInst.inputs.horizontal) < 0.35 ? 0 : Mathf.Sign(EnMainInst.inputs.horizontal);
-                EnMainInst.inputs.vertical = Mathf.Abs(EnMainInst.inputs.vertical) < 0.35 ? 0 : Mathf.Sign(EnMainInst.inputs.vertical);
+                EnMainInst.inputs.horizontal = Mathf.Abs(EnMainInst.inputs.horizontal) < 0.35f ? 0.0f : Mathf.Sign(EnMainInst.inputs.horizontal);
+                EnMainInst.inputs.vertical = Mathf.Abs(EnMainInst.inputs.vertical) < 0.35f ? 0.0f : Mathf.Sign(EnMainInst.inputs.vertical);
                 EnMainInst.inputs.jumpHeld = Input.GetButton("Jump");
                 EnMainInst.inputs.dodge = Input.GetButtonDown("Submit");
                 EnMainInst.inputs.attack1 = Input.GetButtonDown("Fire1");
@@ -374,12 +376,14 @@ public class EnMove : MonoBehaviour {
                 if (isGrounded && wallLetGo) wallLetGo = false;
 
                 // pull up through platform
+                platformPullUp = useLooseForL && !ignorePlatform;
                 if (isPlayer) {
-                    if (useLooseForL && wallClingLagTime == 0.0f && !ignorePlatform) {
+                    if (platformPullUp) {
                         Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, PLATFORM_PULLUP_SPEED));
                         queuedPlatPullVelReset = true;
                     } else if (queuedPlatPullVelReset) {
                         Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+                        wallClingLagTime = PLATFORM_FALL_LAG;
                         queuedPlatPullVelReset = false;
                     }
                 }
@@ -424,7 +428,7 @@ public class EnMove : MonoBehaviour {
 
                 // jumping
                 if (EnMainInst.inputs.jump) {
-                    if (isGrounded || isPlatform) {
+                    if (isGrounded) {
                         if (EnMainInst.inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
                             // drop through platform
                             StartIgnorePlatform();
@@ -514,7 +518,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // disable wall cling if grounded
-                if ((isGrounded || !isWalled) && isWallCling) {
+                if ((isGrounded || !isWalled) && isWallCling || isInPlatform) {
                     StopWallCling(0.0f);
                 }
 
@@ -552,7 +556,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
+        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack: {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
     }
 
     void LateUpdate() {
