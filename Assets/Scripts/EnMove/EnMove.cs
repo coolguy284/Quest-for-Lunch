@@ -32,7 +32,6 @@ public class EnMove : MonoBehaviour {
 
     float WALL_SLIDE_TIMER = 3.0f;
     float WALL_DROP_TIMER = 4.0f;
-    float WALLHOVER_MAGIC_CONS = 0.42f;
     float WALL_DROP_SPEED = 1.0f;
     float PLATFORM_PULLUP_SPEED = 8.0f;
 
@@ -143,12 +142,14 @@ public class EnMove : MonoBehaviour {
     }
 
     void AirJump() {
-        Self_RigidBody.velocity = new Vector2(Self_RigidBody.velocity.x, 0.0f);
+        if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+            Self_RigidBody.velocity = new Vector2(Self_RigidBody.velocity.x, 0.0f);
         Self_RigidBody.AddForce(new Vector2(0, AIRJUMP_FORCE), ForceMode2D.Impulse);
     }
 
     void WallJump(bool left, float strength) {
-        Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+        if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+            Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
         Self_RigidBody.AddForce(new Vector2((left ? -1.0f : 1.0f) * WALLJUMP_FORCE, WALLJUMP_FORCE) * strength, ForceMode2D.Impulse);
         wallClingLagTime = WALL_JUMP_LAG;
         isHoldingWall = false;
@@ -158,9 +159,10 @@ public class EnMove : MonoBehaviour {
         isWallCling = true;
 
         if (climb) {
-            Self_RigidBody.velocity = new Vector2(Self_RigidBody.velocity.x, 10.0f);
+            if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+                Self_RigidBody.velocity = new Vector2(0.0f, 10.0f);
         } else {
-            Self_RigidBody.velocity = new Vector2(Self_RigidBody.velocity.x, 0.0f);
+            StartHaltState();
         }
     }
 
@@ -168,6 +170,9 @@ public class EnMove : MonoBehaviour {
         isWallCling = false;
         wallClingTimer = 0.0f;
         wallClingLagTime = lagTime;
+        if (Self_RigidBody.bodyType == RigidbodyType2D.Static) {
+            StopHaltState();
+        }
     }
 
     void StartIgnorePlatform() {
@@ -187,13 +192,23 @@ public class EnMove : MonoBehaviour {
 
     void StartFastDrop() {
         isFastDropping = true;
-        Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
+        if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+            Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
     }
     
     void StopFastDrop() {
         isFastDropping = false;
         fastDropStoppedFrame = true;
-        Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+        if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+            Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+    }
+
+    public void StartHaltState() {
+        Self_RigidBody.bodyType = RigidbodyType2D.Static;
+    }
+
+    public void StopHaltState() {
+        Self_RigidBody.bodyType = RigidbodyType2D.Dynamic;
     }
 
     public void StartAttack(string attackTypeVal) {
@@ -398,7 +413,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // kickback when stop moving
-                if (PinputsHorizontal > 0.5f && EnMainInst.inputs.horizontal < 0.5f || PinputsHorizontal < -0.5f && EnMainInst.inputs.horizontal > -0.5f) {
+                if ((PinputsHorizontal > 0.5f && EnMainInst.inputs.horizontal < 0.5f || PinputsHorizontal < -0.5f && EnMainInst.inputs.horizontal > -0.5f) && Self_RigidBody.bodyType == RigidbodyType2D.Dynamic) {
                     Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
                 }
 
@@ -488,9 +503,16 @@ public class EnMove : MonoBehaviour {
                 // wall cling
 
                 if (wallClingTimer < WALL_SLIDE_TIMER) {
-                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, WALLHOVER_MAGIC_CONS));
+                    if (Self_RigidBody.velocity.y > 0.0f) {
+                        Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
+                    } else if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic) {
+                        StartHaltState();
+                    }
                 } else if (wallClingTimer < WALL_DROP_TIMER) {
-                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, WALLHOVER_MAGIC_CONS + -WALL_DROP_SPEED));
+                    if (Self_RigidBody.bodyType == RigidbodyType2D.Static) {
+                        StopHaltState();
+                    }
+                    Self_RigidBody.velocity = new Vector2(0.0f, Mathf.Max(Self_RigidBody.velocity.y, -WALL_DROP_SPEED));
                 } else {
                     StopWallCling(WALL_DROPOFF_LAG);
                     wallLetGo = true;
@@ -556,7 +578,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack: {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
+        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack: {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}\nHaltMotion: {15}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld, EnMainInst.haltMotion);
     }
 
     void LateUpdate() {
