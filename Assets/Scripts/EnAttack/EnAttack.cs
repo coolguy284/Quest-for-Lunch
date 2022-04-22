@@ -7,6 +7,7 @@ public class EnAttack : MonoBehaviour {
     BoxCollider2D Self_BoxCollider;
     Rigidbody2D Self_RigidBody;
     EnMain EnMainInst;
+    EnMove EnMoveInst;
     public TextMeshProUGUI DebugText3;
     bool isPlayer = false;
 
@@ -59,8 +60,8 @@ public class EnAttack : MonoBehaviour {
     void AttackRanged(Level.TWeaponStats attackStats, EnItem.Slot weaponSlot, int weaponSlotId) {
         var projectile = Instantiate(EnMainInst.ProjectileDict[attackStats.fires], transform.position, Quaternion.identity);
         projectile.transform.parent = EnMainInst.ProjectilesList.transform;
-        projectile.GetComponent<Rigidbody2D>().AddForce(new Vector2(GetComponent<EnMove>().facingRight ? attackStats.damage : -attackStats.damage, 0.0f), ForceMode2D.Impulse);
-        projectile.transform.rotation = Quaternion.Euler(0.0f, 0.0f, GetComponent<EnMove>().facingRight ? -45.0f : 135.0f);
+        projectile.GetComponent<Rigidbody2D>().AddForce(new Vector2(EnMoveInst.facingRight ? attackStats.damage : -attackStats.damage, 0.0f), ForceMode2D.Impulse);
+        projectile.transform.rotation = Quaternion.Euler(0.0f, 0.0f, EnMoveInst.facingRight ? -45.0f : 135.0f);
         projectile.GetComponent<SpriteRenderer>().enabled = false;
         var projectileDamage = projectile.GetComponent<ProjectileDamage>();
         projectileDamage.EnMainInst = EnMainInst;
@@ -99,12 +100,12 @@ public class EnAttack : MonoBehaviour {
         }
 
         // startup lag
-        GetComponent<EnMove>().StartAttack(attackStats.name);
+        EnMoveInst.StartAttack(attackStats.name);
         attackCooldown = attackStats.startup;
         float startupTime = 0.0f;
         while (startupTime < attackStats.startup) {
-            if (GetComponent<EnMove>().inputLagTime > 0.0f) {
-                GetComponent<EnMove>().StopAttack();
+            if (EnMoveInst.inputLagTime > 0.0f || EnMoveInst.platformPullUp) {
+                EnMoveInst.StopAttack();
                 yield break;
             }
             startupTime += Time.deltaTime;
@@ -116,10 +117,14 @@ public class EnAttack : MonoBehaviour {
         switch (attackStats.type) {
             case "normal":
                 float activeTime = 0.0f;
-                while (activeTime < attackStats.active) {
+                while (activeTime < attackStats.active && !EnMoveInst.platformPullUp) {
                     AttackHitbox(attackStats);
                     activeTime += Time.deltaTime;
                     yield return null;
+                }
+                if (EnMoveInst.platformPullUp) {
+                    EnMoveInst.StopAttack();
+                    yield break;
                 }
                 break;
             
@@ -127,7 +132,7 @@ public class EnAttack : MonoBehaviour {
                 AttackRanged(attackStats, weaponSlot, attackSlot);
                 break;
         }
-        GetComponent<EnMove>().StopAttack();
+        EnMoveInst.StopAttack();
         attackCooldown = attackStats.cooldown;
 
         // decrease arrow count
@@ -143,10 +148,10 @@ public class EnAttack : MonoBehaviour {
             Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
             EnMainInst.haltMotion = true;
             givenMomentumHalt = true;
-            if (GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME) {
-                extraMomentumHalt = GetComponent<EnMove>().inAirTime;
+            if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME) {
+                extraMomentumHalt = EnMoveInst.inAirTime;
             }
-        } else if (GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) {
+        } else if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) {
             Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
             EnMainInst.haltMotion = true;
         } else {
@@ -158,6 +163,7 @@ public class EnAttack : MonoBehaviour {
         Self_BoxCollider = GetComponent<BoxCollider2D>();
         Self_RigidBody = GetComponent<Rigidbody2D>();
         EnMainInst = GetComponent<EnMain>();
+        EnMoveInst = GetComponent<EnMove>();
         isPlayer = EnMainInst.isPlayer;
     }
 
@@ -170,13 +176,13 @@ public class EnAttack : MonoBehaviour {
 
         if (GetComponent<EnMove>().fastDropStoppedFrame) {
             StartCoroutine(PerformAttack(-1));
-        } else if (EnMainInst.inputs.attack1 && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
+        } else if (EnMainInst.inputs.attack1 && attackCooldown == 0.0f && EnMoveInst.isNormalState) {
             StartCoroutine(PerformAttack(0));
-        } else if (EnMainInst.inputs.attack2 && attackCooldown == 0.0f && GetComponent<EnMove>().isNormalState) {
+        } else if (EnMainInst.inputs.attack2 && attackCooldown == 0.0f && EnMoveInst.isNormalState) {
             StartCoroutine(PerformAttack(1));
         }
 
-        if (attackCooldown > 0.0f && (!givenMomentumHalt || GetComponent<EnMove>().inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt)) {
+        if (attackCooldown > 0.0f && (!givenMomentumHalt || EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) && !EnMoveInst.platformPullUp) {
             Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
             EnMainInst.haltMotion = true;
         } else {
@@ -184,7 +190,7 @@ public class EnAttack : MonoBehaviour {
         }
 
         // refresh momentumhalts if on ground
-        if (GetComponent<EnMove>().isGrounded) {
+        if (EnMoveInst.isGrounded) {
             givenMomentumHalt = false;
             extraMomentumHalt = 0.0f;
         }

@@ -80,15 +80,17 @@ public class EnHealth : MonoBehaviour {
         isPlayer = EnMainInst.isPlayer;
 
         // get tile at feet
-        var celCoords = GroundGridLayout.WorldToCell(new Vector2(Self.transform.position.x, Self.transform.position.y - EnMainInst.bounds.extentY));
+        var feetCoords = new Vector2(Self.transform.position.x, Self.transform.position.y - EnMainInst.bounds.extentY);
+        var celCoords = GroundGridLayout.WorldToCell(feetCoords);
         var tile = GroundTileMap.GetTile(celCoords);
         var tileAt = tile ? tile.name : "None";
         
         if (alive) {
             // only do damage if vulnerable
             if (invulnTime == 0.0f) {
-                // if tile is spikes do damage
-                if (tileAt == "Spikes") {
+                // if tile is spikes and player is actually on top of them do damage
+                // negative modulus my beloved
+                if (tileAt == "Spikes" && (feetCoords.y % 0.5f + 0.5f) % 0.5f < 0.3f) {
                     changeHealth(-SPIKES_DAMAGE);
                     hitInvulnTime = SPIKES_INVULN;
                 }
