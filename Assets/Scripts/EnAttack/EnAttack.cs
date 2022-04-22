@@ -20,6 +20,7 @@ public class EnAttack : MonoBehaviour {
     //int attackCombo = 0;
     bool givenMomentumHalt = false; // for the one guaranteed momentum halt
     float extraMomentumHalt = 0.0f; // extra momentum halt time
+    bool notPerformingAttack = true;
 
     void AttackHitbox(Level.TWeaponStats attackStats) {
         var colliders = transform.Find("HitBox").GetComponent<ColliderTracker>().colliders;
@@ -75,6 +76,7 @@ public class EnAttack : MonoBehaviour {
 
     IEnumerator PerformAttack(int attackSlot) {
         // get stats
+        notPerformingAttack = false;
         Level.TWeaponStats attackStats;
         EnItem.Slot weaponSlot;
         if (attackSlot == -1) {
@@ -95,6 +97,7 @@ public class EnAttack : MonoBehaviour {
         // check whether arrows available
         if (attackStats.type == "ranged") {
             if ((int)weaponSlot.extra[0] >= attackStats.extraInt[0]) {
+                notPerformingAttack = true;
                 yield break;
             }
         }
@@ -106,6 +109,7 @@ public class EnAttack : MonoBehaviour {
         while (startupTime < attackStats.startup) {
             if (EnMoveInst.inputLagTime > 0.0f || EnMoveInst.platformPullUp) {
                 EnMoveInst.StopAttack();
+                notPerformingAttack = true;
                 yield break;
             }
             startupTime += Time.deltaTime;
@@ -124,6 +128,7 @@ public class EnAttack : MonoBehaviour {
                 }
                 if (EnMoveInst.platformPullUp) {
                     EnMoveInst.StopAttack();
+                    notPerformingAttack = true;
                     yield break;
                 }
                 break;
@@ -145,18 +150,22 @@ public class EnAttack : MonoBehaviour {
 
         // halt momentum
         if (!givenMomentumHalt) {
-            Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-            EnMainInst.haltMotion = true;
+            if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+                EnMoveInst.StartHaltState();
             givenMomentumHalt = true;
             if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME) {
                 extraMomentumHalt = EnMoveInst.inAirTime;
             }
         } else if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) {
-            Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-            EnMainInst.haltMotion = true;
+            if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+                EnMoveInst.StartHaltState();
         } else {
+            if (Self_RigidBody.bodyType == RigidbodyType2D.Static)
+                EnMoveInst.StopHaltState();
             EnMainInst.haltMotion = false;
         }
+        
+        notPerformingAttack = true;
     }
 
     void Start() {
@@ -172,21 +181,32 @@ public class EnAttack : MonoBehaviour {
         
         // update state variables
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
+        if (EnMoveInst == null) EnMoveInst = GetComponent<EnMove>();
         isPlayer = EnMainInst.isPlayer;
 
-        if (GetComponent<EnMove>().fastDropStoppedFrame) {
-            StartCoroutine(PerformAttack(-1));
-        } else if (EnMainInst.inputs.attack1 && attackCooldown == 0.0f && EnMoveInst.isNormalState) {
-            StartCoroutine(PerformAttack(0));
-        } else if (EnMainInst.inputs.attack2 && attackCooldown == 0.0f && EnMoveInst.isNormalState) {
-            StartCoroutine(PerformAttack(1));
-        }
+        if (notPerformingAttack) {
+            // begin performing attacks
+            if (EnMoveInst.fastDropStoppedFrame) {
+                StartCoroutine(PerformAttack(-1));
+            } else if (EnMainInst.inputs.attack1 && attackCooldown == 0.0f && EnMoveInst.isNormalState) {
+                StartCoroutine(PerformAttack(0));
+            } else if (EnMainInst.inputs.attack2 && attackCooldown == 0.0f && EnMoveInst.isNormalState) {
+                StartCoroutine(PerformAttack(1));
+            }
 
-        if (attackCooldown > 0.0f && (!givenMomentumHalt || EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) && !EnMoveInst.platformPullUp) {
-            Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
-            EnMainInst.haltMotion = true;
-        } else {
-            EnMainInst.haltMotion = false;
+            if (attackCooldown > 0.0f && (!givenMomentumHalt || EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) && !EnMoveInst.platformPullUp) {
+                if (!EnMainInst.haltMotion) {
+                    if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+                        EnMoveInst.StartHaltState();
+                    EnMainInst.haltMotion = true;
+                }
+            } else {
+                if (EnMainInst.haltMotion) {
+                    if (Self_RigidBody.bodyType == RigidbodyType2D.Static)
+                        EnMoveInst.StopHaltState();
+                    EnMainInst.haltMotion = false;
+                }
+            }
         }
 
         // refresh momentumhalts if on ground

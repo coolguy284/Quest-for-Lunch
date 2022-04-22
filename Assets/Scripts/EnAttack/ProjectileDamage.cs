@@ -83,7 +83,6 @@ public class ProjectileDamage : MonoBehaviour {
 
     IEnumerator Start() {
         var velocity = GetComponent<Rigidbody2D>().velocity;
-        transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(velocity.y, velocity.x));
         yield return null;
         GetComponent<SpriteRenderer>().enabled = true;
     }
@@ -95,7 +94,8 @@ public class ProjectileDamage : MonoBehaviour {
         if (GetComponent<Rigidbody2D>() != null) {
             var rigidBody = GetComponent<Rigidbody2D>();
             rigidBody.AddForce(new Vector2(0.0f, -Mathf.Min(Mathf.Pow(existedTime * 18.0f, 4.0f), 100.0f)), ForceMode2D.Force);
-            transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(rigidBody.velocity.y, rigidBody.velocity.x) * 180.0f / Mathf.PI - 45.0f);
+            if (rigidBody.velocity.x != 0.0f && rigidBody.velocity.y != 0.0f)
+                transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(rigidBody.velocity.y, rigidBody.velocity.x) * 180.0f / Mathf.PI - 45.0f);
         }
 
         // check for destroy condition
