@@ -1,5 +1,3 @@
-soften speed cap so less jitter
-
 wall to ground getup animation
 chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon
 add teleport attack
