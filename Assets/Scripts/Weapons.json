@@ -9,6 +9,7 @@
             "active": 0.3,
             "cooldown": 0.5,
             "knockback": 3,
+            "stunChance": 0.2,
             "hitstun": 2,
             "invuln": 4,
             "extraInt": []
@@ -22,6 +23,7 @@
             "active": 0.2,
             "cooldown": 0.1,
             "knockback": 1,
+            "stunChance": 0.1,
             "hitstun": 0.1,
             "invuln": 0.2,
             "extraInt": []
@@ -35,6 +37,7 @@
             "active": 0.3,
             "cooldown": 0.1,
             "knockback": 2,
+            "stunChance": 0.5,
             "hitstun": 0.1,
             "invuln": 1,
             "extraInt": []
@@ -48,6 +51,7 @@
             "active": 0.3,
             "cooldown": 0.1,
             "knockback": 6,
+            "stunChance": 0.2,
             "hitstun": 0.1,
             "invuln": 1,
             "extraInt": []
@@ -61,6 +65,7 @@
             "active": 0.3,
             "cooldown": 0.1,
             "knockback": 6,
+            "stunChance": 0.2,
             "hitstun": 0.1,
             "invuln": 1,
             "extraInt": []
@@ -74,6 +79,7 @@
             "active": 0.3,
             "cooldown": 0.1,
             "knockback": 6,
+            "stunChance": 0.2,
             "hitstun": 0.1,
             "invuln": 1,
             "extraInt": []
@@ -87,6 +93,7 @@
             "active": 0.3,
             "cooldown": 0.1,
             "knockback": 6,
+            "stunChance": 0.2,
             "hitstun": 0.1,
             "invuln": 1,
             "extraInt": []
@@ -100,6 +107,7 @@
             "active": 0.3,
             "cooldown": 0.1,
             "knockback": 6,
+            "stunChance": 0.2,
             "hitstun": 0.1,
             "invuln": 1,
             "extraInt": []
@@ -113,6 +121,7 @@
             "active": 0,
             "cooldown": 0.1,
             "knockback": 0,
+            "stunChance": 0,
             "hitstun": 0,
             "invuln": 0,
             "extraInt": [5]
@@ -126,6 +135,7 @@
             "active": 0,
             "cooldown": 0,
             "knockback": 6,
+            "stunChance": 0.3,
             "hitstun": 0.1,
             "invuln": 1,
             "extraInt": []
@@ -139,6 +149,7 @@
             "active": 0.5,
             "cooldown": 2,
             "knockback": 2,
+            "stunChance": 0.2,
             "hitstun": 0.2,
             "invuln": 1,
             "extraInt": []

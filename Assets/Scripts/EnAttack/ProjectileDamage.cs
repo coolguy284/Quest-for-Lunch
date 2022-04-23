@@ -62,7 +62,8 @@ public class ProjectileDamage : MonoBehaviour {
             var direction = entity.transform.position - transform.position;
             entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * attackStats.knockback, ForceMode2D.Impulse);
             entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
-            entity.GetComponent<EnMove>().inputLagTime = attackStats.hitstun;
+            if (entity.GetComponent<EnAttack>().STUN_CHANCE + attackStats.stunChance > Random.Range(0.0f, 1.0f))
+                entity.GetComponent<EnMove>().inputLagTime = attackStats.hitstun;
 
             // grant suscoins
             if (isPlayer && !entity.GetComponent<EnHealth>().alive) {

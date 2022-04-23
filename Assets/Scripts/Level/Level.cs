@@ -18,6 +18,7 @@ public class Level : MonoBehaviour {
         public float active;
         public float cooldown;
         public float knockback;
+        public float stunChance;
         public float hitstun;
         public float invuln;
         public int[] extraInt;

@@ -1,12 +1,11 @@
 wall to ground getup animation
-chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon
 add teleport attack
 sword is melee, fork is ranged (for now)
 save player data
 
 things on the weapons (stats), abilities
 secondary currency for extra abilities
-animations for stuff
+add 3d model with animations
 make rendering and 3d rendering pixel perfect
 potential upscaling to combat 3d texture jitteryness, can just upscale the entity cam to a render texture
 
