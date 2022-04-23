@@ -1,4 +1,3 @@
-slightly reduce endlag on bow
 soften speed cap so less jitter
 
 wall to ground getup animation

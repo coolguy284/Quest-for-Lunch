@@ -109,7 +109,7 @@
             "type": "ranged",
             "fires": "Arrow",
             "damage": 30,
-            "startup": 0.4,
+            "startup": 0.3,
             "active": 0,
             "cooldown": 0.1,
             "knockback": 0,
