@@ -11,6 +11,9 @@ public class EnAttack : MonoBehaviour {
     public TextMeshProUGUI DebugText3;
     bool isPlayer = false;
 
+    [HideInInspector]
+    public float STUN_CHANCE = 0.1f; // default is stun chance for enemies
+    static float PLAYER_STUN_CHANCE = 0.5f;
     //float TELEPORT_ATTACK_MAX = 10.0f;
     float MOMENTUM_HALT_TIME = 1.0f;
     
@@ -48,7 +51,8 @@ public class EnAttack : MonoBehaviour {
             // perform knockback
             entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * attackStats.knockback, ForceMode2D.Impulse);
             entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
-            entity.GetComponent<EnMove>().inputLagTime = attackStats.hitstun;
+            if (entity.GetComponent<EnAttack>().STUN_CHANCE + attackStats.stunChance > Random.Range(0.0f, 1.0f))
+                entity.GetComponent<EnMove>().inputLagTime = attackStats.hitstun;
 
             // grant suscoins
             if (isPlayer && !entity.GetComponent<EnHealth>().alive) {
@@ -168,6 +172,9 @@ public class EnAttack : MonoBehaviour {
         EnMainInst = GetComponent<EnMain>();
         EnMoveInst = GetComponent<EnMove>();
         isPlayer = EnMainInst.isPlayer;
+        if (isPlayer) {
+            STUN_CHANCE = PLAYER_STUN_CHANCE;
+        }
     }
 
     void Update() {

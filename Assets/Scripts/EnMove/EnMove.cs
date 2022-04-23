@@ -140,6 +140,7 @@ public class EnMove : MonoBehaviour {
 
     void Jump() {
         Self_RigidBody.AddForce(new Vector2(0, JUMP_FORCE), ForceMode2D.Impulse);
+        lockGround = true;
     }
 
     void AirJump() {
@@ -154,6 +155,7 @@ public class EnMove : MonoBehaviour {
         Self_RigidBody.AddForce(new Vector2((left ? -1.0f : 1.0f) * WALLJUMP_FORCE, WALLJUMP_FORCE) * strength, ForceMode2D.Impulse);
         wallClingLagTime = WALL_JUMP_LAG;
         isHoldingWall = false;
+        lockWall = true;
     }
 
     void StartWallCling(bool climb) {
@@ -443,21 +445,19 @@ public class EnMove : MonoBehaviour {
                     }
                 }
 
-                // jumping
                 if (EnMainInst.inputs.jump) {
-                    if (isGrounded) {
-                        if (EnMainInst.inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
-                            // drop through platform
-                            StartIgnorePlatform();
-                            wallClingLagTime = PLATFORM_FALL_LAG;
-                        } else {
-                            Jump();
-                            jumpButtonDaemon = true;
-                            
-                            // halt horizontal velocity if velocity is from a dodge
-                            if (GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
-                                Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
-                            }
+                    if (EnMainInst.inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
+                        // drop through platform
+                        StartIgnorePlatform();
+                        wallClingLagTime = PLATFORM_FALL_LAG;
+                    } else if (isGrounded) {
+                        // jumping
+                        Jump();
+                        jumpButtonDaemon = true;
+                        
+                        // halt horizontal velocity if velocity is from a dodge
+                        if (GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
+                            Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
                         }
                     } else {
                         if (EnMainInst.inputs.vertical < 0.0f) {
@@ -470,8 +470,6 @@ public class EnMove : MonoBehaviour {
                             if (wallLetGo) wallLetGo = false;
                         }
                     }
-                    if (isGrounded) lockGround = true;
-                    if (isHoldingWall) lockWall = true;
                 }
 
                 // while jump button is pressed, jumping is true, when jumping is true gravity is reduced
