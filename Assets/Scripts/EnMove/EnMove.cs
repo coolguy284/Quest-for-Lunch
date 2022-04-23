@@ -39,6 +39,7 @@ public class EnMove : MonoBehaviour {
     float WALL_JUMP_LAG = 0.8f;
     float PLATFORM_FALL_LAG = 0.8f;
     float DODGE_LAG = 1.0f;
+    float PLATFORM_GETUP_LAG = 0.2f;
 
     int jumps = 0; // number of jumps available
     bool lockGround = false; // if true ground cannot refresh jump counter
@@ -399,6 +400,7 @@ public class EnMove : MonoBehaviour {
                     } else if (queuedPlatPullVelReset) {
                         Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
                         wallClingLagTime = PLATFORM_FALL_LAG;
+                        inputLagTime = PLATFORM_GETUP_LAG;
                         queuedPlatPullVelReset = false;
                     }
                 }
