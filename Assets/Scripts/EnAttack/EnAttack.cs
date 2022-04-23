@@ -150,18 +150,14 @@ public class EnAttack : MonoBehaviour {
 
         // halt momentum
         if (!givenMomentumHalt) {
-            if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
-                EnMoveInst.StartHaltState();
+            EnMainInst.haltMotion = true;
             givenMomentumHalt = true;
             if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME) {
                 extraMomentumHalt = EnMoveInst.inAirTime;
             }
         } else if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) {
-            if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
-                EnMoveInst.StartHaltState();
+            EnMainInst.haltMotion = true;
         } else {
-            if (Self_RigidBody.bodyType == RigidbodyType2D.Static)
-                EnMoveInst.StopHaltState();
             EnMainInst.haltMotion = false;
         }
         
@@ -196,17 +192,18 @@ public class EnAttack : MonoBehaviour {
 
             if (attackCooldown > 0.0f && (!givenMomentumHalt || EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) && !EnMoveInst.platformPullUp) {
                 if (!EnMainInst.haltMotion) {
-                    if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
-                        EnMoveInst.StartHaltState();
                     EnMainInst.haltMotion = true;
                 }
             } else {
                 if (EnMainInst.haltMotion) {
-                    if (Self_RigidBody.bodyType == RigidbodyType2D.Static)
-                        EnMoveInst.StopHaltState();
                     EnMainInst.haltMotion = false;
                 }
             }
+        }
+
+        // major drag when haltmotion is active
+        if (EnMainInst.haltMotion) {
+            Self_RigidBody.AddForce(new Vector2(Self_RigidBody.velocity.x * -10f, Self_RigidBody.velocity.y * -10f), ForceMode2D.Force);
         }
 
         // refresh momentumhalts if on ground

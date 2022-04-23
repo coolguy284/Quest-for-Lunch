@@ -1,5 +1,4 @@
 slightly reduce endlag on bow
-when a weapon is used, do a halfhearted stop instead of a full and complete stop
 soften speed cap so less jitter
 slight input lag on top of platform, basically extend the lag when going up through a platform to a little bit after it as well
 

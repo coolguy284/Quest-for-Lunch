@@ -232,7 +232,7 @@ public class EnMove : MonoBehaviour {
     #region State Update Functions
 
     void updateInput() {
-        if (alive && inputLagTime == 0.0f && !inAttack && !isInPlatform) {
+        if (alive && inputLagTime == 0.0f && !isInPlatform) {
             if (isPlayer) {
                 // take inputs from user
                 EnMainInst.inputs.horizontal = Input.GetAxisRaw("Horizontal");
@@ -404,7 +404,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // horizontal movement
-                if (!EnMainInst.haltMotion && (!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
+                if ((!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
                     if (Self_RigidBody.velocity.x * EnMainInst.inputs.horizontal > 0) {
                         Self_RigidBody.AddForce(new Vector2(EnMainInst.inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 4.0f), 0.0f), ForceMode2D.Force);
                     } else {
@@ -578,7 +578,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack: {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}\nHaltMotion: {15}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld, EnMainInst.haltMotion);
+        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack: {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
     }
 
     void LateUpdate() {
