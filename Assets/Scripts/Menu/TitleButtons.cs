@@ -9,7 +9,11 @@ public class TitleButtons : MonoBehaviour {
     public GameObject TutorialMenu;
 
     public void StartGame() {
-        SceneManager.LoadScene("Levels");
+        SceneManager.LoadScene("Game");
+    }
+
+    public void ContinueGame() {
+        SceneManager.LoadScene("Game");
     }
     
     public void QuitGame() {

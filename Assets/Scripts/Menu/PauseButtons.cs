@@ -30,7 +30,7 @@ public class PauseButtons : MonoBehaviour {
         if (PauseMenu.activeSelf) {
             Resume();
         }
-        SceneManager.LoadScene("Levels");
+        SceneManager.LoadScene("Title");
     }
 
     void Start() {
