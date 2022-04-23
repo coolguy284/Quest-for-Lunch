@@ -1,6 +1,5 @@
 slightly reduce endlag on bow
 soften speed cap so less jitter
-slight input lag on top of platform, basically extend the lag when going up through a platform to a little bit after it as well
 
 wall to ground getup animation
 chance that enemy is stunned on hit is enemy base stun chance plus stun chance of weapon

@@ -104,7 +104,10 @@ public class EnAttack : MonoBehaviour {
 
         // startup lag
         EnMoveInst.StartAttack(attackStats.name);
-        attackCooldown = attackStats.startup;
+        attackCooldown = attackStats.startup + 0.1f;
+        EnMainInst.haltMotion = true;
+        if (attackSlot == -1 && Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
+            EnMoveInst.StartHaltState();
         float startupTime = 0.0f;
         while (startupTime < attackStats.startup) {
             if (EnMoveInst.inputLagTime > 0.0f || EnMoveInst.platformPullUp) {
@@ -117,7 +120,7 @@ public class EnAttack : MonoBehaviour {
         }
 
         // perform attack
-        attackCooldown = attackStats.active;
+        attackCooldown = attackStats.active + 0.1f;
         switch (attackStats.type) {
             case "normal":
                 float activeTime = 0.0f;
@@ -150,15 +153,10 @@ public class EnAttack : MonoBehaviour {
 
         // halt momentum
         if (!givenMomentumHalt) {
-            EnMainInst.haltMotion = true;
             givenMomentumHalt = true;
             if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME) {
                 extraMomentumHalt = EnMoveInst.inAirTime;
             }
-        } else if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) {
-            EnMainInst.haltMotion = true;
-        } else {
-            EnMainInst.haltMotion = false;
         }
         
         notPerformingAttack = true;
@@ -189,21 +187,18 @@ public class EnAttack : MonoBehaviour {
             } else if (EnMainInst.inputs.attack2 && attackCooldown == 0.0f && EnMoveInst.isNormalState) {
                 StartCoroutine(PerformAttack(1));
             }
-
-            if (attackCooldown > 0.0f && (!givenMomentumHalt || EnMoveInst.inAirTime < MOMENTUM_HALT_TIME + extraMomentumHalt) && !EnMoveInst.platformPullUp) {
-                if (!EnMainInst.haltMotion) {
-                    EnMainInst.haltMotion = true;
-                }
-            } else {
-                if (EnMainInst.haltMotion) {
-                    EnMainInst.haltMotion = false;
-                }
-            }
         }
 
         // major drag when haltmotion is active
         if (EnMainInst.haltMotion) {
             Self_RigidBody.AddForce(new Vector2(Self_RigidBody.velocity.x * -10f, Self_RigidBody.velocity.y * -10f), ForceMode2D.Force);
+        }
+
+        // unhalt motion
+        if ((attackCooldown == 0.0f || givenMomentumHalt && EnMoveInst.inAirTime > MOMENTUM_HALT_TIME + extraMomentumHalt || EnMoveInst.platformPullUp) && EnMainInst.haltMotion) {
+            EnMainInst.haltMotion = false;
+            if (Self_RigidBody.bodyType == RigidbodyType2D.Static)
+                EnMoveInst.StopHaltState();
         }
 
         // refresh momentumhalts if on ground
@@ -219,6 +214,6 @@ public class EnAttack : MonoBehaviour {
         }
         
         // debug text
-        if (isPlayer) DebugText3.text = string.Format("GivenHalt: {0}\nExtraHalt: {1:0.000}", givenMomentumHalt, extraMomentumHalt);
+        if (isPlayer) DebugText3.text = string.Format("GivenHalt: {0}\nExtraHalt: {1:0.000}\nAttackCooldown: {2:0.000}\nHaltMotion: {3}", givenMomentumHalt, extraMomentumHalt, attackCooldown, EnMainInst.haltMotion);
     }
 }

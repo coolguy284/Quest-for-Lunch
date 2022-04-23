@@ -6,7 +6,7 @@
             "fires": "None",
             "damage": 80,
             "startup": 0,
-            "active": 0.2,
+            "active": 0.3,
             "cooldown": 0.5,
             "knockback": 3,
             "hitstun": 2,
