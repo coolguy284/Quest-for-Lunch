@@ -1,5 +1,4 @@
 add teleport attack
-add animation sequences for things
 
 things on the weapons (stats), abilities
 secondary currency for extra abilities

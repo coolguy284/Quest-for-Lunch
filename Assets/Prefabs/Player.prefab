@@ -243,6 +243,7 @@ MonoBehaviour:
   ItemsList: {fileID: 0}
   ProjectilesList: {fileID: 0}
   ItemPrefab: {fileID: 0}
+  animator: {fileID: 1711140824440727978}
 --- !u!114 &3026333166035380683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,7 +256,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712ffef125cf1844ca1025f19da8397c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 1711140824440727978}
   DebugText: {fileID: 0}
   isNormalState: 1
   isWallCling: 0
@@ -266,6 +266,7 @@ MonoBehaviour:
   facingRight: 1
   isGrounded: 0
   inAirTime: 0
+  platformPullUp: 0
   fastDropStoppedFrame: 0
 --- !u!114 &4021388766387843322
 MonoBehaviour:
@@ -300,6 +301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugText3: {fileID: 0}
+  STUN_CHANCE: 0.1
   attackCooldown: 0
 --- !u!114 &518227008849500309
 MonoBehaviour:

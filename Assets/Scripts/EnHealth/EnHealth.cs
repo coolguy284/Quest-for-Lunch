@@ -53,6 +53,7 @@ public class EnHealth : MonoBehaviour {
             } else {
                 Destroy(Self);
             }
+            EnMainInst.animator.SetTrigger("Death");
         } else if (!alive) {
             alive = true;
             if (isPlayer) {
