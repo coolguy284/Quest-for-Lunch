@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using TMPro;
 
 public class EnMove : MonoBehaviour {
@@ -11,6 +12,9 @@ public class EnMove : MonoBehaviour {
     Rigidbody2D Self_RigidBody;
     EnMain EnMainInst;
     GameObject Player;
+    GridLayout GroundGridLayout;
+    Tilemap GroundTileMap;
+    Tilemap PlatformTileMap;
     public Animator animator;
     public TextMeshProUGUI DebugText;
 
@@ -41,6 +45,11 @@ public class EnMove : MonoBehaviour {
     float DODGE_LAG = 1.0f;
     float PLATFORM_GETUP_LAG = 0.2f;
 
+    float WALL_GETUP_WALL_SPEED = 5.0f;
+    float WALL_GETUP_GROUND_SPEED = 5.0f;
+    float WALL_GETUP_WALL_TIME = 0.01f;
+    float WALL_GETUP_GROUND_TIME = 0.14f;
+
     int jumps = 0; // number of jumps available
     bool lockGround = false; // if true ground cannot refresh jump counter
     bool lockWall = false; // if true wall cannot refresh jump counter
@@ -50,6 +59,7 @@ public class EnMove : MonoBehaviour {
     public bool isWallCling = false;
     [HideInInspector]
     public bool isFastDropping = false;
+    bool isWallGetUp = false;
     float dodgeLagTime = 0.0f;
 
     float wallClingLagTime = 0.0f; // amount of time that the wall cannot be clinged to
@@ -66,6 +76,7 @@ public class EnMove : MonoBehaviour {
     float trueGravityScale = 0.0f;
     [HideInInspector]
     public bool facingRight = true;
+    float wallGetUpGroundTimer = 0.0f;
 
     bool isPlayer = false;
     bool alive = false;
@@ -125,13 +136,53 @@ public class EnMove : MonoBehaviour {
     }
 
     bool isOnWallLeft() {
-        var leftWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX - EnMainInst.bounds.extraGap, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Default"));
+        var leftWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX - EnMainInst.bounds.extraGap, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeY, LayerMask.GetMask("Default", "Platform"));
         return leftWallRaycast.collider != null;
     }
 
     bool isOnWallRight() {
-        var rightWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Default"));
+        var rightWallRaycast = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX + EnMainInst.bounds.extraGap, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeY, LayerMask.GetMask("Default", "Platform"));
         return rightWallRaycast.collider != null;
+    }
+
+    bool isTileAt(Vector3Int celCoords) {
+        return GroundTileMap.GetTile(celCoords) != null || PlatformTileMap.GetTile(celCoords) != null;
+    }
+
+    bool isAbleToWallGetUpPart(Vector3Int celCoords, int xScale) {
+        if (isTileAt(celCoords + new Vector3Int(0, 3))) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 3))) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, 2))) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 2))) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, 1))) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 1))) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, 0))) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 0))) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, -1))) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, -1))) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, -2))) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, -2))) return false;
+        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 3))) return false;
+        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 3))) return false;
+        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 2))) return false;
+        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 2))) return false;
+        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 1))) return false;
+        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 1))) return false;
+        if (!isTileAt(celCoords + new Vector3Int(1 * xScale, 0))) return false;
+        if (!isTileAt(celCoords + new Vector3Int(2 * xScale, 0))) return false;
+        return true;
+    }
+
+    bool isAbleToWallGetUp(bool right) {
+        var headCoords = new Vector2(Self.transform.position.x, Self.transform.position.y + EnMainInst.bounds.extentY);
+        var celCoords = GroundGridLayout.WorldToCell(headCoords);
+        int xScale = right ? 1 : -1;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, 1), xScale)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, 0), xScale)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -1), xScale)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -2), xScale)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -3), xScale)) return true;
+        return false;
     }
 
     #endregion
@@ -204,6 +255,17 @@ public class EnMove : MonoBehaviour {
         fastDropStoppedFrame = true;
         if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
             Self_RigidBody.velocity = new Vector2(0.0f, 0.0f);
+    }
+
+    void StartWallGetUp() {
+        isWallGetUp = true;
+        StartHaltState();
+    }
+
+    void StopWallGetUp() {
+        wallGetUpGroundTimer = 0.0f;
+        isWallGetUp = false;
+        StopHaltState();
     }
 
     public void StartHaltState() {
@@ -325,6 +387,9 @@ public class EnMove : MonoBehaviour {
         Self_RigidBody = GetComponent<Rigidbody2D>();
         EnMainInst = GetComponent<EnMain>();
         Player = GameObject.Find("Player");
+        GroundGridLayout = GameObject.Find("Grid").GetComponent<GridLayout>();
+        GroundTileMap = GameObject.Find("Ground Tilemap").GetComponent<Tilemap>();
+        PlatformTileMap = GameObject.Find("Platform Tilemap").GetComponent<Tilemap>();
         trueGravityScale = Self_RigidBody.gravityScale;
         jumps = JUMPS_FROM_GND;
     }
@@ -369,7 +434,7 @@ public class EnMove : MonoBehaviour {
         if (!isGrounded && lockGround) lockGround = false;
         if (!isWalled && lockWall) lockWall = false;
 
-        isNormalState = !isWallCling && !isFastDropping;
+        isNormalState = !isWallCling && !isFastDropping && !isWallGetUp;
 
         if (alive) {
             // add dodge lag when invulnerability disappears
@@ -435,8 +500,10 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // establish wall cling
-                if (isPlayer && wallClingLagTime == 0.0f && !ignorePlatform && isHoldingWall && !isGrounded && !isInPlatform && !wallLetGo) {
-                    if (Self_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
+                if (isPlayer && wallClingLagTime == 0.0f && !ignorePlatform && isHoldingWall && !isGrounded && !wallLetGo) {
+                    if (isAbleToWallGetUp(facingRight)) {
+                        StartWallGetUp();
+                    } else if (Self_RigidBody.velocity.y < WALL_CLIMB_THRESHOLD) {
                         // simple cling
                         StartWallCling(false);
                     } else {
@@ -498,6 +565,20 @@ public class EnMove : MonoBehaviour {
                     }
                     GetComponent<EnHealth>().dodgeInvulnTime = GetComponent<EnHealth>().DODGE_INVULN;
                     dodgeLagTime = DODGE_LAG;
+                }
+            } else if (isWallGetUp) {
+                // wall get up
+
+                if (isWalled) {
+                    Self.transform.position += new Vector3(0.0f, WALL_GETUP_WALL_SPEED, 0.0f) * Time.deltaTime;
+                } else if (wallGetUpGroundTimer < WALL_GETUP_WALL_TIME) {
+                    Self.transform.position += new Vector3(0.0f, WALL_GETUP_WALL_SPEED, 0.0f) * Time.deltaTime;
+                    wallGetUpGroundTimer += Time.deltaTime;
+                } else if (wallGetUpGroundTimer < WALL_GETUP_GROUND_TIME) {
+                    Self.transform.position += new Vector3(facingRight ? WALL_GETUP_GROUND_SPEED : -WALL_GETUP_GROUND_SPEED, 0.0f, 0.0f) * Time.deltaTime;
+                    wallGetUpGroundTimer += Time.deltaTime;
+                } else {
+                    StopWallGetUp();
                 }
             } else if (isWallCling) {
                 // wall cling
@@ -578,7 +659,7 @@ public class EnMove : MonoBehaviour {
         }
 
         // debug text
-        if (isPlayer) DebugText.text = string.Format("IsGrounded: {0}\nIsPlatform: {1}\nIsHoldingWall: {2}\nIsWallCling: {3}\nIsInPlatform: {4}\nJumps: {5}\nInputLag: {6:0.000}\nInAttack: {7}\nWallClingLag: {8:0.000}\nDodgeLag: {9:0.000}\nIgnorePlatform: {10}\nInAirTime: {11:0.000}\nHorz: {12}\nVert: {13}\nJump: {14}", isGrounded, isPlatform, isHoldingWall, isWallCling, isInPlatform, jumps, inputLagTime, inAttack, wallClingLagTime, dodgeLagTime, ignorePlatform, inAirTime, EnMainInst.inputs.horizontal, EnMainInst.inputs.vertical, EnMainInst.inputs.jumpHeld);
+        if (isPlayer) DebugText.text = $"IsGrounded: {isGrounded}\nIsPlatform: {isPlatform}\nIsHoldingWall: {isHoldingWall}\nIsWallGetUp: {isWallGetUp}\nIsWallCling: {isWallCling}\nIsInPlatform: {isInPlatform}\nJumps: {jumps}\nInputLag: {inputLagTime:0.000}\nInAttack: {inAttack}\nWallClingLag: {wallClingLagTime:0.000}\nDodgeLag: {dodgeLagTime:0.000}\nIgnorePlatform: {ignorePlatform}\nInAirTime: {inAirTime:0.000}\nHorz: {EnMainInst.inputs.horizontal}\nVert: {EnMainInst.inputs.vertical}\nJump: {EnMainInst.inputs.jumpHeld}";
     }
 
     void LateUpdate() {

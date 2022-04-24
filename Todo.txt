@@ -1,4 +1,3 @@
-wall to ground getup animation
 add teleport attack
 sword is melee, fork is ranged (for now)
 save player data
