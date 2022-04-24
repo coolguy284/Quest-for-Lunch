@@ -1,5 +1,5 @@
 add teleport attack
-sword is melee, fork is ranged (for now)
+add animation sequences for things
 save player data
 
 things on the weapons (stats), abilities
