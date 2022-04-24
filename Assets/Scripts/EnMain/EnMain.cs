@@ -78,6 +78,8 @@ public class EnMain : MonoBehaviour {
     public GameObject ItemPrefab;
     [HideInInspector]
     public Dictionary<string, Level.TWeaponStats> WeaponStats;
+    public Animator animator;
+    public HashSet<string> animatorParams = new HashSet<string>();
 
     void Start() {
         Player = GameObject.Find("Player");
@@ -88,6 +90,9 @@ public class EnMain : MonoBehaviour {
         ProjectilesList = LevelComponent.ProjectilesList;
         ItemPrefab = LevelComponent.ItemPrefab;
         WeaponStats = LevelComponent.WeaponStats;
+        foreach (var param in animator.parameters) {
+            animatorParams.Add(param.name);
+        }
     }
 
     void Update() {

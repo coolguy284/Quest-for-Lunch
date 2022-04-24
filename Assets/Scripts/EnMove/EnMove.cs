@@ -15,7 +15,6 @@ public class EnMove : MonoBehaviour {
     GridLayout GroundGridLayout;
     Tilemap GroundTileMap;
     Tilemap PlatformTileMap;
-    public Animator animator;
     public TextMeshProUGUI DebugText;
 
     float MOVEMENT_FORCE = 15.0f;
@@ -192,6 +191,7 @@ public class EnMove : MonoBehaviour {
     void Jump() {
         Self_RigidBody.AddForce(new Vector2(0, JUMP_FORCE), ForceMode2D.Impulse);
         lockGround = true;
+        EnMainInst.animator.SetTrigger("Jump");
     }
 
     void AirJump() {
@@ -260,6 +260,7 @@ public class EnMove : MonoBehaviour {
     void StartWallGetUp() {
         isWallGetUp = true;
         StartHaltState();
+        EnMainInst.animator.SetTrigger("WallGetUp");
     }
 
     void StopWallGetUp() {
@@ -280,16 +281,15 @@ public class EnMove : MonoBehaviour {
         inAttack = true;
         attackType = attackTypeVal;
         if (attackTypeVal == "Weapon Plus") return; // TEMPORARY
-        var prefix = isPlayer ? "Player" : "Enemy";
-        var animation = prefix + "_Attack" + attackType;
-        if (animator.HasState(0, Animator.StringToHash(animation))) animator.Play(animation);
-        else animator.Play(isPlayer ? "Player_AttackSword" : "Enemy_AttackBasic1");
+        var animation = "Attack" + attackType;
+        if (EnMainInst.animatorParams.Contains(animation)) EnMainInst.animator.SetTrigger(animation);
+        else EnMainInst.animator.SetTrigger(isPlayer ? "AttackBasic" : "AttackBasic1");
     }
     
     public void StopAttack() {
         inAttack = false;
         var prefix = isPlayer ? "Player" : "Enemy";
-        animator.Play(prefix + "_Idle");
+        EnMainInst.animator.Play(prefix + "_Idle");
     }
 
     #endregion
@@ -565,6 +565,7 @@ public class EnMove : MonoBehaviour {
                     }
                     GetComponent<EnHealth>().dodgeInvulnTime = GetComponent<EnHealth>().DODGE_INVULN;
                     dodgeLagTime = DODGE_LAG;
+                    EnMainInst.animator.SetTrigger("Dodge");
                 }
             } else if (isWallGetUp) {
                 // wall get up
@@ -639,6 +640,13 @@ public class EnMove : MonoBehaviour {
             // cancel dodge invulnerability for any input
             if ((EnMainInst.inputs.jump || EnMainInst.inputs.attack1 || EnMainInst.inputs.attack2 || EnMainInst.inputs.attackTele) && GetComponent<EnHealth>().dodgeInvulnTime != 0.0f) {
                 GetComponent<EnHealth>().dodgeInvulnTime = 0.0f;
+            }
+
+            // set animation variables
+            EnMainInst.animator.SetFloat("Movement Speed", Mathf.Abs(Self_RigidBody.velocity.x));
+            if (isPlayer) {
+                EnMainInst.animator.SetBool("IsWallCling", isWallCling);
+                EnMainInst.animator.SetFloat("Wall Speed", Self_RigidBody.velocity.y);
             }
         }
 
