@@ -1,12 +1,12 @@
 add teleport attack
 add animation sequences for things
-save player data
 
 things on the weapons (stats), abilities
 secondary currency for extra abilities
 add 3d model with animations
 make rendering and 3d rendering pixel perfect
 potential upscaling to combat 3d texture jitteryness, can just upscale the entity cam to a render texture
+save player data
 
 bugs:
 if quality low, movement speed crazy and jumps all over the place, jumps, everything basically 5.0x speed
