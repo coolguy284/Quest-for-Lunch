@@ -198,6 +198,7 @@ public class EnMove : MonoBehaviour {
         if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
             Self_RigidBody.velocity = new Vector2(Self_RigidBody.velocity.x, 0.0f);
         Self_RigidBody.AddForce(new Vector2(0, AIRJUMP_FORCE), ForceMode2D.Impulse);
+        EnMainInst.animator.SetTrigger("AirJump");
     }
 
     void WallJump(bool left, float strength) {
@@ -207,6 +208,7 @@ public class EnMove : MonoBehaviour {
         wallClingLagTime = WALL_JUMP_LAG;
         isHoldingWall = false;
         lockWall = true;
+        EnMainInst.animator.SetTrigger("WallJump");
     }
 
     void StartWallCling(bool climb) {
