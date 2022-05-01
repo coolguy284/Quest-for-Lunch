@@ -1,15 +1,19 @@
 Todo anim.: 
-	- Run
-	- Rising-Air
-	- Falling-Air
-	- Wallclimb
-	- Wallcling
-	- Dodge
-	- Platform Grab
-	- Ledge Grab
-	- Crouch (Release)
-	- Damaged
 	- All 9 Weapons
 
 Finished anim: 
 	- Idle
+	- Run
+	- Rising-Air
+	- Falling-Air
+	- Crouch
+	- Crouch (Release)
+	- Landing
+	- Damaged-Intial
+	- Damaged-Final
+	- Death
+	- Wallclimb
+	- Wallcling
+	- Dodge
+	- Ledge Grab
+	- Platform Grab
