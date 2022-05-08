@@ -815,6 +815,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5628471630770908082}
     m_Modifications:
+    - target: {fileID: 296770118407215705, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: alive
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 296770118407215705, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: health
+      value: 7.44e-43
+      objectReference: {fileID: 0}
+    - target: {fileID: 296770118407215705, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: maxHealth
+      value: -1.1845229e+31
+      objectReference: {fileID: 0}
+    - target: {fileID: 296770118407215705, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: DODGE_INVULN
+      value: -1.1845268e+31
+      objectReference: {fileID: 0}
+    - target: {fileID: 296770118407215705, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: hitInvulnTime
+      value: -1.184519e+31
+      objectReference: {fileID: 0}
+    - target: {fileID: 296770118407215705, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: dodgeInvulnTime
+      value: 7.44e-43
+      objectReference: {fileID: 0}
+    - target: {fileID: 296770118407215705, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: pastDodgeInvulnTime
+      value: -1.1845152e+31
+      objectReference: {fileID: 0}
     - target: {fileID: 493426261116116526, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -861,6 +889,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 493426261116116563, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622637211522995862, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: DebugText3
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622637211522995862, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: STUN_CHANCE
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622637211522995862, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: attackCooldown
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -923,6 +963,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 493426261116116563, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622637211522995862, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: DebugText3
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622637211522995862, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: STUN_CHANCE
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622637211522995862, guid: 4b66ebd055ea6b741984e3c6c16d753d, type: 3}
+      propertyPath: attackCooldown
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
