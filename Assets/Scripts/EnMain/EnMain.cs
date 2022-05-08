@@ -78,7 +78,46 @@ public class EnMain : MonoBehaviour {
     public GameObject ItemPrefab;
     [HideInInspector]
     public Dictionary<string, Level.TWeaponStats> WeaponStats;
-    public Animator animator;
+    public Animator _animator;
+    public Animator _animatorSub;
+
+    public class AnimatorInterface {
+        public Animator _animator;
+        public Animator _animatorSub;
+
+        public AnimatorInterface(Animator _animatorVal, Animator _animatorSubVal) {
+            _animator = _animatorVal;
+            _animatorSub = _animatorSubVal;
+        }
+
+        public void Play(string animation) {
+            if (_animator != null) _animator.Play(animation);
+            if (_animatorSub != null) _animatorSub.Play(animation);
+        }
+
+        public void SetTrigger(string parameter) {
+            if (_animator != null) _animator.SetTrigger(parameter);
+            if (_animatorSub != null) _animatorSub.SetTrigger(parameter);
+        }
+        
+        public void SetBool(string parameter, bool value) {
+            if (_animator != null) _animator.SetBool(parameter, value);
+            if (_animatorSub != null) _animatorSub.SetBool(parameter, value);
+        }
+
+        public void SetFloat(string parameter, float value) {
+            if (_animator != null) _animator.SetFloat(parameter, value);
+            if (_animatorSub != null) _animatorSub.SetFloat(parameter, value);
+        }
+
+        public AnimatorControllerParameter[] parameters {
+            get {
+                return _animator.parameters;
+            }
+        }
+    }
+    public AnimatorInterface animator;
+    
     public HashSet<string> animatorParams = new HashSet<string>();
 
     void Start() {
@@ -90,6 +129,7 @@ public class EnMain : MonoBehaviour {
         ProjectilesList = LevelComponent.ProjectilesList;
         ItemPrefab = LevelComponent.ItemPrefab;
         WeaponStats = LevelComponent.WeaponStats;
+        animator = new AnimatorInterface(_animator, _animatorSub);
         foreach (var param in animator.parameters) {
             animatorParams.Add(param.name);
         }
@@ -104,5 +144,6 @@ public class EnMain : MonoBehaviour {
         if (ProjectilesList == null) ProjectilesList = LevelComponent.ProjectilesList;
         if (ItemPrefab == null) ItemPrefab = LevelComponent.ItemPrefab;
         if (WeaponStats == null) WeaponStats = LevelComponent.WeaponStats;
+        if (animator == null) animator = new AnimatorInterface(_animator, _animatorSub);
     }
 }

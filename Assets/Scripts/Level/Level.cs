@@ -48,6 +48,7 @@ public class Level : MonoBehaviour {
     public GameObject EnemyPrefab;
     public GameObject[] Rooms;
     public GameObject ItemPrefab;
+    public GameObject EntityCamera;
     public GameObject MainCamera;
     public GameObject DebugTexts;
 
@@ -141,5 +142,6 @@ public class Level : MonoBehaviour {
         }
 
         MainCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 6.0f / Mathf.Max(MainCamera.GetComponent<Camera>().aspect, 1.77777777777f);
+        EntityCamera.GetComponent<Camera>().orthographicSize = MainCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize;
     }
 }

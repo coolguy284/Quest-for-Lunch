@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [ExecuteInEditMode]
 public class Pixelation : MonoBehaviour {
@@ -32,7 +33,7 @@ public class Pixelation : MonoBehaviour {
         pixelHeightInv = cameraWorldSize.y / PIXEL_SIZE;
         pixelXOffset = -(cameraWorldCenter.x - Mathf.Floor(cameraWorldCenter.x / PIXEL_SIZE) * PIXEL_SIZE) / cameraWorldSize.x;
         pixelYOffset = -(cameraWorldCenter.y - Mathf.Floor(cameraWorldCenter.y / PIXEL_SIZE) * PIXEL_SIZE) / cameraWorldSize.y;
-        if (Application.isPlaying) {
+        if (Application.isPlaying && SceneManager.GetActiveScene().name == "Render Test") {
             mainCamera.transform.position += new Vector3(0.0004f, 0.0f, 0.0f);
         }
     }
@@ -44,5 +45,9 @@ public class Pixelation : MonoBehaviour {
         material.SetFloat("_pixelXOffset", pixelXOffset);
         material.SetFloat("_pixelYOffset", pixelYOffset);
         Graphics.Blit(src, dest, material);
+    }
+
+    void OnDrawGizmos() {
+        return;
     }
 }

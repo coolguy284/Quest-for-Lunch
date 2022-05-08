@@ -168,7 +168,8 @@ MonoBehaviour:
   ItemsList: {fileID: 0}
   ProjectilesList: {fileID: 0}
   ItemPrefab: {fileID: 0}
-  animator: {fileID: 3843454410269108498}
+  _animator: {fileID: 3843454410269108498}
+  _animatorChompy: {fileID: 0}
 --- !u!114 &2109900321004936574
 MonoBehaviour:
   m_ObjectHideFlags: 0

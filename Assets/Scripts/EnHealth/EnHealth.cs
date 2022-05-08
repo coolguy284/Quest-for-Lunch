@@ -54,11 +54,14 @@ public class EnHealth : MonoBehaviour {
                 Destroy(Self);
             }
             EnMainInst.animator.SetTrigger("Death");
-        } else if (!alive) {
-            alive = true;
-            if (isPlayer) {
-                DeadText.SetActive(false);
+        } else {
+            if (!alive) {
+                alive = true;
+                if (isPlayer) {
+                    DeadText.SetActive(false);
+                }
             }
+            EnMainInst.animator.SetTrigger("Damage");
         }
     }
 
