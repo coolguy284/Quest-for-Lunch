@@ -56,6 +56,7 @@ public class EnMove : MonoBehaviour {
     public bool isNormalState = true;
     [HideInInspector]
     public bool isWallCling = false;
+    bool isPWallCling = false;
     [HideInInspector]
     public bool isFastDropping = false;
     bool isWallGetUp = false;
@@ -81,6 +82,7 @@ public class EnMove : MonoBehaviour {
     bool alive = false;
     [HideInInspector]
     public bool isGrounded = false;
+    bool isPGrounded = false;
     bool isTrueGrounded = false;
     bool isPlatform = false;
     bool isLooseInPlatform = false;
@@ -198,7 +200,7 @@ public class EnMove : MonoBehaviour {
         if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic)
             Self_RigidBody.velocity = new Vector2(Self_RigidBody.velocity.x, 0.0f);
         Self_RigidBody.AddForce(new Vector2(0, AIRJUMP_FORCE), ForceMode2D.Impulse);
-        EnMainInst.animator.SetTrigger("AirJump");
+        EnMainInst.animator.SetTrigger("Jump");
     }
 
     void WallJump(bool left, float strength) {
@@ -208,7 +210,7 @@ public class EnMove : MonoBehaviour {
         wallClingLagTime = WALL_JUMP_LAG;
         isHoldingWall = false;
         lockWall = true;
-        EnMainInst.animator.SetTrigger("WallJump");
+        EnMainInst.animator.SetTrigger("Jump");
     }
 
     void StartWallCling(bool climb) {
@@ -403,12 +405,6 @@ public class EnMove : MonoBehaviour {
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
 
         updateInput();
-        
-        if (EnMainInst.inputs.horizontal > 0.0f) {
-            facingRight = true;
-        } else if (EnMainInst.inputs.horizontal < 0.0f) {
-            facingRight = false;
-        }
 
         if (!facingRight) {
             transform.localScale = new Vector3(-1.0f, transform.localScale.y, transform.localScale.z);
@@ -476,6 +472,12 @@ public class EnMove : MonoBehaviour {
 
                 // horizontal movement
                 if ((!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
+                    if (EnMainInst.inputs.horizontal > 0.0f) {
+                        facingRight = true;
+                    } else if (EnMainInst.inputs.horizontal < 0.0f) {
+                        facingRight = false;
+                    }
+
                     if (Self_RigidBody.velocity.x * EnMainInst.inputs.horizontal > 0) {
                         Self_RigidBody.AddForce(new Vector2(EnMainInst.inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 2.0f), 0.0f), ForceMode2D.Force);
                     } else {
@@ -649,6 +651,11 @@ public class EnMove : MonoBehaviour {
             if (isPlayer) {
                 EnMainInst.animator.SetBool("IsWallCling", isWallCling);
                 EnMainInst.animator.SetFloat("Wall Speed", Self_RigidBody.velocity.y);
+                EnMainInst.animator.SetBool("IsGrounded", isGrounded);
+                EnMainInst.animator.SetBool("PlatformPullUp", platformPullUp);
+                if (isPGrounded && !isGrounded || isPWallCling && !isWallCling) {
+                    EnMainInst.animator.SetTrigger("InAir");
+                }
             }
         }
 
@@ -673,6 +680,8 @@ public class EnMove : MonoBehaviour {
     }
 
     void LateUpdate() {
+        isPWallCling = isWallCling;
+        isPGrounded = isGrounded;
         isPLooseInPlatform = isLooseInPlatform;
         PinputsHorizontal = EnMainInst.inputs.horizontal;
     }
