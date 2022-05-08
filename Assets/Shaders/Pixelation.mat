@@ -75,11 +75,11 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     - _pixelHeight: 458.26086
-    - _pixelHeightInv: 864
+    - _pixelHeightInv: 855.6787
     - _pixelWidth: 840
-    - _pixelWidthInv: 1462.7776
-    - _pixelXOffset: -0.0002193928
-    - _pixelYOffset: -0.0008347123
+    - _pixelWidthInv: 1536
+    - _pixelXOffset: -0.00060009956
+    - _pixelYOffset: -0.00083113165
     - _pixelsHeight: 105.4
     - _pixelsWidth: 193.2
     m_Colors:
