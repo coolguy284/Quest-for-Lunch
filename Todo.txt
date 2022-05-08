@@ -1,4 +1,5 @@
 make ledge grab have priority over platform pull when wall running 
+platform pull up on the edge of a platform should trigger a ledge get up
 holding down and pressing jump while attackcooldown is active doesnt cause player to jump but still plays landing animation (?)
 add crouching
 ledge get up set facing direction to that of wall
