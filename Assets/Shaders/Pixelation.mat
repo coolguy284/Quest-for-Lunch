@@ -78,8 +78,8 @@ Material:
     - _pixelHeightInv: 256
     - _pixelWidth: 840
     - _pixelWidthInv: 458.28354
-    - _pixelXOffset: -0
-    - _pixelYOffset: -0
+    - _pixelXOffset: -0.0001396636
+    - _pixelYOffset: -0.001010259
     - _pixelsHeight: 105.4
     - _pixelsWidth: 193.2
     m_Colors:
