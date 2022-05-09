@@ -91,9 +91,10 @@ public class EnItem : MonoBehaviour {
 
     public void DropItem(int slot) {
         if (slot < 0 || slot > Slots.Length || Slots[slot].name == "" || !EnHealthInst.alive) return;
-        var item = Instantiate(EnMainInst.ItemPrefab, transform.position, Quaternion.identity);
+        var item = Instantiate(EnMainInst.ItemPrefab, Vector3.zero, Quaternion.identity);
         item.GetComponent<SpriteRenderer>().sprite = EnMainInst.SpriteDict[Slots[slot].name];
         item.transform.parent = EnMainInst.ItemsList.transform;
+        item.transform.localPosition = transform.position;
         item.name = "Item " + Slots[slot].name;
         item.GetComponent<SlotStore>().Slot = Slots[slot];
         Slots[slot] = new Slot("");

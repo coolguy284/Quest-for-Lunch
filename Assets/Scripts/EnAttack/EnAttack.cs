@@ -63,8 +63,9 @@ public class EnAttack : MonoBehaviour {
     }
 
     void AttackRanged(Level.TWeaponStats attackStats, EnItem.Slot weaponSlot, int weaponSlotId) {
-        var projectile = Instantiate(EnMainInst.ProjectileDict[attackStats.fires], transform.position, Quaternion.identity);
+        var projectile = Instantiate(EnMainInst.ProjectileDict[attackStats.fires], Vector3.zero, Quaternion.identity);
         projectile.transform.parent = EnMainInst.ProjectilesList.transform;
+        projectile.transform.localPosition = transform.position;
         projectile.GetComponent<Rigidbody2D>().AddForce(new Vector2(EnMoveInst.facingRight ? attackStats.damage : -attackStats.damage, 0.0f), ForceMode2D.Impulse);
         projectile.transform.rotation = Quaternion.Euler(0.0f, 0.0f, EnMoveInst.facingRight ? -45.0f : 135.0f);
         projectile.GetComponent<SpriteRenderer>().enabled = false;

@@ -10,6 +10,7 @@ make da roll more velocitious (should be able to move faster spamming dodge whil
 add teleport attack
 things on the weapons (stats), abilities
 secondary currency for extra abilities
+seperate animation controller for model vs player
 make rendering and 3d rendering pixel perfect
 potential upscaling to combat 3d texture jitteryness, can just upscale the entity cam to a render texture
 save player data
