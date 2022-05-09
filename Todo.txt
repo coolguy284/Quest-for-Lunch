@@ -1,17 +1,15 @@
-make ledge grab have priority over platform pull when wall running 
+make ledge grab have priority over platform pull when wall running
 platform pull up on the edge of a platform should trigger a ledge get up
 holding down and pressing jump while attackcooldown is active doesnt cause player to jump but still plays landing animation (?)
 add crouching
 ledge get up set facing direction to that of wall
 wall get up set facing direction to that of wall
-jumpfalling animation will not cancel to ledge get up if ledge get up begins 
+jumpfalling animation will not cancel to ledge get up if ledge get up begins
 make da roll more velocitious (should be able to move faster spamming dodge while walking than with regular walking)
 
 add teleport attack
-
 things on the weapons (stats), abilities
 secondary currency for extra abilities
-add 3d model with animations
 make rendering and 3d rendering pixel perfect
 potential upscaling to combat 3d texture jitteryness, can just upscale the entity cam to a render texture
 save player data
