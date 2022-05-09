@@ -60,7 +60,7 @@ public class ProjectileDamage : MonoBehaviour {
 
             // perform knockback
             var direction = entity.transform.position - transform.position;
-            entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 2.0f) * attackStats.knockback, ForceMode2D.Impulse);
+            entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 0.5f) * attackStats.knockback, ForceMode2D.Impulse);
             entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
             if (entity.GetComponent<EnAttack>().STUN_CHANCE + attackStats.stunChance > Random.Range(0.0f, 1.0f))
                 entity.GetComponent<EnMove>().inputLagTime = attackStats.hitstun;
