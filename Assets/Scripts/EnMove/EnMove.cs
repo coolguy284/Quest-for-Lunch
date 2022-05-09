@@ -317,7 +317,8 @@ public class EnMove : MonoBehaviour {
                 EnMainInst.inputs.dropItem = Input.GetKeyDown(KeyCode.K);
             } else {
                 // calculate inputs of entity
-                var relPlayerPos = Player.transform.position - Self.transform.position;
+                var relPlayerPos3D = Player.transform.position - Self.transform.position;
+                var relPlayerPos = new Vector2(relPlayerPos3D.x, relPlayerPos3D.y);
                 if (Mathf.Abs(relPlayerPos.x) < 5.0f && Mathf.Abs(relPlayerPos.y) < 1.0f &&
                     Physics2D.Raycast(
                         new Vector2(transform.position.x, transform.position.y + EnMainInst.bounds.extentY * 0.8f),

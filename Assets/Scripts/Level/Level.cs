@@ -80,8 +80,9 @@ public class Level : MonoBehaviour {
         var RoomEnemies = Rooms[roomId].transform.Find("Enemies").gameObject.transform;
         for (int i = 0; i < RoomEnemies.childCount; i++) {
             var enemy = RoomEnemies.GetChild(i).gameObject;
-            var instantiatedEnemy = Instantiate(EnemyPrefab, new Vector3(locXPos, locYPos, 0.0f) + enemy.transform.position, Quaternion.identity);
+            var instantiatedEnemy = Instantiate(EnemyPrefab, Vector3.zero, Quaternion.identity);
             instantiatedEnemy.transform.parent = EnemiesList.transform;
+            instantiatedEnemy.transform.localPosition = new Vector3(locXPos, locYPos, 0.0f) + enemy.transform.position;
             instantiatedEnemy.name = "Enemy " + i;
         }
     }
