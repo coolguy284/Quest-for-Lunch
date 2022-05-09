@@ -11114,7 +11114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: ec4ca2e75caa01c4a94a8a719eea1172, type: 2}
   mainCamera: {fileID: 1968207758}
-  PIXEL_SIZE: 0.0078125
+  PIXEL_SIZE: 0.0234375
 --- !u!20 &1447365784
 Camera:
   m_ObjectHideFlags: 0
@@ -12932,7 +12932,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.6930295, y: 1}
+    m_SensorSize: {x: 1.7901701, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

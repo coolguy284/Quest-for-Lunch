@@ -42,8 +42,8 @@ public class Pixelation : MonoBehaviour {
         src.filterMode = FilterMode.Point;
         material.SetFloat("_pixelWidthInv", pixelWidthInv);
         material.SetFloat("_pixelHeightInv", pixelHeightInv);
-        material.SetFloat("_pixelXOffset", pixelXOffset);
-        material.SetFloat("_pixelYOffset", pixelYOffset);
+        material.SetFloat("_pixelXOffset", pixelXOffset * 0f);
+        material.SetFloat("_pixelYOffset", pixelYOffset * 0f);
         Graphics.Blit(src, dest, material);
     }
 
