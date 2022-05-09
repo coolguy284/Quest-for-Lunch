@@ -8,6 +8,7 @@ public class Pixelation : MonoBehaviour {
     public Material material;
     public Camera mainCamera;
     public float PIXEL_SIZE = 0.0625f;
+    public bool snapToWorld = true;
     
     Vector3 cameraWorldLeftCorner;
     Vector3 cameraWorldRightCorner;
@@ -42,8 +43,13 @@ public class Pixelation : MonoBehaviour {
         src.filterMode = FilterMode.Point;
         material.SetFloat("_pixelWidthInv", pixelWidthInv);
         material.SetFloat("_pixelHeightInv", pixelHeightInv);
-        material.SetFloat("_pixelXOffset", pixelXOffset * 0f);
-        material.SetFloat("_pixelYOffset", pixelYOffset * 0f);
+        if (snapToWorld) {
+            material.SetFloat("_pixelXOffset", pixelXOffset);
+            material.SetFloat("_pixelYOffset", pixelYOffset);
+        } else {
+            material.SetFloat("_pixelXOffset", 0.0f);
+            material.SetFloat("_pixelYOffset", 0.0f);
+        }
         Graphics.Blit(src, dest, material);
     }
 
