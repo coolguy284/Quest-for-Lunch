@@ -522,7 +522,7 @@ public class EnMove : MonoBehaviour {
                     }
                 }
 
-                if (EnMainInst.inputs.jump) {
+                if (EnMainInst.inputs.jump && !EnMainInst.haltMotion) {
                     if (EnMainInst.inputs.vertical < 0.0f && isPlatform && !isTrueGrounded) {
                         // drop through platform
                         StartIgnorePlatform();
@@ -565,7 +565,7 @@ public class EnMove : MonoBehaviour {
                 }
 
                 // dodging
-                if (EnMainInst.inputs.dodge && dodgeLagTime == 0.0f) {
+                if (EnMainInst.inputs.dodge && dodgeLagTime == 0.0f && !EnMainInst.haltMotion) {
                     if (isGrounded) {
                         // dodge on ground completely horizontal
                         Self_RigidBody.velocity = new Vector2(facingRight ? DODGE_SPEED : -DODGE_SPEED, Self_RigidBody.velocity.y);
