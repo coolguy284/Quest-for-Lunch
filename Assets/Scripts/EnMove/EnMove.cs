@@ -28,7 +28,7 @@ public class EnMove : MonoBehaviour {
     int JUMPS_FROM_GND = 1;
     int JUMPS_FROM_WALL = 1;
 
-    float DODGE_SPEED = 7.0f;
+    float DODGE_SPEED = 10.0f;
     float FASTDROP_FORCE = 30.0f;
 
     float WALL_CLIMB_THRESHOLD = -0.3f;
