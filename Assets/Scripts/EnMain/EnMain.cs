@@ -6,12 +6,12 @@ using TMPro;
 
 public class EnMain : MonoBehaviour {
     public class Bounds {
-        public float extentX = 0.3f;
+        public float extentX = 0.2f;
         public float extentY = 0.6f;
-        public float sizeX = 0.6f;
+        public float sizeX = 0.4f;
         public float sizeY = 1.2f;
-        public float extentXBot = 0.2f;
-        public float sizeXBot = 0.4f;
+        public float extentXBot = 0.1f;
+        public float sizeXBot = 0.2f;
         public float sizeYBot = 1.1f;
         public float extraGap = 0.02f;
         public float extraSizeGap = 0.04f;
