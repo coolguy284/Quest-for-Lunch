@@ -662,7 +662,7 @@ public class EnMove : MonoBehaviour {
                 EnMainInst.animator.SetFloat("Wall Speed", Self_RigidBody.velocity.y);
                 EnMainInst.animator.SetBool("IsGrounded", isGrounded);
                 EnMainInst.animator.SetBool("PlatformPullUp", platformPullUp);
-                if (isPGrounded && !isGrounded && inputLagTime == 0.0f || isPWallCling && !isWallCling) {
+                if ((isPGrounded && !isGrounded && inputLagTime == 0.0f || isPWallCling && !isWallCling) && !isWallGetUp) {
                     EnMainInst.animator.SetTrigger("InAir");
                 }
             }
