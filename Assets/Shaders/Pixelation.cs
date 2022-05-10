@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 [ExecuteInEditMode]
 public class Pixelation : MonoBehaviour {
     public Material material;
+    Material materialInst;
     public Camera mainCamera;
     public float PIXEL_SIZE = 0.0625f;
     public bool snapToWorld = true;
@@ -18,6 +19,10 @@ public class Pixelation : MonoBehaviour {
     float pixelHeightInv;
     float pixelXOffset;
     float pixelYOffset;
+
+    void Awake() {
+        materialInst = new Material(material);
+    }
 
     void OnPreRender() {
         cameraWorldLeftCorner = mainCamera.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, 0.0f));
@@ -32,8 +37,8 @@ public class Pixelation : MonoBehaviour {
         this.transform.rotation = mainCamera.transform.rotation;
         pixelWidthInv = cameraWorldSize.x / PIXEL_SIZE;
         pixelHeightInv = cameraWorldSize.y / PIXEL_SIZE;
-        pixelXOffset = -(cameraWorldCenter.x - Mathf.Floor(cameraWorldCenter.x / PIXEL_SIZE) * PIXEL_SIZE) / cameraWorldSize.x;
-        pixelYOffset = -(cameraWorldCenter.y - Mathf.Floor(cameraWorldCenter.y / PIXEL_SIZE) * PIXEL_SIZE) / cameraWorldSize.y;
+        pixelXOffset = -(cameraWorldLeftCorner.x - Mathf.Floor(cameraWorldLeftCorner.x / PIXEL_SIZE) * PIXEL_SIZE) / cameraWorldSize.x;
+        pixelYOffset = -(cameraWorldLeftCorner.y - Mathf.Floor(cameraWorldLeftCorner.y / PIXEL_SIZE) * PIXEL_SIZE) / cameraWorldSize.y;
         if (Application.isPlaying && SceneManager.GetActiveScene().name == "Render Test") {
             mainCamera.transform.position += new Vector3(0.0004f, 0.0f, 0.0f);
         }
@@ -41,16 +46,16 @@ public class Pixelation : MonoBehaviour {
 
     void OnRenderImage(RenderTexture src, RenderTexture dest) {
         src.filterMode = FilterMode.Point;
-        material.SetFloat("_pixelWidthInv", pixelWidthInv);
-        material.SetFloat("_pixelHeightInv", pixelHeightInv);
+        materialInst.SetFloat("_pixelWidthInv", pixelWidthInv);
+        materialInst.SetFloat("_pixelHeightInv", pixelHeightInv);
         if (snapToWorld) {
-            material.SetFloat("_pixelXOffset", pixelXOffset);
-            material.SetFloat("_pixelYOffset", pixelYOffset);
+            materialInst.SetFloat("_pixelXOffset", pixelXOffset);
+            materialInst.SetFloat("_pixelYOffset", pixelYOffset);
         } else {
-            material.SetFloat("_pixelXOffset", 0.0f);
-            material.SetFloat("_pixelYOffset", 0.0f);
+            materialInst.SetFloat("_pixelXOffset", 0.0f);
+            materialInst.SetFloat("_pixelYOffset", 0.0f);
         }
-        Graphics.Blit(src, dest, material);
+        Graphics.Blit(src, dest, materialInst);
     }
 
     void OnDrawGizmos() {
