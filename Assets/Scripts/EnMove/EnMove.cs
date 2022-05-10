@@ -133,7 +133,7 @@ public class EnMove : MonoBehaviour {
     bool isInsidePlatform() {
         var platformRaycastL = Physics2D.Raycast(new Vector2(transform.position.x - EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Platform"));
         var platformRaycastR = Physics2D.Raycast(new Vector2(transform.position.x + EnMainInst.bounds.extentX, transform.position.y + EnMainInst.bounds.extentY), Vector2.down, EnMainInst.bounds.sizeYBot, LayerMask.GetMask("Platform"));
-        return platformRaycastL.collider != null || platformRaycastR.collider != null;
+        return platformRaycastL.collider != null && platformRaycastR.collider != null;
     }
 
     bool isOnWallLeft() {
