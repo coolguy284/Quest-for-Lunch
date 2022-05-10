@@ -428,6 +428,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ememi
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 99eb5870495efe84ea8562a9d4de6486, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 99eb5870495efe84ea8562a9d4de6486, type: 3}
 --- !u!4 &5419586996087415138 stripped

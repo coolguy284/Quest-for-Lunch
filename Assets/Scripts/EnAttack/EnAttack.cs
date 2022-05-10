@@ -107,6 +107,12 @@ public class EnAttack : MonoBehaviour {
             }
         }
 
+        // set sprite texture (quick method, will be improved eventually)
+        if (attackStats.type == "normal" && EnMainInst.SpriteDict.ContainsKey(attackStats.name)) {
+            var imageObject = transform.Find("HitBox/Image");
+            if (imageObject != null) imageObject.GetComponent<SpriteRenderer>().sprite = EnMainInst.SpriteDict[attackStats.name];
+        }
+
         // startup lag
         EnMoveInst.StartAttack(attackStats.name);
         attackCooldown = attackStats.startup + 0.1f;
@@ -162,6 +168,12 @@ public class EnAttack : MonoBehaviour {
             if (EnMoveInst.inAirTime < MOMENTUM_HALT_TIME) {
                 extraMomentumHalt = EnMoveInst.inAirTime;
             }
+        }
+
+        // unset sprite texture
+        if (attackStats.type == "normal") {
+            var imageObject = transform.Find("HitBox/Image");
+            if (imageObject != null) imageObject.GetComponent<SpriteRenderer>().sprite = null;
         }
         
         notPerformingAttack = true;
