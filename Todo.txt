@@ -1,5 +1,4 @@
 platform pull up on the edge of a platform should trigger a ledge get up
-holding down and pressing jump while attackcooldown is active doesnt cause player to jump but still plays landing animation (?)
 add crouching
 jumpfalling animation will not cancel to ledge get up if ledge get up begins
 
