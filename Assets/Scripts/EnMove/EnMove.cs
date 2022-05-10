@@ -146,31 +146,36 @@ public class EnMove : MonoBehaviour {
         return rightWallRaycast.collider != null;
     }
 
-    bool isTileAt(Vector3Int celCoords) {
-        return GroundTileMap.GetTile(celCoords) != null || PlatformTileMap.GetTile(celCoords) != null;
+    bool isTileAt(Vector3Int celCoords, Vector3Int baseCelCoords) {
+        var relCelCoords = celCoords - baseCelCoords;
+        if (relCelCoords.x != 0 && relCelCoords.y > 0 || relCelCoords.x == 0 && relCelCoords.y >= 0) {
+            return GroundTileMap.GetTile(celCoords) != null;
+        } else {
+            return GroundTileMap.GetTile(celCoords) != null || PlatformTileMap.GetTile(celCoords) != null;
+        }
     }
 
-    bool isAbleToWallGetUpPart(Vector3Int celCoords, int xScale) {
-        if (isTileAt(celCoords + new Vector3Int(0, 3))) return false;
-        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 3))) return false;
-        if (isTileAt(celCoords + new Vector3Int(0, 2))) return false;
-        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 2))) return false;
-        if (isTileAt(celCoords + new Vector3Int(0, 1))) return false;
-        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 1))) return false;
-        if (isTileAt(celCoords + new Vector3Int(0, 0))) return false;
-        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 0))) return false;
-        if (isTileAt(celCoords + new Vector3Int(0, -1))) return false;
-        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, -1))) return false;
-        if (isTileAt(celCoords + new Vector3Int(0, -2))) return false;
-        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, -2))) return false;
-        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 3))) return false;
-        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 3))) return false;
-        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 2))) return false;
-        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 2))) return false;
-        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 1))) return false;
-        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 1))) return false;
-        if (!isTileAt(celCoords + new Vector3Int(1 * xScale, 0))) return false;
-        if (!isTileAt(celCoords + new Vector3Int(2 * xScale, 0))) return false;
+    bool isAbleToWallGetUpPart(Vector3Int celCoords, int xScale, Vector3Int baseCelCoords) {
+        if (isTileAt(celCoords + new Vector3Int(0, 3), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 3), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, 2), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 2), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, 1), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 1), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, 0), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, 0), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, -1), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, -1), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(0, -2), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(-1 * xScale, -2), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 3), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 3), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 2), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 2), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(1 * xScale, 1), baseCelCoords)) return false;
+        if (isTileAt(celCoords + new Vector3Int(2 * xScale, 1), baseCelCoords)) return false;
+        if (!isTileAt(celCoords + new Vector3Int(1 * xScale, 0), baseCelCoords)) return false;
+        if (!isTileAt(celCoords + new Vector3Int(2 * xScale, 0), baseCelCoords)) return false;
         return true;
     }
 
@@ -178,11 +183,11 @@ public class EnMove : MonoBehaviour {
         var headCoords = new Vector2(Self.transform.position.x, Self.transform.position.y + EnMainInst.bounds.extentY);
         var celCoords = GroundGridLayout.WorldToCell(headCoords);
         int xScale = right ? 1 : -1;
-        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, 1), xScale)) return true;
-        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, 0), xScale)) return true;
-        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -1), xScale)) return true;
-        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -2), xScale)) return true;
-        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -3), xScale)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, 1), xScale, celCoords)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, 0), xScale, celCoords)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -1), xScale, celCoords)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -2), xScale, celCoords)) return true;
+        if (isAbleToWallGetUpPart(celCoords + new Vector3Int(0, -3), xScale, celCoords)) return true;
         return false;
     }
 
@@ -224,7 +229,7 @@ public class EnMove : MonoBehaviour {
         }
     }
 
-    void StopWallCling(float lagTime) {
+    void StopWallCling(float lagTime = 0.0f) {
         isWallCling = false;
         wallClingTimer = 0.0f;
         wallClingLagTime = lagTime;
@@ -473,17 +478,17 @@ public class EnMove : MonoBehaviour {
 
                 // horizontal movement
                 if ((!isInPlatform || wallClingLagTime > 0.0f) && GetComponent<EnHealth>().dodgeInvulnTime == 0.0f && !isHoldingWall) {
-                    if (EnMainInst.inputs.horizontal > 0.0f) {
-                        facingRight = true;
-                    } else if (EnMainInst.inputs.horizontal < 0.0f) {
-                        facingRight = false;
-                    }
-
                     if (Self_RigidBody.velocity.x * EnMainInst.inputs.horizontal > 0) {
                         Self_RigidBody.AddForce(new Vector2(EnMainInst.inputs.horizontal * MOVEMENT_FORCE, 0.0f) * Mathf.Max(1.0f - Mathf.Pow(Self_RigidBody.velocity.x / MOVEMENT_SPEED, 2.0f), 0.0f), ForceMode2D.Force);
                     } else {
                         Self_RigidBody.AddForce(new Vector2(EnMainInst.inputs.horizontal * MOVEMENT_FORCE, 0.0f), ForceMode2D.Force);
                     }
+                }
+
+                if (EnMainInst.inputs.horizontal > 0.0f) {
+                    facingRight = true;
+                } else if (EnMainInst.inputs.horizontal < 0.0f) {
+                    facingRight = false;
                 }
 
                 // kickback when stop moving
@@ -589,7 +594,10 @@ public class EnMove : MonoBehaviour {
             } else if (isWallCling) {
                 // wall cling
 
-                if (wallClingTimer < WALL_SLIDE_TIMER) {
+                if (isAbleToWallGetUp(facingRight)) {
+                    StopWallCling();
+                    StartWallGetUp();
+                } else if (wallClingTimer < WALL_SLIDE_TIMER) {
                     if (Self_RigidBody.velocity.y > 0.0f) {
                         Self_RigidBody.velocity = new Vector2(0.0f, Self_RigidBody.velocity.y);
                     } else if (Self_RigidBody.bodyType == RigidbodyType2D.Dynamic) {
@@ -609,7 +617,7 @@ public class EnMove : MonoBehaviour {
                 if (EnMainInst.inputs.jump) {
                     if (EnMainInst.inputs.vertical < 0.0f) {
                         // fast drop
-                        StopWallCling(0.0f);
+                        StopWallCling();
                         StartFastDrop();
                     } else if (EnMainInst.inputs.horizontal < 0.0f && isWalledRight || EnMainInst.inputs.horizontal > 0.0f && isWalledLeft) {
                         // jump away
@@ -628,7 +636,7 @@ public class EnMove : MonoBehaviour {
 
                 // disable wall cling if grounded
                 if ((isGrounded || !isWalled) && isWallCling || isInPlatform) {
-                    StopWallCling(0.0f);
+                    StopWallCling();
                 }
 
                 wallClingTimer += Time.deltaTime;
