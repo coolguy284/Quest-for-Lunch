@@ -1,8 +1,3 @@
-Fix FBX file:
-	Remove Idle (1)
-	Add Crouch-Start to compliment Crouch-Release
-	Add an animation called "A" or something that has a "default" pose so when it is displayed it is obvious that an animation is not playing (an animation should be playing at all times)
-
 Todo anim.: 
 	- All 9 Weapons
 
