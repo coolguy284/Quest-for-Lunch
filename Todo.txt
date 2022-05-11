@@ -1,5 +1,6 @@
 platform pull up on the edge of a platform should trigger a ledge get up
 add crouching
+add health bar above enemy
 
 add teleport attack
 things on the weapons (stats), abilities
