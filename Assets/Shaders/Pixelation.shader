@@ -6,6 +6,7 @@ Shader "Custom/Pixelation" {
         _pixelXOffset ("_pixelXOffset", Float) = 0
         _pixelYOffset ("_pixelYOffset", Float) = 0
     }
+    
     SubShader {
         // No culling or depth
         Cull Off ZWrite Off ZTest Always

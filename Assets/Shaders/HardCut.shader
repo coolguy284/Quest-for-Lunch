@@ -5,6 +5,7 @@ Shader "Custom/HardCut3" {
         [NoScaleOffset]
         _NormalTex ("Normal Map", 2D) = "bump" {}
     }
+    
     SubShader {
         Pass {
             CGPROGRAM
