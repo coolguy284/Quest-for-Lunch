@@ -1,3 +1,4 @@
+prevent being able to swap items in inventory when dead (cannot drop items when dead, as it should be)
 platform pull up on the edge of a platform should trigger a ledge get up
 add crouching
 
