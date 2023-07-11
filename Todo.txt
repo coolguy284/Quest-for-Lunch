@@ -1,4 +1,3 @@
-turn off autocrlf and commit true line endings
 normalize whitespace indentation in files
 
 prevent being able to swap items in inventory when dead (cannot drop items when dead, as it should be)
