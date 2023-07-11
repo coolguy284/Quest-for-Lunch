@@ -1,4 +1,3 @@
-merge presentation fixups into main
 turn off autocrlf and commit true line endings
 normalize whitespace indentation in files
 

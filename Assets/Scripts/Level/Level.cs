@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 using Cinemachine;
 
 public class Level : MonoBehaviour {
+    public bool PresentationMode = false;
+    
     public TextAsset WeaponsJson;
 
     [System.Serializable]
@@ -51,6 +53,7 @@ public class Level : MonoBehaviour {
     public GameObject EntityCamera;
     public GameObject MainCamera;
     public GameObject DebugTexts;
+    public GameObject HelpText;
 
     IEnumerator PlaceRoom(int roomId, int locX, int locY) {
         // place tiles
@@ -88,6 +91,12 @@ public class Level : MonoBehaviour {
     }
 
     void Start() {
+        // enable help UI component if in presentation mode
+        if (PresentationMode) {
+            DebugTexts.SetActive(false);
+            HelpText.SetActive(true);
+        }
+        
         // load weapons json
         Assert.IsNotNull(WeaponsJson);
         baseWeaponsStats = JsonUtility.FromJson<WeaponStatsArr>(WeaponsJson.text);
@@ -108,7 +117,7 @@ public class Level : MonoBehaviour {
         }
 
         // activate debug text in editor mode
-        if (Application.isEditor) {
+        if (Application.isEditor && !PresentationMode) {
             DebugTexts.SetActive(true);
         }
 

@@ -1657,8 +1657,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1002.9, y: -30.142698}
-  m_SizeDelta: {x: 142.3703, y: -60.2853}
+  m_AnchoredPosition: {x: 999.5194, y: 84.06671}
+  m_SizeDelta: {x: 135.61, y: -288.7041}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &493386166
 CanvasRenderer:
@@ -1729,8 +1729,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 71.18515, y: -103.295}
-  m_SizeDelta: {x: 142.3703, y: 206.59}
+  m_AnchoredPosition: {x: 67.805, y: -103.295}
+  m_SizeDelta: {x: 135.61, y: 206.59}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &497220503
 MonoBehaviour:
@@ -2029,6 +2029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7667ebc9d3364ff40a69346c57887aa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PresentationMode: 0
   WeaponsJson: {fileID: 4900000, guid: 40ea7d761400427499b4e6eaaad98b28, type: 3}
   Sprites:
   - {fileID: -992786336, guid: 4a0fec4d85ed6604983d0c1dc24ecc8e, type: 3}
@@ -2056,6 +2057,7 @@ MonoBehaviour:
   EntityCamera: {fileID: 1447365778}
   MainCamera: {fileID: 1968207754}
   DebugTexts: {fileID: 493386163}
+  HelpText: {fileID: 2028684488}
 --- !u!4 &548532679
 Transform:
   m_ObjectHideFlags: 0
@@ -11437,8 +11439,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 71.18515, y: -285.905}
-  m_SizeDelta: {x: 142.3703, y: 41.01}
+  m_AnchoredPosition: {x: 67.805, y: -285.905}
+  m_SizeDelta: {x: 135.61, y: 41.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1488116561
 MonoBehaviour:
@@ -12120,8 +12122,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 71.18515, y: -235.995}
-  m_SizeDelta: {x: 142.3703, y: 54.81}
+  m_AnchoredPosition: {x: 67.805, y: -235.995}
+  m_SizeDelta: {x: 135.61, y: 54.81}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1811249842
 MonoBehaviour:
@@ -12936,7 +12938,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7901701, y: 1}
+    m_SensorSize: {x: 1.7788732, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -13235,7 +13237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2028684489
 RectTransform:
   m_ObjectHideFlags: 0
