@@ -10,7 +10,7 @@ public class EnAttack : MonoBehaviour {
     EnMove EnMoveInst;
     public TextMeshProUGUI DebugText3;
     bool isPlayer = false;
-
+    
     [HideInInspector]
     public float STUN_CHANCE = 0.1f; // default is stun chance for enemies
     static float PLAYER_STUN_CHANCE = 0.5f;
@@ -24,14 +24,14 @@ public class EnAttack : MonoBehaviour {
     bool givenMomentumHalt = false; // for the one guaranteed momentum halt
     float extraMomentumHalt = 0.0f; // extra momentum halt time
     bool notPerformingAttack = true;
-
+    
     void AttackHitbox(Level.TWeaponStats attackStats) {
         var colliders = transform.Find("HitBox").GetComponent<ColliderTracker>().colliders;
-
+        
         // for each thing hitbox hit
         foreach (var entity in new List<Collider2D>(colliders)) {
             var direction = entity.transform.position - transform.position;
-
+            
             // check for intersection with wall
             var wallRaycast = Physics2D.Raycast(
                 new Vector2(transform.position.x, transform.position.y),
@@ -43,17 +43,17 @@ public class EnAttack : MonoBehaviour {
             
             // only attack if vulnerable
             if (entity.GetComponent<EnHealth>() == null || entity.GetComponent<EnHealth>().invulnTime != 0.0f) continue;
-
+            
             // perform damage
             entity.GetComponent<EnHealth>().changeHealth(-attackStats.damage);
             entity.GetComponent<EnHealth>().hitInvulnTime = attackStats.invuln;
-
+            
             // perform knockback
             entity.GetComponent<Rigidbody2D>().AddForce(new Vector2(direction.x > 0.0f ? 1.0f : -1.0f, 0.5f) * attackStats.knockback, ForceMode2D.Impulse);
             entity.GetComponent<EnAttack>().attackCooldown = 0.0f;
             if (entity.GetComponent<EnAttack>().STUN_CHANCE + attackStats.stunChance > Random.Range(0.0f, 1.0f))
                 entity.GetComponent<EnMove>().inputLagTime = attackStats.hitstun;
-
+            
             // grant suscoins
             if (isPlayer && !entity.GetComponent<EnHealth>().alive) {
                 EnMainInst.susCoins += (int)(entity.GetComponent<EnHealth>().maxHealth * 1.25f);
@@ -61,7 +61,7 @@ public class EnAttack : MonoBehaviour {
             }
         }
     }
-
+    
     void AttackRanged(Level.TWeaponStats attackStats, EnItem.Slot weaponSlot, int weaponSlotId) {
         var projectile = Instantiate(EnMainInst.ProjectileDict[attackStats.fires], Vector3.zero, Quaternion.identity);
         projectile.transform.parent = EnMainInst.ProjectilesList.transform;
@@ -78,7 +78,7 @@ public class EnAttack : MonoBehaviour {
         projectileDamage.slotId = weaponSlotId;
         projectileDamage.slot = weaponSlot;
     }
-
+    
     IEnumerator PerformAttack(int attackSlot) {
         // get stats
         notPerformingAttack = false;
@@ -98,7 +98,7 @@ public class EnAttack : MonoBehaviour {
                 attackStats = EnMainInst.WeaponStats["Enemy_Basic1"];
             }
         }
-
+        
         // check whether arrows available
         if (attackStats.type == "ranged") {
             if ((int)weaponSlot.extra[0] >= attackStats.extraInt[0]) {
@@ -106,13 +106,13 @@ public class EnAttack : MonoBehaviour {
                 yield break;
             }
         }
-
+        
         // set sprite texture (quick method, will be improved eventually)
         if (attackStats.type == "normal" && EnMainInst.SpriteDict.ContainsKey(attackStats.name)) {
             var imageObject = transform.Find("HitBox/Image");
             if (imageObject != null) imageObject.GetComponent<SpriteRenderer>().sprite = EnMainInst.SpriteDict[attackStats.name];
         }
-
+        
         // startup lag
         EnMoveInst.StartAttack(attackStats.name);
         attackCooldown = attackStats.startup + 0.1f;
@@ -129,7 +129,7 @@ public class EnAttack : MonoBehaviour {
             startupTime += Time.deltaTime;
             yield return null;
         }
-
+        
         // perform attack
         attackCooldown = attackStats.active + 0.1f;
         switch (attackStats.type) {
@@ -153,7 +153,7 @@ public class EnAttack : MonoBehaviour {
         }
         EnMoveInst.StopAttack();
         attackCooldown = attackStats.cooldown;
-
+        
         // decrease arrow count
         if (attackStats.type == "ranged") {
             if ((int)weaponSlot.extra[0] < attackStats.extraInt[0]) {
@@ -161,7 +161,7 @@ public class EnAttack : MonoBehaviour {
                 GetComponent<EnItem>().DisplaySingleSlot(attackSlot);
             }
         }
-
+        
         // halt momentum
         if (!givenMomentumHalt) {
             givenMomentumHalt = true;
@@ -169,7 +169,7 @@ public class EnAttack : MonoBehaviour {
                 extraMomentumHalt = EnMoveInst.inAirTime;
             }
         }
-
+        
         // unset sprite texture
         if (attackStats.type == "normal") {
             var imageObject = transform.Find("HitBox/Image");
@@ -178,7 +178,7 @@ public class EnAttack : MonoBehaviour {
         
         notPerformingAttack = true;
     }
-
+    
     void Start() {
         Self_BoxCollider = GetComponent<BoxCollider2D>();
         Self_RigidBody = GetComponent<Rigidbody2D>();
@@ -189,7 +189,7 @@ public class EnAttack : MonoBehaviour {
             STUN_CHANCE = PLAYER_STUN_CHANCE;
         }
     }
-
+    
     void Update() {
         if (Time.timeScale == 0.0f) return;
         
@@ -197,7 +197,7 @@ public class EnAttack : MonoBehaviour {
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
         if (EnMoveInst == null) EnMoveInst = GetComponent<EnMove>();
         isPlayer = EnMainInst.isPlayer;
-
+        
         if (notPerformingAttack) {
             // begin performing attacks
             if (EnMoveInst.fastDropStoppedFrame) {
@@ -208,25 +208,25 @@ public class EnAttack : MonoBehaviour {
                 StartCoroutine(PerformAttack(1));
             }
         }
-
+        
         // major drag when haltmotion is active
         if (EnMainInst.haltMotion) {
             Self_RigidBody.AddForce(new Vector2(Self_RigidBody.velocity.x * -10f, Self_RigidBody.velocity.y * -10f), ForceMode2D.Force);
         }
-
+        
         // unhalt motion
         if ((attackCooldown == 0.0f || givenMomentumHalt && EnMoveInst.inAirTime > MOMENTUM_HALT_TIME + extraMomentumHalt || EnMoveInst.platformPullUp) && EnMainInst.haltMotion) {
             EnMainInst.haltMotion = false;
             if (Self_RigidBody.bodyType == RigidbodyType2D.Static)
                 EnMoveInst.StopHaltState();
         }
-
+        
         // refresh momentumhalts if on ground
         if (EnMoveInst.isGrounded) {
             givenMomentumHalt = false;
             extraMomentumHalt = 0.0f;
         }
-
+        
         // reduce attack cooldown by time passed
         if (attackCooldown > 0.0f) {
             attackCooldown -= Time.deltaTime;

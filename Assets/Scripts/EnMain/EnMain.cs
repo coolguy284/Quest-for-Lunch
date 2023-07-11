@@ -80,21 +80,21 @@ public class EnMain : MonoBehaviour {
     public Dictionary<string, Level.TWeaponStats> WeaponStats;
     public Animator _animator;
     public Animator _animatorSub;
-
+    
     public class AnimatorInterface {
         public Animator _animator;
         public Animator _animatorSub;
-
+        
         public AnimatorInterface(Animator _animatorVal, Animator _animatorSubVal) {
             _animator = _animatorVal;
             _animatorSub = _animatorSubVal;
         }
-
+        
         public void Play(string animation) {
             if (_animator != null) _animator.Play(animation);
             if (_animatorSub != null) _animatorSub.Play(animation);
         }
-
+        
         public void SetTrigger(string parameter) {
             if (_animator != null) _animator.SetTrigger(parameter);
             if (_animatorSub != null) _animatorSub.SetTrigger(parameter);
@@ -104,12 +104,12 @@ public class EnMain : MonoBehaviour {
             if (_animator != null) _animator.SetBool(parameter, value);
             if (_animatorSub != null) _animatorSub.SetBool(parameter, value);
         }
-
+        
         public void SetFloat(string parameter, float value) {
             if (_animator != null) _animator.SetFloat(parameter, value);
             if (_animatorSub != null) _animatorSub.SetFloat(parameter, value);
         }
-
+        
         public AnimatorControllerParameter[] parameters {
             get {
                 return _animator.parameters;
@@ -119,7 +119,7 @@ public class EnMain : MonoBehaviour {
     public AnimatorInterface animator;
     
     public HashSet<string> animatorParams = new HashSet<string>();
-
+    
     void Start() {
         Player = GameObject.Find("Player");
         LevelComponent = GameObject.Find("Main Level Script").GetComponent<Level>();
@@ -134,7 +134,7 @@ public class EnMain : MonoBehaviour {
             animatorParams.Add(param.name);
         }
     }
-
+    
     void Update() {
         if (Player == null) Player = GameObject.Find("Player");
         if (LevelComponent == null) LevelComponent = GameObject.Find("Main Level Script").GetComponent<Level>();

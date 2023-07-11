@@ -5,36 +5,36 @@ Shader "Custom/PostProcess" {
         _psychedelic ("Psychedelic", Range(0, 1)) = 0
         _bowl ("Bowl", Range(0, 1)) = 0
     }
-
+    
     SubShader {
         // No culling or depth
         Cull Off ZWrite Off ZTest Always
-
+        
         Pass {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-
+            
             #include "UnityCG.cginc"
-
+            
             #define PI 3.1415926535
-
+            
             sampler2D _MainTex;
             float _vignette;
             float _psychedelic;
             float _bowl;
             float _mandel;
-
+            
             struct appdata {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
-
+            
             struct v2f {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
             };
-
+            
             v2f vert(appdata v) {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -42,15 +42,15 @@ Shader "Custom/PostProcess" {
                 o.uv = v.uv - shiftvector;
                 return o;
             }
-
+            
             float sq(float val) {
                 return val * val;
             }
-
+            
             float hypot(float x, float y) {
                 return sqrt(x * x + y * y);
             }
-
+            
             fixed4 frag(v2f i) : SV_Target {
                 if (_psychedelic > 0.5 || _bowl > 0.5) {
                     float xorig = i.uv[0] - 0.5;
@@ -80,7 +80,7 @@ Shader "Custom/PostProcess" {
                     col.g = lerp(col.g, 0, multfact2);
                     col.b = lerp(col.b, 0, multfact2);
                 }
-
+                
                 return col;
             }
             ENDCG

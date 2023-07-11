@@ -9,7 +9,7 @@ public class Level : MonoBehaviour {
     public bool PresentationMode = false;
     
     public TextAsset WeaponsJson;
-
+    
     [System.Serializable]
     public class TWeaponStats {
         public string name;
@@ -25,17 +25,17 @@ public class Level : MonoBehaviour {
         public float invuln;
         public int[] extraInt;
     }
-
+    
     [System.Serializable]
     public class WeaponStatsArr {
         public TWeaponStats[] weaponStats;
     }
-
+    
     WeaponStatsArr baseWeaponsStats;
-
+    
     [HideInInspector]
     public Dictionary<string, TWeaponStats> WeaponStats = new Dictionary<string, TWeaponStats>();
-
+    
     public Sprite[] Sprites;
     public GameObject[] Projectiles;
     [HideInInspector]
@@ -54,7 +54,7 @@ public class Level : MonoBehaviour {
     public GameObject MainCamera;
     public GameObject DebugTexts;
     public GameObject HelpText;
-
+    
     IEnumerator PlaceRoom(int roomId, int locX, int locY) {
         // place tiles
         float locXPos = locX / 2f;
@@ -75,10 +75,10 @@ public class Level : MonoBehaviour {
                 PlatformTilemap.SetTile(new Vector3Int(x + locX, y + locY, 0), PlatformTile);
             }
         }
-
+        
         // the tilemap collider does not update immediately so need to wait a frame before placing enemies
         yield return null;
-
+        
         // place enemies
         var RoomEnemies = Rooms[roomId].transform.Find("Enemies").gameObject.transform;
         for (int i = 0; i < RoomEnemies.childCount; i++) {
@@ -89,7 +89,7 @@ public class Level : MonoBehaviour {
             instantiatedEnemy.name = "Enemy " + i;
         }
     }
-
+    
     void Start() {
         // enable help UI component if in presentation mode
         if (PresentationMode) {
@@ -100,57 +100,57 @@ public class Level : MonoBehaviour {
         // load weapons json
         Assert.IsNotNull(WeaponsJson);
         baseWeaponsStats = JsonUtility.FromJson<WeaponStatsArr>(WeaponsJson.text);
-
+        
         // parse weapons json
         foreach (var stat in baseWeaponsStats.weaponStats) {
             WeaponStats.Add(stat.name, stat);
         }
-
+        
         // parse sprites dict
         foreach (var sprite in Sprites) {
             SpriteDict.Add(sprite.name, sprite);
         }
-
+        
         // parse projectiles dict
         foreach (var prefab in Projectiles) {
             ProjectileDict.Add(prefab.name, prefab);
         }
-
+        
         // activate debug text in editor mode
         if (Application.isEditor && !PresentationMode) {
             DebugTexts.SetActive(true);
         }
-
+        
         // place test room
         StartCoroutine(PlaceRoom(0, -7, -35));
     }
-
+    
     void Update() {
         if (WeaponStats.Count == 0) {
             // load weapons json
             Assert.IsNotNull(WeaponsJson);
             baseWeaponsStats = JsonUtility.FromJson<WeaponStatsArr>(WeaponsJson.text);
-
+            
             // parse weapons json
             foreach (var stat in baseWeaponsStats.weaponStats) {
                 WeaponStats.Add(stat.name, stat);
             }
         }
-
+        
         if (SpriteDict.Count == 0) {
             // parse sprites dict
             foreach (var sprite in Sprites) {
                 SpriteDict.Add(sprite.name, sprite);
             }
         }
-
+        
         if (ProjectileDict.Count == 0) {
             // parse projectiles dict
             foreach (var prefab in Projectiles) {
                 ProjectileDict.Add(prefab.name, prefab);
             }
         }
-
+        
         MainCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize = 6.0f / Mathf.Max(MainCamera.GetComponent<Camera>().aspect, 1.77777777777f);
         EntityCamera.GetComponent<Camera>().orthographicSize = MainCamera.GetComponent<CinemachineVirtualCamera>().m_Lens.OrthographicSize;
     }

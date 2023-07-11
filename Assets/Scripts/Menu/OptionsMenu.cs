@@ -11,16 +11,16 @@ public class OptionsMenu : MonoBehaviour {
     public Toggle fullscreenToggle;
     public Toggle debugToggle;
     public GameObject DebugTexts;
-
+    
     Resolution[] resolutionsList;
     bool ignoreSetting = true;
-
+    
     public void SetResolution(int resolutionIndex) {
         if (ignoreSetting) return;
         Resolution resolution = resolutionsList[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
-
+    
     public void SetFullscreen(bool fullScreen) {
         if (ignoreSetting) return;
         Screen.fullScreen = fullScreen;
@@ -30,23 +30,23 @@ public class OptionsMenu : MonoBehaviour {
             ignoreSetting = false;
         }
     }
-
+    
     public void SetQuality(int qualityIndex) {
         QualitySettings.SetQualityLevel(qualityIndex);
     }
-
+    
     public void SetMainVol(float volume) {
         audioMixer.SetFloat("Main", volume);
     }
-
+    
     public void SetMusicVol(float volume) {
         audioMixer.SetFloat("Music", volume);
     }
-
+    
     public void SetSFXVol(float volume) {
         audioMixer.SetFloat("SFX", volume);
     }
-
+    
     void updateResolutions() {
         resolutionDropdown.ClearOptions();
         List<Resolution> newResolutionsList = new List<Resolution>();
@@ -81,7 +81,7 @@ public class OptionsMenu : MonoBehaviour {
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
     }
-
+    
     void Start() {
         ignoreSetting = true;
         updateResolutions();

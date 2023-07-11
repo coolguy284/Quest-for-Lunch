@@ -9,7 +9,7 @@ public class EnItem : MonoBehaviour {
     public GameObject UISlots;
     EnMain EnMainInst;
     EnHealth EnHealthInst;
-
+    
     public class Slot {
         public string name;
         public object[] extra;
@@ -26,9 +26,9 @@ public class EnItem : MonoBehaviour {
             }
         }
     }
-
+    
     public Slot[] Slots = new Slot[2] { new Slot(), new Slot() };
-
+    
     void DisplaySlot(Slot slot, Transform slotUI) {
         slotUI.Find("Item").GetComponent<Image>().sprite = slot.name == "" ? null : EnMainInst.SpriteDict[slot.name];
         slotUI.Find("Item").GetComponent<Image>().color = slot.name == "" ? Color.clear : Color.white;
@@ -39,17 +39,17 @@ public class EnItem : MonoBehaviour {
             slotUI.Find("Info").gameObject.SetActive(false);
         }
     }
-
+    
     public void DisplaySingleSlot(int slot) {
         DisplaySlot(Slots[slot], UISlots.transform.GetChild(slot));
     }
-
+    
     public void DisplaySlots(Transform slots = null) {
         if (slots == null) slots = UISlots.transform;
         DisplaySlot(Slots[0], slots.GetChild(0));
         DisplaySlot(Slots[1], slots.GetChild(1));
     }
-
+    
     int GetFreeSlot() {
         if (Slots[0].name == "") {
             return 0;
@@ -59,7 +59,7 @@ public class EnItem : MonoBehaviour {
             return -1;
         }
     }
-
+    
     int GetTakenSlot() {
         if (Slots[0].name != "") {
             return 0;
@@ -69,7 +69,7 @@ public class EnItem : MonoBehaviour {
             return -1;
         }
     }
-
+    
     void PickupItem() {
         if (!EnHealthInst.alive) return;
         var freeSlot = GetFreeSlot();
@@ -88,7 +88,7 @@ public class EnItem : MonoBehaviour {
             }
         }
     }
-
+    
     public void DropItem(int slot) {
         if (slot < 0 || slot > Slots.Length || Slots[slot].name == "" || !EnHealthInst.alive) return;
         var item = Instantiate(EnMainInst.ItemPrefab, Vector3.zero, Quaternion.identity);
@@ -100,23 +100,23 @@ public class EnItem : MonoBehaviour {
         Slots[slot] = new Slot("");
         DisplaySlots();
     }
-
+    
     void SwapItems(int slot1, int slot2) {
         var temp = Slots[slot1];
         Slots[slot1] = Slots[slot2];
         Slots[slot2] = temp;
         DisplaySlots();
     }
-
+    
     public void SwapItems() {
         SwapItems(0, 1);
     }
-
+    
     void Start() {
         EnMainInst = GetComponent<EnMain>();
         EnHealthInst = GetComponent<EnHealth>();
     }
-
+    
     void Update() {
         if (EnMainInst == null) EnMainInst = GetComponent<EnMain>();
         if (EnHealthInst.alive && EnMainInst.inputs.pickupItem) {

@@ -19,11 +19,11 @@ public class Pixelation : MonoBehaviour {
     float pixelHeightInv;
     float pixelXOffset;
     float pixelYOffset;
-
+    
     void Awake() {
         materialInst = new Material(material);
     }
-
+    
     void OnPreRender() {
         cameraWorldLeftCorner = mainCamera.ScreenToWorldPoint(new Vector3(0.0f, 0.0f, 0.0f));
         cameraWorldRightCorner = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0.0f));
@@ -43,7 +43,7 @@ public class Pixelation : MonoBehaviour {
             mainCamera.transform.position += new Vector3(0.0004f, 0.0f, 0.0f);
         }
     }
-
+    
     void OnRenderImage(RenderTexture src, RenderTexture dest) {
         src.filterMode = FilterMode.Point;
         materialInst.SetFloat("_pixelWidthInv", pixelWidthInv);
@@ -57,7 +57,7 @@ public class Pixelation : MonoBehaviour {
         }
         Graphics.Blit(src, dest, materialInst);
     }
-
+    
     void OnDrawGizmos() {
         return;
     }

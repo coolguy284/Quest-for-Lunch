@@ -7,11 +7,11 @@ public class TitleButtons : MonoBehaviour {
     public GameObject MainMenu;
     public GameObject OptionsMenu;
     public GameObject TutorialMenu;
-
+    
     public void StartGame() {
         SceneManager.LoadScene("Game");
     }
-
+    
     public void ContinueGame() {
         SceneManager.LoadScene("Game");
     }
@@ -19,7 +19,7 @@ public class TitleButtons : MonoBehaviour {
     public void QuitGame() {
         Application.Quit();
     }
-
+    
     void Update() {
         if (Input.GetButtonDown("Cancel")) {
             if (OptionsMenu.activeSelf) {
