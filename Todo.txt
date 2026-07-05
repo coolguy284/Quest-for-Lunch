@@ -19,3 +19,4 @@ double jump gone when regular jump if game lags enough
 
 keep in mind:
 should be able to hold left click on bow for quickfire bows
+lockpicking update
